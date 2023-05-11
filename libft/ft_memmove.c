@@ -1,27 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/11 09:40:39 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/11 10:35:42 by valmpani         ###   ########.fr       */
+/*   Created: 2023/05/11 10:30:35 by valmpani          #+#    #+#             */
+/*   Updated: 2023/05/11 12:10:40 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	size_t	index;
+	unsigned char	*d;
+	unsigned char	*s;
+	size_t			index;
+	int				count;
 
-	if (src == NULL && dst == NULL)
+	if (dst == NULL && src == NULL)
 		return (NULL);
-	index = 0;
-	while (index < n)
+	d = (unsigned char *)(dst);
+	s = (unsigned char *)(src);
+	count = +1;
+	if (dst > src)
 	{
-	((unsigned char *)dst)[index] = ((unsigned char *)src)[index];
+		d = (unsigned char *)(dst + len - 1);
+		s = (unsigned char *)(src + len - 1);
+		count = -1;
+	}
+	index = 0;
+	while (index < len)
+	{
+		*d = *s;
+		d += count;
+		s += count;
 		index++;
 	}
 	return (dst);

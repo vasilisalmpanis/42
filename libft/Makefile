@@ -1,11 +1,11 @@
 NAME	=	libft.a
 SRC	=	ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c\
 		ft_memset.c ft_strlen.c ft_memcpy.c ft_memmove.c ft_strlcpy.c ft_toupper.c\
-		ft_tolower.c ft_strchr.c ft_strrchr.c ft_strncmp.c
+		ft_tolower.c ft_strchr.c ft_strrchr.c ft_strncmp.c ft_memchr.c
 
 OBJS	=	${SRC:.c=.o}
 INCS	=	"libft.h"
-LIBC	=	ar rc
+LIBC	=	ar -rcs
 LIBR	=	ranlib
 CC	=	cc
 RM	=	rm -f
@@ -16,15 +16,14 @@ CFLAGS	=	-Wall -Wextra -Werror
 
 ${NAME}:	${OBJS}
 	${LIBC}	${NAME}	${OBJS}
-	${LIBR}	${NAME}
 
 all:	${NAME}
 
-clean:
-	${RM}	${OBJS}
-
 fclean:
 	${RM}	${NAME}
+
+clean:
+	${RM} -f ${OBJS}
 
 re:
 	fclean all

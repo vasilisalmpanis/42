@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 08:08:00 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/11 15:32:02 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/11 17:20:10 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		ft_tolower(int c);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strrchr(const char *s, int c);
 int		ft_strncmp(char *s1, char *s2, unsigned int n);
-
+void	*ft_memchr(const void *s, int c, size_t n);
 // size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
 
 #endif

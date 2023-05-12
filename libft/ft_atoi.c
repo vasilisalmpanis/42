@@ -1,25 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/11 08:37:39 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/12 13:07:01 by valmpani         ###   ########.fr       */
+/*   Created: 2023/05/12 10:59:56 by valmpani          #+#    #+#             */
+/*   Updated: 2023/05/12 11:05:54 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlen(const char *c)
+int	ft_atoi(const char *str)
 {
-	size_t	index;
+	int	index;
+	int	minus;
+	int	number;
 
 	index = 0;
-	while (c[index])
+	minus = 1;
+	number = 0;
+	while ((str[index] >= '\t' && str[index] <= '\r') || str[index] == ' ')
+		index++;
+	if (str[index] == '-')
 	{
+		minus = -1;
 		index++;
 	}
-	return (index);
+	else if (str[index] == '+')
+		index++;
+	while (str[index] >= '0' && str[index] <= '9')
+	{
+		number = number * 10 + str[index] - '0';
+		index++;
+	}
+	return (number * minus);
 }

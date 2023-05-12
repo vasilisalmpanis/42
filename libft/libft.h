@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 08:08:00 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/12 08:39:40 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/12 12:12:33 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int		ft_strncmp(char *s1, char *s2, unsigned int n);
 void	*ft_memchr(const void *s, int c, size_t n);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
-// size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
+int		ft_atoi(const char *str);
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
 
 #endif

@@ -1,34 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/11 12:48:44 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/12 21:28:29 by valmpani         ###   ########.fr       */
+/*   Created: 2023/05/13 09:56:26 by valmpani          #+#    #+#             */
+/*   Updated: 2023/05/13 09:59:12 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	size_t	index;
+	size_t	length_s1;
+	size_t	length_s2;
+	char	*last_buffer;
 
-	if (dstsize != 0)
-	{
-		index = 0;
-		while (src[index] != '\0' && index < (dstsize - 1))
-		{
-			dst[index] = src[index];
-			index++;
-		}
-		dst[index] = '\0';
-	}
-	return (ft_strlen(src));
+	length_s1 = 0;
+	length_s2 = 0;
+	if (s1)
+		length_s1 = ft_strlen(s1);
+	if (s2)
+		length_s2 = ft_strlen(s2);
 }
-
-// full size of dest buffer
-// NUL termination if there is room
-// room for nul is incuded in dstsize

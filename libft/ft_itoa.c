@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 13:41:12 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/13 20:19:44 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/15 21:19:30 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,38 +28,31 @@ int	ft_find_length(long c)
 	return (length);
 }
 
-int	ft_is_pn(long c)
-{
-	if (c >= 0)
-		return (1);
-	else
-		return (0);
-}
-
 char	*ft_itoa(int n)
 {
-	long	value;
+	int		value;
 	long	number;
 	char	*buffer;
 
 	number = n;
 	value = ft_find_length(n) + 1;
 	if (number < 0)
-	{
-		number *= -1;
 		value++;
-	}
-	buffer = ft_calloc(value, 1);
+	buffer = (char *)calloc(value, sizeof(char));
 	if (!buffer)
 		return (NULL);
-	while (value > 0)
+	if (number == 0)
+		buffer[0] = '0';
+	if (number < 0)
 	{
-		buffer[value - 2] = number % 10 + '0';
-		number = number / 10;
-		value--;
-	}
-	if (n < 0)
+		number *= -1;
 		buffer[0] = '-';
+	}
+	while (number != 0)
+	{
+		buffer[value-- - 2] = number % 10 + '0';
+		number = number / 10;
+	}
 	return (buffer);
 }
 

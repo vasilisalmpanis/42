@@ -6,29 +6,36 @@ SRC	=	ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.
 		ft_strjoin.c ft_strtrim.c ft_itoa.c ft_strmapi.c ft_striteri.c ft_putchar_fd.c\
 		ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_split.c\
 
+BSRC = ft_lstnew.c ft_lstadd_front.c ft_lstsize.c\
+
 OBJS	=	${SRC:.c=.o}
+BOBJS	=	${BSRC:.c=.o}
 INCS	=	"libft.h"
-LIBC	=	ar -rcs
-LIBR	=	ranlib
+LIBC	=	ar -rc
 CC	=	cc
 RM	=	rm -f
 CFLAGS	=	-Wall -Wextra -Werror
 
-.c.o:
-	${CC}	${CFLAGS}	-c	$<	-o	${<:.c=.o}	-I ${INCS}
-
-${NAME}:	${OBJS}
+${NAME}:	${OBJS} ${BOBJS}
 	${LIBC}	${NAME}	${OBJS}
 
-all:	${NAME}
+${OBJS} : ${SRC}
+	${CC} ${CFLAGS} -c ${SRC} -I ${INCS}
 
-fclean: clean
-	${RM}	${NAME}
+${BOBJS} : ${BSRC}
+	${CC} ${CFLAGS} -c ${BSRC}
 
-clean:
-	${RM} -f ${OBJS}
+all : ${NAME}
 
-re:
-	fclean all
+bonus: ${BOJS} ${OBJS}
+	${LIBC}	${NAME}	${BOBJS}
 
-.PHONY:	all	clean	fclean	re
+fclean : clean
+	${RM} ${NAME}
+
+clean :
+	${RM}	${OBJS}	${BOBJS}
+	
+re: fclean all
+
+.PHONY: all fclean clean re bonus

@@ -4,7 +4,7 @@
 |      Project     | Mark | Retry | Took |    Note    |       With      | Language |
 |:----------------:|:----:|:-----:|:----:|:----------:|:---------------:|:-:|
 |<a href="https://github.com/vasilisalmpanis/42/tree/main/Piscine%20Reloaded">Piscine Reloaded</a>  | 0%   |      |   1d  | Problems with server not evaluated |                 |<img src="https://info.varonis.com/hubfs/UNIX%20LOGO@2x.png" alt="c" width="40" height="40"/> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
-|       <a href="[https://github.com/vasilisalmpanis/42/tree/main/Piscine%20Reloaded](https://github.com/vasilisalmpanis/42/tree/main/libft)">Libft</a>       | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
+|       <a href="https://github.com/vasilisalmpanis/42/tree/main/libft">Libft</a>       | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
 |   get_next_line  | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
 |      netwhat     | %    |      |    |            |                 | n/a |
 |     ft_printf    | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |

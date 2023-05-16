@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 13:41:12 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/15 21:19:30 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/15 21:57:32 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	ft_find_length(long c)
 	length = 0;
 	if (c == 0)
 		return (1);
+	if (c < 0)
+		length++;
 	while (c != 0)
 	{
 		c = c / 10;
@@ -35,12 +37,11 @@ char	*ft_itoa(int n)
 	char	*buffer;
 
 	number = n;
-	value = ft_find_length(n) + 1;
-	if (number < 0)
-		value++;
-	buffer = (char *)calloc(value, sizeof(char));
+	value = ft_find_length(number) + 1;
+	buffer = (char *)malloc(value * sizeof(char));
 	if (!buffer)
 		return (NULL);
+	buffer[value - 1] = '\0';
 	if (number == 0)
 		buffer[0] = '0';
 	if (number < 0)

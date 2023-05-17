@@ -7,7 +7,7 @@
 |       <a href="https://github.com/vasilisalmpanis/42/tree/main/libft">Libft</a>       | %    |      |  5d  |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
 |   get_next_line  | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
 |      netwhat     | %    |      |    |            |                 | n/a |
-|     ft_printf    | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
+|     <a href="https://github.com/vasilisalmpanis/42/tree/main/ft_printf">Printf</a>    | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
 |     ft_server    | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-plain.svg" alt="docker" width="40" height="40"/> |
 |       cub3d      | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
 |      libasm      | %    |      |    |             |                 | assembly |

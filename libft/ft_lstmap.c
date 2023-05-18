@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 09:36:01 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/16 13:31:51 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/18 09:46:24 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 		if (new == NULL)
 		{
 			ft_lstclear(&result, del);
-			if (result)
-				free(&result);
 			return (NULL);
 		}
 		ft_lstadd_back(&result, new);

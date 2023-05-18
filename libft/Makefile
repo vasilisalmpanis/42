@@ -24,11 +24,11 @@ ${OBJS} : ${SRC}
 	${CC} ${CFLAGS} -c ${SRC} -I ${INCS}
 
 ${BOBJS} : ${BSRC}
-	${CC} ${CFLAGS} -c ${BSRC}
+	${CC} ${CFLAGS} -c ${BSRC} -I ${INCS}
 
 all : ${NAME}
 
-bonus: ${BOJS} ${OBJS}
+bonus: ${BOBJS} ${OBJS}
 	${LIBC}	${NAME}	${BOBJS}
 
 fclean : clean

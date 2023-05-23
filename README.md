@@ -5,7 +5,7 @@
 |:----------------:|:----:|:-----:|:----:|:----------:|:---------------:|:-:|
 |<a href="https://github.com/vasilisalmpanis/42/tree/main/Piscine%20Reloaded">Piscine Reloaded</a>  | 0%   |      |   1d  | Problems with server not evaluated |                 |<img src="https://info.varonis.com/hubfs/UNIX%20LOGO@2x.png" alt="c" width="40" height="40"/> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
 |       <a href="https://github.com/vasilisalmpanis/42/tree/main/libft">Libft</a>       | 104%    |   1   |  5d  |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
-|   get_next_line  | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
+|   <a href="https://github.com/vasilisalmpanis/42/tree/main/get_next_line">get_next_line</a>  | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
 |      netwhat     | %    |      |    |            |                 | n/a |
 |     <a href="https://github.com/vasilisalmpanis/42/tree/main/ft_printf">Printf</a>    | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
 |     ft_server    | %    |      |    |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-plain.svg" alt="docker" width="40" height="40"/> |

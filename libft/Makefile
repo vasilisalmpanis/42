@@ -13,9 +13,11 @@ OBJS	=	${SRC:.c=.o}
 BOBJS	=	${BSRC:.c=.o}
 INCS	=	"libft.h"
 LIBC	=	ar -rc
-CC		=	cc
+CC		=	gcc
 RM		=	rm -f
 CFLAGS	=	-Wall -Wextra -Werror
+
+all : ${NAME}
 
 ${NAME}:	${OBJS} ${BOBJS}
 	${LIBC}	${NAME}	${OBJS}
@@ -26,7 +28,6 @@ ${OBJS} : ${SRC}
 ${BOBJS} : ${BSRC}
 	${CC} ${CFLAGS} -c ${BSRC} -I ${INCS}
 
-all : ${NAME}
 
 bonus: ${BOBJS} ${OBJS}
 	${LIBC}	${NAME}	${BOBJS}

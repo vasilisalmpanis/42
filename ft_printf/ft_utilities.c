@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 20:08:59 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/17 21:32:11 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/18 12:22:31 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_putstr(char *c, int *length)
 	if (c == NULL)
 	{
 		write(1, "(null)", 6);
-		*length += 1;
+		*length += 6;
 	}
 	else
 	{
@@ -36,7 +36,7 @@ void	ft_putptr(unsigned long arg, int *length)
 {
 	if (arg == 0)
 	{
-		ft_putstr("0x0", length);
+		write(1, "0x0", 3);
 		*length += 3;
 		return ;
 	}

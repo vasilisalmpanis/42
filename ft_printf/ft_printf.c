@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 18:23:07 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/18 11:16:30 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:11:45 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,11 @@ int	ft_printf(const char *str, ...)
 // int main()
 // {
 // 	int	i;
-// 	void *str;
-
-// 	i = ft_printf("%u %d\n", 4294967295, 12345);
-// 	if (printf("%ld %d\n", 4294967295, 12345) != i)
+// 	// void *str;
+// 	i = ft_printf("%d\n", ft_printf("\001\002\007\v\010\f\r\n"));
+// 	printf("%d\n", printf("\001\002\007\v\010\f\r\n"));
+// 	// i = ft_printf("%u %d\n", 4294967295, 12345);
+// 	if (printf("%d\n", printf("\001\002\007\v\010\f\r\n")) != i)
 // 	{
 // 		printf("Error");
 // 	}

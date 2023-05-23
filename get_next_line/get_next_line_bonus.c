@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/18 14:30:34 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/23 12:52:20 by valmpani         ###   ########.fr       */
+/*   Created: 2023/05/23 12:28:42 by valmpani          #+#    #+#             */
+/*   Updated: 2023/05/23 12:59:51 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_make_new(char *rest, char *buf)
 {
@@ -32,7 +32,6 @@ char	*ft_line_rest(char *rest)
 		i++;
 	if (!rest[i])
 	{
-		ft_bzero(rest, ft_strlen(rest));
 		free(rest);
 		return (NULL);
 	}
@@ -84,6 +83,7 @@ char	*ft_read_file(int fd, char *rest)
 		bytes = read(fd, buf, BUFFER_SIZE);
 		if (bytes < 0)
 		{
+			ft_bzero(rest, ft_strlen(rest));
 			free(rest);
 			free(buf);
 			return (NULL);
@@ -100,32 +100,16 @@ char	*ft_read_file(int fd, char *rest)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*rest;
+	static char	*rest[1024];
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1)
+	{
 		return (NULL);
-	rest = ft_read_file(fd, rest);
-	if (!rest)
+	}
+	rest[fd] = ft_read_file(fd, rest[fd]);
+	if (!rest[fd])
 		return (NULL);
-	line = ft_line(rest);
-	rest = ft_line_rest(rest);
+	line = ft_line(rest[fd]);
+	rest[fd] = ft_line_rest(rest[fd]);
 	return (line);
 }
-
-// int main()
-// {
-// 	char *name = "read_error.txt";
-// 	int fd = open(name, O_RDONLY);
-// 	printf("%s", get_next_line(fd));
-// 	printf("%s", get_next_line(fd));
-// 	printf("%s", get_next_line(fd));
-// 	printf("%s", get_next_line(fd));
-// 	close(fd);
-// 	fd = open(name, O_RDONLY);
-// 	printf("%s", get_next_line(fd));
-// 	printf("%s", get_next_line(fd));
-// 	printf("%s", get_next_line(fd));
-// 	printf("%s", get_next_line(fd));
-// 	close(fd);
-// 	return (0);
-// }

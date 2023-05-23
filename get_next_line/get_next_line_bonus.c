@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 12:28:42 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/23 12:59:51 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/23 13:39:26 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ char	*ft_make_new(char *rest, char *buf)
 	char	*temp;
 
 	temp = ft_strjoin(rest, buf);
+	ft_bzero(rest, ft_strlen(rest));
 	free(rest);
 	return (temp);
 }
@@ -32,6 +33,7 @@ char	*ft_line_rest(char *rest)
 		i++;
 	if (!rest[i])
 	{
+		ft_bzero(rest, ft_strlen(rest));
 		free(rest);
 		return (NULL);
 	}
@@ -83,7 +85,6 @@ char	*ft_read_file(int fd, char *rest)
 		bytes = read(fd, buf, BUFFER_SIZE);
 		if (bytes < 0)
 		{
-			ft_bzero(rest, ft_strlen(rest));
 			free(rest);
 			free(buf);
 			return (NULL);
@@ -102,7 +103,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*rest[1024];
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 	{
 		return (NULL);
 	}

@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:30:34 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/23 12:52:20 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/23 13:40:56 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*rest;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	rest = ft_read_file(fd, rest);
 	if (!rest)

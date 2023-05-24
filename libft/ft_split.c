@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 15:07:56 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/19 16:50:11 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/24 18:10:30 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,3 +103,4 @@ char	**ft_split(char const *s, char c)
 // !! in the exam you need to recreate strlcpy or substr but the first is better
 // if you find more delimiters jump them
 // NULLify the last element and return the 2-D array of strings.
+// if something errors in the allocation you have to free everything.

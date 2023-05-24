@@ -19,7 +19,7 @@ CFLAGS	=	-Wall -Wextra -Werror
 
 all : ${NAME}
 
-${NAME}:	${OBJS} ${BOBJS}
+${NAME}:	${OBJS}
 	${LIBC}	${NAME}	${OBJS}
 
 ${OBJS} : ${SRC}

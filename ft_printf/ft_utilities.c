@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 20:08:59 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/18 12:22:31 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/24 19:51:49 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ void	ft_printnbr(char c, int arg, int *length)
 	}
 	else if (c == 'u')
 	{
-		ft_putunsigned((unsigned int) arg, "0123456789", length);
+		ft_putnbrhex(c, (unsigned int) arg, "0123456789", length);
 	}
 	if (c == 'x')
-		ft_putnbrhex(c, arg, "0123456789abcdef", length);
+		ft_putnbrhex(c, (unsigned int) arg, "0123456789abcdef", length);
 	else if (c == 'X')
-		ft_putnbrhex(c, arg, "0123456789ABCDEF", length);
+		ft_putnbrhex(c, (unsigned int) arg, "0123456789ABCDEF", length);
 }

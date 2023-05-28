@@ -17,7 +17,7 @@ ${NAME} : ${OBJ}
 		${LIBC} ${NAME} ${OBJ}
 
 ${OBJ}	:
-		${CC} ${CFLAGS} -c ${SRC} -I ${INCS}
+		${CC} ${CFLAGS} -c ${SRC}
 
 ${LIBFT}:
 		${MAKE} -C $@

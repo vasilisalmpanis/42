@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 18:23:07 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/24 19:38:41 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/28 13:44:33 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ int	ft_printf(const char *str, ...)
 // }
 // • %c Prints a single character.
 // • %s Prints a string (as defined by the common C convention).
-// • %p The void * pointer argument has to be printed in hexadecimal format. • %d Prints a decimal (base 10) number.
+// • %p The void * pointer argument has to be printed in hexadecimal format.
+// • %d Prints a decimal (base 10) number.
 // • %i Prints an integer in base 10.
 // • %u Prints an unsigned decimal (base 10) number.
 // • %x Prints a number in hexadecimal (base 16) lowercase format.

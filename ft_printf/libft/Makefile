@@ -13,22 +13,23 @@ OBJS	=	${SRC:.c=.o}
 BOBJS	=	${BSRC:.c=.o}
 INCS	=	"libft.h"
 LIBC	=	ar -rc
-CC		=	cc
+CC		=	gcc
 RM		=	rm -f
 CFLAGS	=	-Wall -Wextra -Werror
 
-${NAME}:	${OBJS} ${BOBJS}
+all : ${NAME}
+
+${NAME}:	${OBJS}
 	${LIBC}	${NAME}	${OBJS}
 
 ${OBJS} : ${SRC}
-	${CC} ${CFLAGS} -c ${SRC} -I ${INCS}
+	${CC} ${CFLAGS} -c ${SRC}
 
 ${BOBJS} : ${BSRC}
 	${CC} ${CFLAGS} -c ${BSRC}
 
-all : ${NAME}
 
-bonus: ${BOJS} ${OBJS}
+bonus: ${BOBJS} ${OBJS}
 	${LIBC}	${NAME}	${BOBJS}
 
 fclean : clean

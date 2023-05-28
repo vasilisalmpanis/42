@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 15:07:56 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/14 19:20:31 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/24 18:10:30 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,49 +39,60 @@ int	ft_find_wc(char *n, char c)
 	return (wc);
 }
 
-char	*ft_cs(char *n, char c)
+void	ft_free(char **b, int len)
+{
+	int	i;
+
+	i = 0;
+	while (i < len)
+	{
+		free(b[i]);
+		i++;
+	}
+	free(b);
+}
+
+char	**ft_cs(char *n, char **b, char c, int wc)
 {
 	int		i;
 	char	*s;
+	int		str_len;
 
 	i = 0;
-	while (n[i] != c && n[i])
-		i++;
-	s = malloc((i + 1) * sizeof(char));
-	ft_strlcpy(s, n, i + 1);
-	if (!s)
+	while (i < wc)
 	{
-		free(s);
-		return (NULL);
+		str_len = 0;
+		while (*n == c)
+			n++;
+		while (*n != c && *n != '\0')
+		{
+			str_len++;
+			n++;
+		}
+		s = (char *)malloc((str_len + 1) * sizeof(char));
+		if (s == NULL)
+		{
+			ft_free(b, i + 1);
+			return (NULL);
+		}
+		ft_strlcpy(s, n - str_len, str_len + 1);
+		b[i++] = s;
 	}
-	return (s);
+	return (b);
 }
 
 char	**ft_split(char const *s, char c)
 {
 	char	**b;
 	int		wc;
-	int		i;
 	char	*n;
 
 	n = (char *)s;
 	wc = ft_find_wc(n, c);
-	b = (char **)malloc((wc + 1) * sizeof(char *));
-	if (!b)
+	b = (char **)ft_calloc((wc + 1), sizeof(char *));
+	if (b == NULL)
 		return (NULL);
-	i = 0;
-	while (i < wc)
-	{
-		while (*n == c)
-			n++;
-		b[i] = ft_cs(n, c);
-		if (!b[i])
-			return (NULL);
-		i++;
-		while (*n != c && *n)
-			n++;
-	}
-	b[i] = NULL;
+	b = ft_cs(n, b, c, wc);
 	return (b);
 }
 
@@ -92,3 +103,4 @@ char	**ft_split(char const *s, char c)
 // !! in the exam you need to recreate strlcpy or substr but the first is better
 // if you find more delimiters jump them
 // NULLify the last element and return the 2-D array of strings.
+// if something errors in the allocation you have to free everything.

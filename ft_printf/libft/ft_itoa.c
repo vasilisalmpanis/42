@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 13:41:12 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/17 12:45:51 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/15 21:57:32 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*ft_itoa(int n)
 	long	number;
 	char	*buffer;
 
-	number = (long)n;
+	number = n;
 	value = ft_find_length(number) + 1;
 	buffer = (char *)malloc(value * sizeof(char));
 	if (!buffer)

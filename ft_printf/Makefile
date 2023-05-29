@@ -20,8 +20,7 @@ ${OBJ}	:
 		${CC} ${CFLAGS} -c ${SRC}
 
 ${LIBFT}:
-		${MAKE} -C $@
-
+		make -C libft
 clean :
 		${RM} ${OBJ}
 		${MAKE} clean -C libft

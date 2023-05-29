@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 12:39:28 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/23 12:39:30 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/29 14:19:33 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <limits.h>
-// # define BUFFER_SIZE 2
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
 char	*get_next_line(int fd);
 char	*ft_strjoin(char const *s1, char const *s2);

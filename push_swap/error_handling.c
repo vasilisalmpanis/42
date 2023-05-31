@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:42:07 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/31 10:38:31 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/31 10:52:10 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,18 @@ int	ft_check_argv_str(char **argv)
 {
 	int	i;
 	int	j;
+	int	pm;
 
 	i = -1;
 	while (argv[++i])
 	{
 		j = -1;
+		pm = 0;
 		while (argv[i][++j])
 		{
-			if ((argv[i][j] == '-' || argv[i][j] == '+') && argv[i][j-1] == ' ')
+			if ((argv[i][j] == '-' || argv[i][j] == '+') && !pm && j == 0)
 			{
+				pm = 1;
 				j++;
 			}
 			if (!ft_isdigit(argv[i][j]))
@@ -58,16 +61,18 @@ int	ft_check_argv(char **argv)
 {
 	int	i;
 	int	j;
+	int	pm;
 
 	i = 0;
 	while (argv[++i])
 	{
-		ft_putstr_fd(argv[i], 1);
+		pm = 0;
 		j = -1;
 		while (argv[i][++j])
 		{
-			if ((argv[i][j] == '-' || argv[i][j] == '+') && argv[i][j-1] == ' ')
+			if ((argv[i][j] == '-' || argv[i][j] == '+') && !pm && j == 0)
 			{
+				pm = 1;
 				j++;
 			}
 			if (!ft_isdigit(argv[i][j]))

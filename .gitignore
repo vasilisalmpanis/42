@@ -2,3 +2,5 @@
 *.o
 main_files
 *.out
+.a
+.dSYM

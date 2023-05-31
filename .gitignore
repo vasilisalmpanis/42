@@ -3,5 +3,5 @@
 main_files
 *.out
 .a
-*.dSYM
-*.vscode
+*.dSYM/
+.vscode/

@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:42:07 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/31 10:52:10 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/31 12:02:28 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,15 @@ int	ft_check_array(char *str)
 
 int	ft_check_argv_str(char **argv)
 {
-	int	i;
-	int	j;
-	int	pm;
+	int		i;
+	int		j;
+	bool	pm;
 
 	i = -1;
 	while (argv[++i])
 	{
 		j = -1;
-		pm = 0;
+		pm = false;
 		while (argv[i][++j])
 		{
 			if ((argv[i][j] == '-' || argv[i][j] == '+') && !pm && j == 0)
@@ -59,15 +59,15 @@ int	ft_check_argv_str(char **argv)
 
 int	ft_check_argv(char **argv)
 {
-	int	i;
-	int	j;
-	int	pm;
+	int		i;
+	int		j;
+	bool	pm;
 
 	i = 0;
 	while (argv[++i])
 	{
-		pm = 0;
 		j = -1;
+		pm = false;
 		while (argv[i][++j])
 		{
 			if ((argv[i][j] == '-' || argv[i][j] == '+') && !pm && j == 0)

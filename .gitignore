@@ -4,3 +4,4 @@ main_files
 *.out
 .a
 .dSYM
+.vscode

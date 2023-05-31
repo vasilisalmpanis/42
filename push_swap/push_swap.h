@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/31 09:48:14 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/05/31 10:37:46 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,5 +17,6 @@
 int		ft_handle_errors(int argc, char **argv);
 int		ft_check_array(char *str);
 int		ft_check_argv(char **argv);
+int		ft_check_argv_str(char **argv);
 
 #endif

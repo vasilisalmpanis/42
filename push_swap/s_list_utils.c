@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 10:57:52 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/02 10:36:33 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/02 13:03:38 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ void	create_list(t_node **list, int argc, char **argv)
 
 void	dealloc_list(t_node **list)
 {
-	t_node *temp;
-	t_node *current;
-	
+	t_node	*temp;
+	t_node	*current;
+
 	current = *list;
 	while (current != NULL)
 	{
@@ -48,3 +48,17 @@ void	dealloc_list(t_node **list)
 	}
 	list = NULL;
 }
+
+// void	dealloc_list_recursive(t_node **list)
+// {
+// 	t_node *temp;
+// 	t_node *current;
+// 	current = *list;
+// 	if (current != NULL)
+// 	{
+// 		temp = current;
+// 		dealloc_list(&current->next);
+// 		free(temp);
+// 	}
+// 	list = NULL;
+// }

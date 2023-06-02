@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:40:44 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/01 15:36:09 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/02 14:37:24 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 int	main(int argc, char **argv)
 {
 	int		result;
+	t_node	*a;
 
 	result = ft_handle_errors(argc, argv);
 	if (!result)
 		return (0);
-	ft_makelist(argc, argv);
+	ft_makelist(argc, argv, &a);
+	dealloc_list(&a);
 	return (0);
 }
-	// check if we have forbidden chars
-	//sort && print the movements we make

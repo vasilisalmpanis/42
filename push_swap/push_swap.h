@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/02 10:22:28 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/02 14:35:40 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ int		ft_handle_errors(int argc, char **argv);
 int		ft_check_array(char *str);
 int		ft_check_argv(char **argv);
 int		ft_check_argv_str(char **argv);
-void	ft_makelist(int argc, char **argv);
 
 typedef struct s_node {
 	int				x;
 	struct s_node	*next;
 }	t_node;
 
+void	ft_makelist(int argc, char **argv, t_node **list);
 int		lstsize(t_node *lst);
 t_node	*addnew(int x);
 t_node	*lstlast(t_node *lst);

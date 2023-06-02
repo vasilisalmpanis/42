@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 17:36:57 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/02 10:48:59 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:04:21 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,4 @@ void	lstiter(t_node *lst)
 		ft_putchar_fd('\n', 1);
 		current = current->next;
 	}
-	ft_putchar_fd('\n', 1);
 }

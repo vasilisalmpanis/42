@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 10:58:13 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/02 14:36:50 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:03:09 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,12 @@ void	ft_makelist(int argc, char **argv, t_node **list)
 {
 	*list = NULL;
 	create_list(list, argc, argv);
-	if (lstsize(*list) <= 2)
-		return ;
 	if (!ft_duplicates(*list))
-		ft_putstr_fd(ERROR, 1);
-	else
-		printf("Okay go ahead");
-	lstiter(*list);
+		return ;
+	if (lstsize(*list) < 2)
+		return ;
+	ft_putstr_fd(ERROR, 1);
+	exit(1);
 }
 
 int	ft_duplicates(t_node *list)
@@ -37,10 +36,10 @@ int	ft_duplicates(t_node *list)
 		while (temp != NULL)
 		{
 			if (list->x == temp->x)
-				return (0);
+				return (1);
 			temp = temp->next;
 		}
 		list = list->next;
 	}
-	return (1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/02 14:35:40 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/02 21:02:41 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,8 @@ void	lstiter(t_node *lst);
 int		ft_duplicates(t_node *list);
 void	create_list(t_node **list, int argc, char **argv);
 void	dealloc_list(t_node **list);
+void	rotate(t_node **list);
+void	swap(t_node **list);
+void	push(t_node **dest, t_node **src);
 
 #endif

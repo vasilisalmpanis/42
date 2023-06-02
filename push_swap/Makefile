@@ -1,8 +1,7 @@
 NAME	=	push_swap
-SRC		=	push_swap.c error_handling.c s_list.c\
+SRC		=	push_swap.c error_handling.c s_list.c s_list_create.c s_list_utils.c\
 
 LIBFT	=	./LIBFT
-LIBC	=	ar	-rc
 RM		=	rm -rf
 CC		=	gcc
 CFLAGS	=	-Wall -Wextra -Werror -g

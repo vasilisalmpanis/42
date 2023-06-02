@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:40:44 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/31 18:12:11 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/01 15:36:09 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,12 @@
 int	main(int argc, char **argv)
 {
 	int		result;
-	// t_list	*lst;
 
 	result = ft_handle_errors(argc, argv);
-	if (!result) // check if we have forbidden chars
+	if (!result)
 		return (0);
 	ft_makelist(argc, argv);
-	//make array of numbers if we have multiple parameters && check for duplicates
-
-	//make array of numbers by split and atoi if we have just one string && check for duplicates
-
-	//sort && print the movements we make
 	return (0);
 }
-
+	// check if we have forbidden chars
+	//sort && print the movements we make

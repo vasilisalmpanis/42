@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:42:07 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/31 12:02:28 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/01 15:08:28 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_check_array(char *str)
 
 	if (!str)
 		return (0);
-	argv = ft_split(str, ' '); 	// FREE ME!
+	argv = ft_split(str, ' ');
 	result = 0;
 	if (!argv)
 		return (0);
@@ -49,7 +49,7 @@ int	ft_check_argv_str(char **argv)
 			}
 			if (!ft_isdigit(argv[i][j]))
 			{
-				ft_putstr_fd("Error\n", 1);
+				ft_putstr_fd(ERROR, 1);
 				return (0);
 			}
 		}
@@ -77,7 +77,7 @@ int	ft_check_argv(char **argv)
 			}
 			if (!ft_isdigit(argv[i][j]))
 			{
-				ft_putstr_fd("Error\n", 1);
+				ft_putstr_fd(ERROR, 1);
 				return (0);
 			}
 		}

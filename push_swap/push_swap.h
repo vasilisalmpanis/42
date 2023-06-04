@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 14:08:59 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/04 14:12:26 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	rrb(t_node **b, bool value);
 void	rrr(t_node **a, t_node **b);
 void	push(t_node **dest, t_node **src);
 t_node	*find_max(t_node *list);
+t_node	*find_min(t_node *list);
 
 void	ft_argument_count(t_node **a, t_node **b);
 void	sort_two_params(t_node **a);

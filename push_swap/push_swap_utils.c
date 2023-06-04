@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 18:47:17 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/03 12:07:44 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/04 14:12:18 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,20 @@ t_node	*find_max(t_node *list)
 		list = list->next;
 	}
 	return (max);
+}
+
+t_node	*find_min(t_node *list)
+{
+	t_node	*min;
+
+	if (list == NULL)
+		return (NULL);
+	min = list;
+	while (list != NULL)
+	{
+		if (list->x < min->x)
+			min = list;
+		list = list->next;
+	}
+	return (min);
 }

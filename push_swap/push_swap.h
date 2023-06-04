@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 15:36:06 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/04 18:07:02 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_node {
 	int				current_pos;
 	int				push_price;
 	bool			above_mid;
+	bool			best_fit;
 	struct s_node	*t_n;
 	struct s_node	*next;
 }	t_node;
@@ -63,5 +64,14 @@ void	sort_two_params(t_node **a);
 void	sort_three_params(t_node **a, bool value);
 void	target_node(t_node *a, t_node *b);
 void	push_swap(t_node **a, t_node **b);
+void	set_current(t_node **a, t_node **b);
+void	set_position(t_node *b);
+void	set_price(t_node *a, t_node *b);
+void	set_best_fit(t_node *list);
+t_node	*get_best_fit(t_node *list);
+void	move_nodes(t_node **a, t_node **b);
+void	rotate_both(t_node **a, t_node **b, t_node *best_fit);
+void	rrotate_both(t_node **a, t_node **b, t_node *best_fit);
+void	finish_rotation(t_node **list, char name, t_node *best_fit);
 
 #endif

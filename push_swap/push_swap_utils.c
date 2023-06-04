@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 18:47:17 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 15:26:40 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/04 18:30:37 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ void	target_node(t_node *a, t_node *b)
 
 	while (b)
 	{
-		best_value = INT64_MAX;
+		best_value = 100000;
 		current = a;
-		while (a)
+		while (current)
 		{
 			if (current->x > b->x && current->x < best_value)
 			{
@@ -63,12 +63,12 @@ void	target_node(t_node *a, t_node *b)
 			}
 			current = current->next;
 		}
+		if (best_value == INT64_MAX)
+			b->t_n = find_min(a);
+		else
+			b->t_n = target_node;
+		b = b->next;
 	}
-	if (best_value == INT64_MAX)
-		b->t_n = find_min(a);
-	else
-		b->t_n = target_node;
-	b = b->next;
 }
 
 void	set_price(t_node *a, t_node *b)

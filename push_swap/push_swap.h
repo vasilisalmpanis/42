@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 14:12:26 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/04 15:36:06 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ int		ft_check_argv_str(char **argv);
 
 typedef struct s_node {
 	int				x;
+	int				current_pos;
+	int				push_price;
+	bool			above_mid;
 	struct s_node	*t_n;
 	struct s_node	*next;
 }	t_node;
@@ -50,11 +53,15 @@ void	rra(t_node **a, bool value);
 void	rrb(t_node **b, bool value);
 void	rrr(t_node **a, t_node **b);
 void	push(t_node **dest, t_node **src);
+void	pa(t_node **a, t_node **b);
+void	pb(t_node **a, t_node **b);
 t_node	*find_max(t_node *list);
 t_node	*find_min(t_node *list);
 
 void	ft_argument_count(t_node **a, t_node **b);
 void	sort_two_params(t_node **a);
-void	sort_three_params(t_node **a);
+void	sort_three_params(t_node **a, bool value);
+void	target_node(t_node *a, t_node *b);
+void	push_swap(t_node **a, t_node **b);
 
 #endif

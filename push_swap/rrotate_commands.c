@@ -1,49 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap_utils.c                                  :+:      :+:    :+:   */
+/*   rrotate_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/02 18:47:17 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/03 12:07:44 by valmpani         ###   ########.fr       */
+/*   Created: 2023/06/03 12:06:44 by valmpani          #+#    #+#             */
+/*   Updated: 2023/06/03 12:08:57 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	push(t_node **dest, t_node **src)
+void	reverse_rotate(t_node **list)
 {
-	t_node	*node;
+	t_node	*last_node;
+	t_node	*current;
 
-	if (*src == NULL || src == NULL)
+	if (list == NULL || *list == NULL)
 		return ;
-	node = *src;
-	*src = (*src)->next;
-	if (*dest == NULL)
-	{
-		*dest = node;
-		(*dest)->next = NULL;
-	}
-	else
-	{
-		node->next = *dest;
-		*dest = node;
-	}
+	last_node = lstlast(*list);
+	current = *list;
+	while (current->next->next != NULL)
+		current = current->next;
+	current->next = NULL;
+	last_node->next = *list;
+	*list = last_node;
 }
 
-t_node	*find_max(t_node *list)
+void	rra(t_node **a)
 {
-	t_node	*max;
+	reverse_rotate(a);
+	ft_putstr_fd("rra\n", 1);
+}
 
-	if (list == NULL)
-		return (NULL);
-	max = list;
-	while (list != NULL)
-	{
-		if (list->x > max->x)
-			max = list;
-		list = list->next;
-	}
-	return (max);
+void	rrb(t_node **b)
+{
+	reverse_rotate(b);
+	ft_putstr_fd("rrb\n", 1);
 }

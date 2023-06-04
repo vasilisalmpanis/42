@@ -1,30 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   ft_argcount.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/30 12:40:44 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/03 12:53:30 by valmpani         ###   ########.fr       */
+/*   Created: 2023/06/03 11:29:06 by valmpani          #+#    #+#             */
+/*   Updated: 2023/06/04 13:45:06 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	main(int argc, char **argv)
+void	ft_argument_count(t_node **a, t_node **b)
 {
-	int		result;
-	t_node	*a;
-	t_node	*b;
-
-	result = ft_handle_errors(argc, argv);
+	if (lstsize(*a) == 2)
+		sort_two_params(a);
+	else if (lstsize(*a) == 3)
+		sort_three_params(a);
 	b = NULL;
-	if (!result)
-		return (0);
-	ft_makelist(argc, argv, &a);
-	ft_argument_count(&a, &b);
-	dealloc_list(&a);
-	dealloc_list(&b);
-	return (0);
+}
+
+void	sort_two_params(t_node **a)
+{
+	if ((*a)->x > (*a)->next->x)
+	{
+		swap(a);
+		ft_putstr_fd("sa\n", 1);
+	}
+}
+
+void	sort_three_params(t_node **a)
+{
+	t_node	*max;
+
+	max = find_max(*a);
+	if (*a == max)
+		ra(a);
+	else if ((*a)->next == max)
+		rra(a);
+	if ((*a)->x > (*a)->next->x)
+		sa(a);
 }

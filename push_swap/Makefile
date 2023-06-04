@@ -1,6 +1,6 @@
 NAME	=	push_swap
 SRC		=	push_swap.c error_handling.c s_list.c s_list_create.c s_list_utils.c\
-			push_swap_utils.c
+			push_swap_utils.c ft_argcount.c swap_commands.c rotate_commands.c rrotate_commands.c
 LIBFT	=	./LIBFT
 RM		=	rm -rf
 CC		=	gcc

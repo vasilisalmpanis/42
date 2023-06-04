@@ -1,30 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   rotate_commands.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/30 12:40:44 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/03 12:53:30 by valmpani         ###   ########.fr       */
+/*   Created: 2023/06/03 12:03:41 by valmpani          #+#    #+#             */
+/*   Updated: 2023/06/03 12:53:37 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	main(int argc, char **argv)
+void	rotate(t_node **list)
 {
-	int		result;
-	t_node	*a;
-	t_node	*b;
+	t_node	*current;
+	t_node	*last_node;
 
-	result = ft_handle_errors(argc, argv);
-	b = NULL;
-	if (!result)
-		return (0);
-	ft_makelist(argc, argv, &a);
-	ft_argument_count(&a, &b);
-	dealloc_list(&a);
-	dealloc_list(&b);
-	return (0);
+	if (list == NULL || *list == NULL)
+		return ;
+	last_node = lstlast(*list);
+	current = *list;
+	*list = current->next;
+	lstlast(current)->next = current;
+	current->next = NULL;
+}
+
+void	ra(t_node **a)
+{
+	rotate(a);
+	ft_putstr_fd("ra\n", 1);
+}
+
+void	rb(t_node **b)
+{
+	rotate(b);
+	ft_putstr_fd("rb\n", 1);
 }

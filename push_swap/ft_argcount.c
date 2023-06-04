@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 11:29:06 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 13:45:06 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/04 14:10:21 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ void	sort_three_params(t_node **a)
 
 	max = find_max(*a);
 	if (*a == max)
-		ra(a);
+		ra(a, false);
 	else if ((*a)->next == max)
-		rra(a);
+		rra(a, false);
 	if ((*a)->x > (*a)->next->x)
-		sa(a);
+		sa(a, false);
 }

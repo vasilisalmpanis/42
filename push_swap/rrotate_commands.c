@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 12:06:44 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/03 12:08:57 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/04 14:08:38 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,25 @@ void	reverse_rotate(t_node **list)
 	*list = last_node;
 }
 
-void	rra(t_node **a)
+void	rra(t_node **a, bool value)
 {
 	reverse_rotate(a);
+	if (value)
+		return ;
 	ft_putstr_fd("rra\n", 1);
 }
 
-void	rrb(t_node **b)
+void	rrb(t_node **b, bool value)
 {
 	reverse_rotate(b);
+	if (value)
+		return ;
 	ft_putstr_fd("rrb\n", 1);
+}
+
+void	rrr(t_node **a, t_node **b)
+{
+	ra(a, true);
+	rb(b, true);
+	ft_putstr_fd("rrr\n", 1);
 }

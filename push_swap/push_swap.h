@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 13:59:57 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/04 14:08:59 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,17 @@ int		ft_duplicates(t_node *list);
 void	create_list(t_node **list, int argc, char **argv);
 void	dealloc_list(t_node **list);
 void	swap(t_node **list);
-void	sa(t_node **a);
-void	sb(t_node **b);
+void	sa(t_node **a, bool value);
+void	sb(t_node **b, bool value);
+void	ss(t_node **a, t_node **b);
 void	rotate(t_node **list);
-void	ra(t_node **a);
-void	rb(t_node **b);
+void	ra(t_node **a, bool value);
+void	rb(t_node **b, bool value);
+void	rr(t_node **a, t_node **b);
 void	reverse_rotate(t_node **list);
-void	rra(t_node **a);
-void	rrb(t_node **b);
+void	rra(t_node **a, bool value);
+void	rrb(t_node **b, bool value);
+void	rrr(t_node **a, t_node **b);
 void	push(t_node **dest, t_node **src);
 t_node	*find_max(t_node *list);
 

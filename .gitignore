@@ -5,4 +5,4 @@ main_files
 .a
 *.dSYM/
 .vscode/
-checker_Mac
+**/checker_Mac

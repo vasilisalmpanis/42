@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 10:58:13 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 18:31:18 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/05 12:50:11 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	set_position(t_node *b)
 	if (!b)
 		return ;
 	i = 0;
-	center = lstsize(b);
+	center = lstsize(b) / 2;
 	while (b)
 	{
 		b->current_pos = i;
@@ -33,11 +33,13 @@ void	set_position(t_node *b)
 	}
 }
 
-void	set_best_fit(t_node *list)
+void	set_best_fit(t_node **b)
 {
 	long	best_price;
-	t_node	best_node;
+	t_node	*best_node;
+	t_node	*list;
 
+	list = *b;
 	if (list == NULL)
 		return ;
 	best_price = INT64_MAX;
@@ -46,16 +48,15 @@ void	set_best_fit(t_node *list)
 		if (list->push_price < best_price)
 		{
 			best_price = list->push_price;
-			best_node = *list;
+			best_node = list;
 		}
 		list = list->next;
 	}
-	best_node.best_fit = true;
+	best_node->best_fit = true;
 }
 
 t_node	*get_best_fit(t_node *list)
 {
-
 	if (list == NULL)
 		return (NULL);
 	while (list)
@@ -71,9 +72,9 @@ void	set_current(t_node **a, t_node **b)
 {
 	set_position(*a);
 	set_position(*b);
-	target_node(*a, *b);
-	set_price(*a, *b);
-	set_best_fit(*b);
+	target_node(a, b);
+	set_price(a, b);
+	set_best_fit(b);
 }
 
 void	move_nodes(t_node **a, t_node **b)
@@ -85,7 +86,7 @@ void	move_nodes(t_node **a, t_node **b)
 		rotate_both(a, b, best_fit);
 	else if (!(best_fit->above_mid) && !(best_fit->t_n->above_mid))
 		rrotate_both(a, b, best_fit);
-	finish_rotation(b, 'a', best_fit);
-	finish_rotation(a, 'b', best_fit->t_n);
+	finish_rotation(b, 'b', best_fit);
+	finish_rotation(a, 'a', best_fit->t_n);
 	pa(a, b);
 }

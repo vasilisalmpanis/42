@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 18:07:02 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/05 11:58:25 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	insert_end(t_node **lst, t_node *new);
 void	lstiter(t_node *lst);
 int		ft_duplicates(t_node *list);
 void	create_list(t_node **list, int argc, char **argv);
-void	dealloc_list(t_node **list);
+void	dealloc_list(t_node **a, t_node **b);
 void	swap(t_node **list);
 void	sa(t_node **a, bool value);
 void	sb(t_node **b, bool value);
@@ -62,16 +62,20 @@ t_node	*find_min(t_node *list);
 void	ft_argument_count(t_node **a, t_node **b);
 void	sort_two_params(t_node **a);
 void	sort_three_params(t_node **a, bool value);
-void	target_node(t_node *a, t_node *b);
+void	sort_five_params(t_node **a, t_node **b, bool value);
+void	target_node(t_node **a, t_node **b);
 void	push_swap(t_node **a, t_node **b);
 void	set_current(t_node **a, t_node **b);
 void	set_position(t_node *b);
-void	set_price(t_node *a, t_node *b);
-void	set_best_fit(t_node *list);
+void	set_price(t_node **a, t_node **b);
+void	set_best_fit(t_node **b);
 t_node	*get_best_fit(t_node *list);
 void	move_nodes(t_node **a, t_node **b);
 void	rotate_both(t_node **a, t_node **b, t_node *best_fit);
 void	rrotate_both(t_node **a, t_node **b, t_node *best_fit);
 void	finish_rotation(t_node **list, char name, t_node *best_fit);
+bool	is_sorted(t_node *a);
+bool	is_reverse(t_node **a, t_node **b);
+t_node	*find_aftermin(t_node *list, t_node *min);
 
 #endif

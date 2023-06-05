@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 18:47:17 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 18:30:37 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/05 12:03:38 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,39 @@ t_node	*find_min(t_node *list)
 	return (min);
 }
 
-void	target_node(t_node *a, t_node *b)
+t_node	*find_aftermin(t_node *list, t_node *min)
+{
+	long	max;
+	t_node	*aftermin;
+
+	max = INT64_MAX;
+	while (list)
+	{
+		if (list->x > min->x && list->x < max)
+		{
+			max = list->x;
+			aftermin = list;
+		}
+		list = list->next;
+	}
+	return (aftermin);
+}
+
+void	target_node(t_node **a, t_node **b)
 {
 	t_node	*current;
+	t_node	*current_b;
 	t_node	*target_node;
 	long	best_value;
 
-	while (b)
+	current_b = *b;
+	while (current_b)
 	{
-		best_value = 100000;
-		current = a;
+		best_value = INT64_MAX;
+		current = *a;
 		while (current)
 		{
-			if (current->x > b->x && current->x < best_value)
+			if (current->x > current_b->x && current->x < best_value)
 			{
 				best_value = current->x;
 				target_node = current;
@@ -64,29 +84,31 @@ void	target_node(t_node *a, t_node *b)
 			current = current->next;
 		}
 		if (best_value == INT64_MAX)
-			b->t_n = find_min(a);
+			current_b->t_n = find_min(*a);
 		else
-			b->t_n = target_node;
-		b = b->next;
+			current_b->t_n = target_node;
+		current_b = current_b->next;
 	}
 }
 
-void	set_price(t_node *a, t_node *b)
+void	set_price(t_node **a, t_node **b)
 {
-	int	len_a;
-	int	len_b;
+	int		len_a;
+	int		len_b;
+	t_node	*current_b;
 
-	len_a = lstsize(a);
-	len_b = lstsize(b);
-	while (b)
+	len_a = lstsize(*a);
+	len_b = lstsize(*b);
+	current_b = *b;
+	while (current_b)
 	{
-		b->push_price = b->current_pos;
-		if (!b->above_mid)
-			b->push_price = len_b - b->current_pos;
-		if (b->t_n->above_mid)
-			b->push_price += b->t_n->push_price;
+		current_b->push_price = current_b->current_pos;
+		if (!current_b->above_mid)
+			current_b->push_price = len_b - current_b->current_pos;
+		if (current_b->t_n->above_mid)
+			current_b->push_price += current_b->t_n->push_price;
 		else
-			b->push_price += len_a - (b->t_n->current_pos);
-		b = b->next;
+			current_b->push_price += len_a - (current_b->t_n->current_pos);
+		current_b = current_b->next;
 	}
 }

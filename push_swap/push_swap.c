@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:40:44 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 15:56:19 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/05 12:53:50 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,6 @@ int	main(int argc, char **argv)
 		return (0);
 	ft_makelist(argc, argv, &a);
 	ft_argument_count(&a, &b);
-	ft_putstr_fd("\n\n\n", 1);
-	ft_putstr_fd("a :", 1);
-	lstiter(a);
-	ft_putchar_fd('\n', 1);
-	ft_putstr_fd("a :", 1);
-	lstiter(b);
-	dealloc_list(&a);
-	dealloc_list(&b);
+	dealloc_list(&a, &b);
 	return (0);
 }

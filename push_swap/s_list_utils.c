@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 10:57:52 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 16:27:46 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/05 11:30:43 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,27 @@ void	create_list(t_node **list, int argc, char **argv)
 	}
 }
 
-void	dealloc_list(t_node **list)
+void	dealloc_list(t_node **a, t_node **b)
 {
 	t_node	*temp;
 	t_node	*current;
 
-	current = *list;
+	current = *a;
 	while (current != NULL)
 	{
 		temp = current;
 		current = current->next;
 		free(temp);
 	}
-	list = NULL;
+	a = NULL;
+	current = *b;
+	while (current != NULL)
+	{
+		temp = current;
+		current = current->next;
+		free(temp);
+	}
+	b = NULL;
 }
 
 void	ft_makelist(int argc, char **argv, t_node **list)

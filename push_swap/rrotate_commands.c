@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 12:06:44 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/04 14:08:38 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/05 12:41:18 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	rrb(t_node **b, bool value)
 
 void	rrr(t_node **a, t_node **b)
 {
-	ra(a, true);
-	rb(b, true);
+	rra(a, true);
+	rrb(b, true);
 	ft_putstr_fd("rrr\n", 1);
 }

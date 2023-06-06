@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 17:36:57 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/05 10:08:39 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 13:22:55 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_node	*addnew(int x)
 		exit(1);
 	node->x = x;
 	node->next = NULL;
+	node->t_n = NULL;
 	return (node);
 }
 
@@ -69,15 +70,28 @@ void	lstiter(t_node *lst)
 	{
 		ft_putstr_fd("list :",1 );
 		ft_putnbr_fd(current->x, 1);
-		// ft_putstr_fd("target_node :",1 );
-		// ft_putnbr_fd(current->t_n->x, 1);
-		// ft_putstr_fd("Push price :",1 );
-		// ft_putnbr_fd(current->push_price, 1);
-		// ft_putstr_fd("Best fit :",1 );
-		// if (current->best_fit)
-		// 	ft_putstr_fd("True :",1 );
-		// else
-		// 	ft_putstr_fd("False:",1 );
+		ft_putstr_fd("target ->",1 );
+		ft_putnbr_fd(current->t_n->x, 1);
+		ft_putstr_fd(" target position ->",1 );
+		ft_putnbr_fd(current->t_n->current_pos, 1);
+		ft_putstr_fd(" Price ->",1 );
+		ft_putnbr_fd(nb_abs(current->price_a) + nb_abs(current->price_b), 1);
+		ft_putchar_fd('\n', 1);
+		current = current->next;
+	}
+}
+
+void	lstitera(t_node *lst)
+{
+	t_node	*current;
+
+	if (!lst)
+		return ;
+	current = lst;
+	while (current != NULL)
+	{
+		ft_putstr_fd("list :",1 );
+		ft_putnbr_fd(current->x, 1);
 		ft_putchar_fd('\n', 1);
 		current = current->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 12:06:44 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/05 12:41:18 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 13:32:19 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,23 @@
 
 void	reverse_rotate(t_node **list)
 {
-	t_node	*last_node;
-	t_node	*current;
+	t_node	*tmp;
+	t_node	*tail;
+	t_node	*before_tail;
 
-	if (list == NULL || *list == NULL)
-		return ;
-	last_node = lstlast(*list);
-	current = *list;
-	while (current->next->next != NULL)
-		current = current->next;
-	current->next = NULL;
-	last_node->next = *list;
-	*list = last_node;
+	tail = lstlast(*list);
+	before_tail = get_stack_before_bottom(*list);
+	tmp = *list;
+	*list = tail;
+	(*list)->next = tmp;
+	before_tail->next = NULL;
+}
+
+t_node	*get_stack_before_bottom(t_node *stack)
+{
+	while (stack && stack->next && stack->next->next != NULL)
+		stack = stack->next;
+	return (stack);
 }
 
 void	rra(t_node **a, bool value)

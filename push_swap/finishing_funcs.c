@@ -6,45 +6,31 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 17:52:13 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/05 12:44:29 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 11:29:34 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	rotate_both(t_node **a, t_node **b, t_node *best_fit)
+void	finish_rotation(t_node **list, char name, int *cost)
 {
-	while (*a != best_fit->t_n && *b != best_fit)
-		rr(a, b);
-	set_position(*a);
-	set_position(*b);
-}
-
-void	rrotate_both(t_node **a, t_node **b, t_node *best_fit)
-{
-	while (*a != best_fit->t_n && *b != best_fit)
-		rrr(a, b);
-	set_position(*a);
-	set_position(*b);
-}
-
-void	finish_rotation(t_node **list, char name, t_node *best_fit)
-{
-	while (*list != best_fit)
+	while (*cost)
 	{
-		if (name == 'a')
+		if (*cost > 0)
 		{
-			if (best_fit->above_mid)
+			if (name == 'a')
 				ra(list, false);
 			else
-				rra(list, false);
-		}
-		else if (name == 'b')
-		{
-			if (best_fit->above_mid)
 				rb(list, false);
+			(*cost)--;
+		}
+		else if (*cost < 0)
+		{
+			if (name == 'a')
+				rra(list, false);
 			else
 				rrb(list, false);
+			(*cost)++;
 		}
 	}
 }

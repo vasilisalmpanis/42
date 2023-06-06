@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 11:29:06 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 12:40:39 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 13:56:01 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,21 +72,14 @@ void	sort_five_params(t_node **a, t_node **b, bool value)
 
 void	push_swap(t_node **a, t_node **b)
 {
-	t_node	*min;
-
 	push_but_three(a, b);
 	sort_three_params(a, false);
 	while (*b)
 	{
+
 		set_current(a, b);
 		move_nodes(a, b);
 	}
-	set_position(*a);
-	min = find_min(*a);
-	if (min->above_mid)
-		while (*a != min)
-			ra(a, false);
-	else
-		while (*a != min)
-			rra(a, false);
+	if (!is_sorted(*a))
+		shift_stack(a);
 }

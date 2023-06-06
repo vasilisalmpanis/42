@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 18:47:17 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 09:02:35 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 12:11:28 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ void	target_node(t_node **a, t_node **b)
 		current = *a;
 		while (current)
 		{
-			if (current->x > current_b->x && current->x < best_value)
+			if (current->index > current_b->index && current->index < best_value)
 			{
-				best_value = current->x;
+				best_value = current->index;
 				target_node = current;
 			}
 			current = current->next;
@@ -93,23 +93,53 @@ void	target_node(t_node **a, t_node **b)
 
 void	set_price(t_node **a, t_node **b)
 {
-	int		len_a;
-	int		len_b;
-	t_node	*current_b;
+	t_node	*tmp_a;
+	t_node	*tmp_b;
+	int		size_a;
+	int		size_b;
 
-	len_a = lstsize(*a);
-	len_b = lstsize(*b);
-	current_b = *b;
-	while (current_b)
+	tmp_a = *a;
+	tmp_b = *b;
+	size_a = lstsize(tmp_a);
+	size_b = lstsize(tmp_b);
+	while (tmp_b)
 	{
-		current_b->push_price = current_b->current_pos;
-		if (!current_b->above_mid)
-			current_b->push_price = len_b - current_b->current_pos;
-		if (current_b->t_n->above_mid)
-			current_b->push_price += current_b->t_n->push_price;
-		else
-			current_b->push_price += len_a - (current_b->t_n->current_pos);
-		current_b = current_b->next;
+		tmp_b->price_b = tmp_b->current_pos;
+		if (tmp_b->current_pos > size_b / 2)
+			tmp_b->price_b = (size_b - tmp_b->current_pos) * -1;
+		tmp_b->price_a = tmp_b->t_n->current_pos;
+		if (tmp_b->t_n->current_pos > size_a / 2)
+			tmp_b->price_a = (size_a - tmp_b->t_n->current_pos) * -1;
+		tmp_b = tmp_b->next;
+	}
+}
+
+void	set_index(t_node *a, int len)
+{
+	t_node	*ptr;
+	t_node	*highest;
+	int		value;
+
+	while (--len > 0)
+	{
+		ptr = a;
+		value = INT_MIN;
+		highest = NULL;
+		while (ptr)
+		{
+			if (ptr->x == INT_MIN && ptr->index == 0)
+				ptr->index = 1;
+			if (ptr->x > value && ptr->index == 0)
+			{
+				value = ptr->x;
+				highest = ptr;
+				ptr = a;
+			}
+			else
+				ptr = ptr->next;
+		}
+		if (highest != NULL)
+			highest->index = len;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 11:00:28 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 11:39:11 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 12:36:00 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	do_rotate_both(t_node **a, t_node **b, int *cost_a, int *cost_b)
 		(*cost_b)--;
 		rr(a, b);
 	}
+	target_node
 }
 
 void	do_rrotate_both(t_node **a, t_node **b, int *cost_a, int *cost_b)

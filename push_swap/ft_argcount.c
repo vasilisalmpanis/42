@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 11:29:06 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 11:50:10 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 12:30:03 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,6 @@ void	push_swap(t_node **a, t_node **b)
 	while (*b)
 	{
 		set_current(a, b);
-		// lstiter(*a);
-		// ft_putstr_fd("\n\n", 1);
-		lstiter(*b);
 		move_nodes(a, b);
 	}
 	if (!is_sorted(*a))

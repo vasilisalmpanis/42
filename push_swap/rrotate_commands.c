@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 12:06:44 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/05 12:41:18 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 12:30:31 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	reverse_rotate(t_node **list)
 		return ;
 	last_node = lstlast(*list);
 	current = *list;
-	while (current->next->next != NULL)
+	while (current->next->next != NULL && current->next != NULL && current != NULL)
 		current = current->next;
 	current->next = NULL;
 	last_node->next = *list;

@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 09:02:39 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 12:42:42 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdbool.h>
 # define ERROR "Error\n"
 # include <stdlib.h>
+# include <limits.h>
 
 int		ft_handle_errors(int argc, char **argv);
 int		ft_check_array(char *str);
@@ -26,6 +27,7 @@ typedef struct s_node {
 	int				x;
 	int				current_pos;
 	int				push_price;
+	int				index;
 	bool			above_mid;
 	bool			best_fit;
 	struct s_node	*t_n;
@@ -78,5 +80,6 @@ void	finish_rotation(t_node **list, char name, t_node *best_fit);
 bool	is_sorted(t_node *a);
 bool	is_reverse(t_node **a, t_node **b);
 t_node	*find_aftermin(t_node *list, t_node *min);
+void	assign_index(t_node *a, int stack_size);
 
 #endif

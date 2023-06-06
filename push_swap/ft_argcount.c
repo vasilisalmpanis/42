@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 11:29:06 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 09:01:49 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 12:40:39 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	push_swap(t_node **a, t_node **b)
 {
 	t_node	*min;
 
-	
+	push_but_three(a, b);
 	sort_three_params(a, false);
 	while (*b)
 	{

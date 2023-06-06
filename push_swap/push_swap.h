@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/05 11:58:25 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 09:02:39 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	set_price(t_node **a, t_node **b);
 void	set_best_fit(t_node **b);
 t_node	*get_best_fit(t_node *list);
 void	move_nodes(t_node **a, t_node **b);
+void	push_but_three(t_node **a, t_node **b);
 void	rotate_both(t_node **a, t_node **b, t_node *best_fit);
 void	rrotate_both(t_node **a, t_node **b, t_node *best_fit);
 void	finish_rotation(t_node **list, char name, t_node *best_fit);

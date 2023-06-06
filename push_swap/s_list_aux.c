@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 10:58:13 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 11:19:46 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 13:55:11 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ void	move_nodes(t_node **a, t_node **b)
 		if (nb_abs(tmp->price_a) + nb_abs(tmp->price_b) < nb_abs(cheapest))
 		{
 			cheapest = nb_abs(tmp->price_b) + nb_abs(tmp->price_a);
-			cost_a = tmp->price_b;
-			cost_b = tmp->price_a;
+			cost_a = tmp->price_a;
+			cost_b = tmp->price_b;
 			c_n = tmp;
 		}
 		tmp = tmp->next;

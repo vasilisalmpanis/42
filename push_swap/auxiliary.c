@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 11:00:28 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 12:36:00 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/06 13:26:38 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void	do_rotate_both(t_node **a, t_node **b, int *cost_a, int *cost_b)
 		(*cost_b)--;
 		rr(a, b);
 	}
-	target_node
+	set_position(*a);
+	set_position(*b);
 }
 
 void	do_rrotate_both(t_node **a, t_node **b, int *cost_a, int *cost_b)
@@ -38,14 +39,16 @@ void	do_rrotate_both(t_node **a, t_node **b, int *cost_a, int *cost_b)
 		(*cost_b)--;
 		rrr(a, b);
 	}
+	set_position(*a);
+	set_position(*b);
 }
 
 void	do_move(t_node **a, t_node **b, int cost_a, int cost_b)
 {
 	if (cost_a < 0 && cost_b < 0)
-		do_rotate_both(a, b, &cost_a, &cost_b);
-	else if (cost_a > 0 && cost_b > 0)
 		do_rrotate_both(a, b, &cost_a, &cost_b);
+	else if (cost_a > 0 && cost_b > 0)
+		do_rotate_both(a, b, &cost_a, &cost_b);
 	finish_rotation(a, 'a', &cost_a);
 	finish_rotation(b, 'b', &cost_b);
 	pa(a, b);

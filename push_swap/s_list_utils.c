@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 10:57:52 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 12:42:24 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:53:57 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,29 @@
 
 void	create_list(t_node **list, int argc, char **argv)
 {
-	int		i;
-	char	**buf;
+	long int	i;
+	int			index;
+	char		**buf;
 
 	*list = NULL;
-	i = 0;
-	if (argc != 2)
-		while (argv[++i])
-			insert_end(list, addnew(ft_atoi(argv[i])));
+	index = -1;
+	if (argc != 1)
+		while (argv[++index])
+		{
+			i = ft_atoi(argv[index]);
+			if (i > INT_MAX || i < INT_MIN)
+			{
+				ft_putstr_fd("Error\n", 1);
+				dealloc_list(list, NULL);
+				exit(1);
+			}
+			insert_end(list, addnew(i));
+		}
 	else
 	{
-		buf = ft_split(argv[1], ' ');
-		while (buf[i])
-		{
-			insert_end(list, addnew(ft_atoi(buf[i])));
-			i++;
-		}
-		ft_free(buf, ft_find_wc(argv[1], ' '));
+		buf = ft_split(argv[0], ' ');
+		create_list(list, ft_find_wc(argv[0], ' ') + 1, buf);
+		ft_free(buf, ft_find_wc(argv[0], ' '));
 	}
 }
 
@@ -47,6 +53,8 @@ void	dealloc_list(t_node **a, t_node **b)
 		free(temp);
 	}
 	a = NULL;
+	if (b == NULL)
+		return ;
 	current = *b;
 	while (current != NULL)
 	{
@@ -116,4 +124,14 @@ void	assign_index(t_node *a, int stack_size)
 		if (highest != NULL)
 			highest->index = stack_size;
 	}
+}
+
+int	split_len(char **buf)
+{
+	int i;
+
+	i = 0;
+	while (buf[i])
+		i++;
+	return (i + 1);
 }

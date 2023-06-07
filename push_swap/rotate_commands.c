@@ -6,12 +6,14 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 12:03:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/05 12:40:31 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/07 09:35:52 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
+/* Points last node to first, sets head to second node and previous head points
+to NULL*/
 void	rotate(t_node **list)
 {
 	t_node	*current;
@@ -26,6 +28,7 @@ void	rotate(t_node **list)
 	current->next = NULL;
 }
 
+/*Rotates list a*/
 void	ra(t_node **a, bool value)
 {
 	rotate(a);
@@ -34,6 +37,7 @@ void	ra(t_node **a, bool value)
 	ft_putstr_fd("ra\n", 1);
 }
 
+/*Rotates list b*/
 void	rb(t_node **b, bool value)
 {
 	rotate(b);
@@ -42,6 +46,7 @@ void	rb(t_node **b, bool value)
 	ft_putstr_fd("rb\n", 1);
 }
 
+/*Rotates both lists*/
 void	rr(t_node **a, t_node **b)
 {
 	ra(a, true);

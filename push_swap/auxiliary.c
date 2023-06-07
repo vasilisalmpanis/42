@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 11:00:28 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 13:26:38 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/07 09:50:08 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,25 +56,27 @@ void	do_move(t_node **a, t_node **b, int cost_a, int cost_b)
 
 void	shift_stack(t_node **a)
 {
-	int	lowest_pos;
-	int	stack_size;
+	t_node	*lowest_pos;
+	int		stack_size;
 
 	stack_size = lstsize(*a);
-	lowest_pos = find_min(*a)->current_pos;
-	if (lowest_pos > stack_size / 2)
+	lowest_pos = find_min(*a);
+	if (lowest_pos->current_pos > stack_size / 2)
 	{
-		while (lowest_pos < stack_size)
+		while (lowest_pos->current_pos != 0)
 		{
 			rra(a, false);
-			lowest_pos++;
+			set_position(*a);
+			lowest_pos = find_min(*a);
 		}
 	}
 	else
 	{
-		while (lowest_pos > 0)
+		while (lowest_pos->current_pos != 0)
 		{
 			ra(a, false);
-			lowest_pos--;
+			set_position(*a);
+			lowest_pos = find_min(*a);
 		}
 	}
 }

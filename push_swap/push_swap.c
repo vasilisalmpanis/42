@@ -6,12 +6,17 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:40:44 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 13:56:05 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:22:21 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
+/*Checks input for error and returns messages
+  Creates the linked list and sets the position they should be after sorting.
+  Checks for duplicates,sorted or reverse sorted.
+  Sorts the list printing out commands
+  Deallocates both linked lists.*/
 int	main(int argc, char **argv)
 {
 	int		result;
@@ -22,6 +27,8 @@ int	main(int argc, char **argv)
 	b = NULL;
 	if (!result)
 		return (0);
+	argv++;
+	argc--;
 	ft_makelist(argc, argv, &a);
 	set_index(a, lstsize(a));
 	ft_argument_count(&a, &b);

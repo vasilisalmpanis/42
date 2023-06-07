@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 11:29:06 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/06 13:56:01 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/07 09:42:29 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ void	ft_argument_count(t_node **a, t_node **b)
 {
 	if (is_sorted(*a))
 		return ;
-	else if (is_reverse(a, b))
-		return ;
 	else if (lstsize(*a) == 2)
 		sort_two_params(a);
+	else if (is_reverse(a, b))
+		return ;
 	else if (lstsize(*a) == 3)
 		sort_three_params(a, false);
 	else if (lstsize(*a) == 5)
@@ -76,7 +76,6 @@ void	push_swap(t_node **a, t_node **b)
 	sort_three_params(a, false);
 	while (*b)
 	{
-
 		set_current(a, b);
 		move_nodes(a, b);
 	}

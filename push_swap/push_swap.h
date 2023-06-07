@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/07 10:56:22 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/07 11:05:57 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_node	*lstlast(t_node *lst);
 void	insert_end(t_node **lst, t_node *new);
 void	lstiter(t_node *lst);
 int		ft_duplicates(t_node *list);
-void	create_list(t_node **list, int argc, char **argv);
+void	create_list(t_node **list, int argc, char **argv, long int i);
 void	dealloc_list(t_node **a, t_node **b);
 void	swap(t_node **list);
 void	sa(t_node **a, bool value);
@@ -88,6 +88,5 @@ void	do_rrotate_both(t_node **a, t_node **b, int *cost_a, int *cost_b);
 void	shift_stack(t_node **a);
 void	lstitera(t_node *lst);
 t_node	*get_stack_before_bottom(t_node *stack);
-
 
 #endif

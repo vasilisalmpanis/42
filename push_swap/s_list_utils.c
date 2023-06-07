@@ -6,21 +6,21 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 10:57:52 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/07 10:55:58 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/07 11:07:42 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	create_list(t_node **list, int argc, char **argv)
+void	create_list(t_node **list, int argc, char **argv, long int i)
 {
-	long int	i;
 	int			index;
 	char		**buf;
 
 	*list = NULL;
 	index = -1;
 	if (argc != 1)
+	{
 		while (argv[++index])
 		{
 			i = ft_atoi(argv[index]);
@@ -32,10 +32,11 @@ void	create_list(t_node **list, int argc, char **argv)
 			}
 			insert_end(list, addnew(i));
 		}
+	}
 	else
 	{
 		buf = ft_split(argv[0], ' ');
-		create_list(list, ft_find_wc(argv[0], ' ') + 1, buf);
+		create_list(list, ft_find_wc(argv[0], ' ') + 1, buf, i);
 		ft_free(buf, ft_find_wc(argv[0], ' '));
 	}
 }
@@ -67,8 +68,11 @@ void	dealloc_list(t_node **a, t_node **b)
 
 void	ft_makelist(int argc, char **argv, t_node **list)
 {
+	long int	i;
+
+	i = 0;
 	*list = NULL;
-	create_list(list, argc, argv);
+	create_list(list, argc, argv, i);
 	if (!ft_duplicates(*list))
 		return ;
 	if (lstsize(*list) < 2)

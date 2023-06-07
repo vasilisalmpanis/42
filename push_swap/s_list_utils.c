@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 10:57:52 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/07 10:53:57 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:55:58 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,14 +124,4 @@ void	assign_index(t_node *a, int stack_size)
 		if (highest != NULL)
 			highest->index = stack_size;
 	}
-}
-
-int	split_len(char **buf)
-{
-	int i;
-
-	i = 0;
-	while (buf[i])
-		i++;
-	return (i + 1);
 }

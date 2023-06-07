@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/07 10:02:37 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:56:22 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct s_node {
 }	t_node;
 
 void	ft_makelist(int argc, char **argv, t_node **list);
-int		split_len(char **buf);
 int		lstsize(t_node *lst);
 t_node	*addnew(int x);
 t_node	*lstlast(t_node *lst);

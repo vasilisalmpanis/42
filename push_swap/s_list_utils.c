@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 10:57:52 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/07 11:07:42 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/12 08:20:51 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ void	dealloc_list(t_node **a, t_node **b)
 	b = NULL;
 }
 
+/* Create the list and check for duplicates and small length
+if everything goes well we return other wise we print error. */
 void	ft_makelist(int argc, char **argv, t_node **list)
 {
 	long int	i;
@@ -99,33 +101,4 @@ int	ft_duplicates(t_node *list)
 		list = list->next;
 	}
 	return (0);
-}
-
-void	assign_index(t_node *a, int stack_size)
-{
-	t_node	*ptr;
-	t_node	*highest;
-	int		value;
-
-	while (--stack_size > 0)
-	{
-		ptr = a;
-		value = INT_MIN;
-		highest = NULL;
-		while (ptr)
-		{
-			if (ptr->x == INT_MIN && ptr->index == 0)
-				ptr->index = 1;
-			if (ptr->x > value && ptr->index == 0)
-			{
-				value = ptr->x;
-				highest = ptr;
-				ptr = a;
-			}
-			else
-				ptr = ptr->next;
-		}
-		if (highest != NULL)
-			highest->index = stack_size;
-	}
 }

@@ -6,3 +6,4 @@ main_files
 *.dSYM/
 .vscode/
 **/checker_Mac
+**/anna

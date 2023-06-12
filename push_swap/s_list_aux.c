@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 10:58:13 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/07 09:29:55 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/12 08:32:04 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ void	set_current(t_node **a, t_node **b)
 	set_price(a, b);
 }
 
+/* Sets price + if above half of list and - if below because we have
+to rr. also sets price for the target node to go to the top. If both postive
+we rr if both negative we rrr else every list rotates how it needs to.*/
 void	set_price(t_node **a, t_node **b)
 {
 	t_node	*tmp_a;
@@ -60,6 +63,9 @@ void	set_price(t_node **a, t_node **b)
 	}
 }
 
+/* Sets index but setting min value on each iteration
+and the find the next smaller biggest number. Could also be implemented
+in reverse. */
 void	set_index(t_node *a, int len)
 {
 	t_node	*ptr;

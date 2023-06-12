@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 11:00:28 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/07 09:50:08 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/12 08:35:01 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ void	do_move(t_node **a, t_node **b, int cost_a, int cost_b)
 	pa(a, b);
 }
 
+/*Until index 1 is in position 0 we keep rotating according
+to previous position. if it was below mid we rra else we ra. */
 void	shift_stack(t_node **a)
 {
 	t_node	*lowest_pos;

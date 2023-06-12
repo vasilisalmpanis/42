@@ -6,12 +6,13 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:42:07 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/01 15:08:28 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/12 08:16:20 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
+/* If users gives one string split it and pass it to argv checker */
 int	ft_check_array(char *str)
 {
 	char	**argv;
@@ -29,6 +30,7 @@ int	ft_check_array(char *str)
 	return (result);
 }
 
+/*Only allows one + - and a digit after. Returns 0 when other than digit found*/
 int	ft_check_argv_str(char **argv)
 {
 	int		i;
@@ -57,6 +59,9 @@ int	ft_check_argv_str(char **argv)
 	return (1);
 }
 
+/*Same as argv_str but jumps over first element of argv. Could use same
+function just adding one to pointer to skip program name.
+Only allows one + - and a digit after. Returns 0 when other than digit found*/
 int	ft_check_argv(char **argv)
 {
 	int		i;
@@ -85,6 +90,8 @@ int	ft_check_argv(char **argv)
 	return (1);
 }
 
+/* Checks if arguments are one string or multiple 
+If no error is found it returns 1 otherwise 0. */
 int	ft_handle_errors(int argc, char **argv)
 {
 	if (argc == 1)

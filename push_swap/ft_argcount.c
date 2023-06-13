@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/03 11:29:06 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/12 08:27:18 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/13 13:14:14 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ void	sort_five_params(t_node **a, t_node **b, bool value)
 	{
 		if ((*a)->x == min->x || (*a)->x == aftermin->x)
 			pb(a, b);
-		ra(a, value);
+		else
+			ra(a, value);
 	}
 	sort_three_params(a, value);
 	if ((*b)->x < (*b)->next->x)

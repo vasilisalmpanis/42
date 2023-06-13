@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:39:41 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/12 10:32:16 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/13 13:05:12 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,6 @@ void	do_rotate_both(t_node **a, t_node **b, int *cost_a, int *cost_b);
 void	do_rrotate_both(t_node **a, t_node **b, int *cost_a, int *cost_b);
 void	shift_stack(t_node **a);
 t_node	*get_stack_before_bottom(t_node *stack);
+void	lstitera(t_node *lst);
 
 #endif

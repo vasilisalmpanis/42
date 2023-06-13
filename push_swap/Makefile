@@ -1,28 +1,54 @@
-NAME	=	push_swap
-SRC		=	push_swap.c error_handling.c s_list.c s_list_aux.c s_list_utils.c\
-			push_swap_utils.c ft_argcount.c swap_commands.c rotate_commands.c rrotate_commands.c\
+NAME    =   push_swap
+SRC     =   push_swap.c error_handling.c s_list.c s_list_aux.c s_list_utils.c \
+			push_swap_utils.c ft_argcount.c swap_commands.c rotate_commands.c rrotate_commands.c \
 			push_commands.c finishing_funcs.c is_sorted.c auxiliary.c
-LIBFT	=	./LIBFT
-RM		=	rm -rf
-CC		=	gcc
-CFLAGS	=	-Wall -Wextra -Werror -g
+LIBFT   =   ./libft
+RM      =   rm -rf
+CC      =   gcc
+CFLAGS  =   -Wall -Wextra -Werror
 
-all : ${LIBFT} ${NAME}
+OBJ     =   $(SRC:.c=.o)
+GREEN=\033[0;32m
+RED=\033[0;31m
+BLUE=\033[0;34m
+END=\033[0m
 
-${NAME} : ${OBJ}
-		cp libft/libft.a .
-		${CC} ${CFLAGS} ${SRC} -o ${NAME} libft.a
+all: norm ${LIBFT} ${NAME}
+
+${NAME}: ${OBJ} ${LIBFT}
+		@echo "${RED}----PUSH SWAP----${END}"
+		${CC} ${CFLAGS} ${OBJ} -o ${NAME} libft.a
+		@echo "${RED}----COMPLETED----${END}"
 
 ${LIBFT}:
+		@echo "${GREEN}----LIBFT----${END}"
 		make -C libft
-clean :
-		${MAKE} clean -C libft
+		cp ${LIBFT}/libft.a .
+		@echo "${GREEN}----COMPLETED----${END}"
+		@echo "\n\n\n\n"
+
+%.o: %.c
+		${CC} ${CFLAGS} -c $< -o $@
+
+norm :
+		@echo "${BLUE}******************${END}"
+		@echo "${BLUE}    NORMINETTE    ${END}"
+		norminette
+		@echo "${BLUE}----COMPLETED----\n\n\n\n${END}"
+
+clean:
+		@echo "${RED}----CLEAN----${END}"
+		make clean -C libft
 		${RM} libft.a
+		${RM} ${OBJ}
+		@echo "${RED}----COMPLETED----${END}"
 
-fclean : clean
+fclean: clean
+		@echo "${RED}----FCLEAN----${END}"
 		${RM} ${NAME}
-		${MAKE} fclean -C libft
+		make fclean -C libft
+		@echo "${RED}----COMPLETED----${END}"
 
-re :	fclean all
+re: fclean all
 
 .PHONY: all clean fclean re ${LIBFT}

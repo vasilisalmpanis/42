@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 17:36:57 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/07 09:29:40 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/13 13:05:03 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,18 +81,21 @@ int	lstsize(t_node *lst)
 // 	}
 // }
 
-// void	lstitera(t_node *lst)
-// {
-// 	t_node	*current;
+void	lstitera(t_node *lst)
+{
+	t_node	*current;
 
-// 	if (!lst)
-// 		return ;
-// 	current = lst;
-// 	while (current != NULL)
-// 	{
-// 		ft_putstr_fd("list :", 1);
-// 		ft_putnbr_fd(current->x, 1);
-// 		ft_putchar_fd('\n', 1);
-// 		current = current->next;
-// 	}
-// }
+	if (!lst)
+		return ;
+	current = lst;
+	while (current != NULL)
+	{
+		ft_putstr_fd("list :", 1);
+		ft_putnbr_fd(current->x, 1);
+		ft_putchar_fd('\n', 1);
+		ft_putstr_fd("index :", 1);
+		ft_putnbr_fd(current->index, 1);
+		ft_putchar_fd('\n', 1);
+		current = current->next;
+	}
+}

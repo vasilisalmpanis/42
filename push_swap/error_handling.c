@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 12:42:07 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/12 08:16:20 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/13 13:13:35 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ int	ft_check_array(char *str)
 	if (!str)
 		return (0);
 	argv = ft_split(str, ' ');
+	if (argv[0] == NULL)
+	{
+		ft_free(argv, ft_find_wc(str, ' '));
+		exit(-1);
+	}
 	result = 0;
 	if (!argv)
 		return (0);

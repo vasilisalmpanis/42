@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 10:46:50 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/19 14:03:34 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/19 17:50:19 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main(int argc, char **argv, char **env)
 
 	if (argc != 5)
 	{
-		ft_printf("file1 cmd cmd file2\n");
+		ft_printf("file1 cmd1 cmd2 file2\n");
 		return (1);
 	}
 	object.argc = argc;
@@ -32,5 +32,6 @@ int	main(int argc, char **argv, char **env)
 		error_files(object.argv[argc - 1], object.argv[argc - 1]);
 	if (object.file[0] == -1)
 		exit (1);
+	execute_commands(object);
 	return (0);
 }

@@ -1,10 +1,10 @@
 NAME    =   pipex
-SRC     =   main.c utils.c errors.c\
+SRC     =   main.c utils.c errors.c execute.c\
 
 LIBFT   =   ./libft
 RM      =   rm -rf
 CC      =   gcc
-CFLAGS  =   -Wall -Wextra -Werror
+CFLAGS  =   -g -Wall -Wextra -Werror
 
 OBJ     =   $(SRC:.c=.o)
 GREEN=\033[0;32m
@@ -12,7 +12,7 @@ RED=\033[0;31m
 BLUE=\033[0;34m
 END=\033[0m
 
-all: norm ${LIBFT} ${NAME}
+all: ${LIBFT} ${NAME}
 
 ${NAME}: ${OBJ} ${LIBFT}
 		@echo "${RED}----PUSH SWAP----${END}"

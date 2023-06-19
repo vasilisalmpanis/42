@@ -6,7 +6,14 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 10:46:50 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/19 10:46:51 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/19 11:16:49 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "pipex.h"
+
+int	main(int argc, char **argv, char **env)
+{
+	ft_printf("%d %s %s", argc, argv[0], env[0]);
+	return (1);
+}

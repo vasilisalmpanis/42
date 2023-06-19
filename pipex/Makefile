@@ -1,5 +1,5 @@
 NAME    =   pipex
-SRC     =   main.c utils.c\
+SRC     =   main.c utils.c errors.c\
 
 LIBFT   =   ./libft
 RM      =   rm -rf

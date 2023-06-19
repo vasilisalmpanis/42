@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 10:47:12 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/19 11:23:24 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/19 11:46:12 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ typedef struct s_data
 }	t_data;
 
 int	main(int argc, char **argv, char **env);
+int	has_access(t_data object);
 
 #endif

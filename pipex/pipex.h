@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 10:47:12 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/19 13:06:39 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/19 14:02:56 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,6 @@ typedef struct s_data
 
 int		main(int argc, char **argv, char **env);
 int		has_access(t_data object);
-void	error_files(char *object);
+void	error_files(char *object, char *argv);
 
 #endif

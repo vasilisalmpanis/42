@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 10:46:50 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/19 11:23:58 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/19 11:25:16 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,5 @@ int	main(int argc, char **argv, char **env)
 	object.argc = argc;
 	object.argc = argv;
 	object.env = env;
-	if (open())
+	if ()
 }

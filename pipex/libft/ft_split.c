@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 15:07:56 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/24 18:10:30 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/19 11:26:51 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ int	ft_find_wc(char *n, char c)
 	return (wc);
 }
 
-void	ft_free(char **b, int len)
+void	ft_free(char **b)
 {
 	int	i;
 
 	i = 0;
-	while (i < len)
+	while (b[i])
 	{
 		free(b[i]);
 		i++;
@@ -72,7 +72,7 @@ char	**ft_cs(char *n, char **b, char c, int wc)
 		s = (char *)malloc((str_len + 1) * sizeof(char));
 		if (s == NULL)
 		{
-			ft_free(b, i + 1);
+			ft_free(b);
 			return (NULL);
 		}
 		ft_strlcpy(s, n - str_len, str_len + 1);

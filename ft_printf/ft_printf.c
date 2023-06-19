@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 18:23:07 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/28 13:44:33 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/19 11:07:07 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

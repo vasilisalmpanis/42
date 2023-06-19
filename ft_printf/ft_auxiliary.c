@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_auxiliary.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 10:29:39 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/24 19:52:17 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/19 11:07:11 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
 void	ft_hexa(unsigned long arg, int *length)
 {
 	char			*base;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utilities.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 20:08:59 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/24 19:51:49 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/19 11:06:58 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

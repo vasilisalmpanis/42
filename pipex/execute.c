@@ -28,7 +28,11 @@ int	execute_commands(t_data object)
 	i = 1;
 	object.split = split_args(object, i + 1);
 	object.cmd = find_command(object, i + 1);
-	execve(object.cmd, object.split, NULL);
+	if (execve(object.cmd, object.split, NULL) == -1)
+	{
+		ft_printf("Pipex: %s: Command not found\n", object.split[0]);
+		exit(1);
+	}
 	// while (++i < object.argc -1)
 	// {
 	// }

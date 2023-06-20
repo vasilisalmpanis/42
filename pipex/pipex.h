@@ -31,14 +31,16 @@ typedef struct s_data
 }	t_data;
 
 int		main(int argc, char **argv, char **env);
-int		has_access(t_data object);
 void	error_files(char *object, char *argv);
-int		execute_commands(t_data object);
+void	cmd_not_found(char *cmd);
+void	cmd_failed(char *str);
+void	execute_commands(t_data object);
+void	child_process(t_data object, int i);
+void	parent_process(t_data object);
 char	*find_command(t_data object, int i);
 char	*command_access(char *env, char *cmd);
 char	**split_args(t_data object, int i);
-void	child_process(t_data object, int i);
-void	parent_process(t_data object, int i);
-char	*environmet(char **env);
+int		has_access(t_data object);
+char	*environment(t_data object);
 
 #endif

@@ -12,15 +12,17 @@
 
 #include "pipex.h"
 
-char	*environmet(char **env)
+char	*environment(t_data object)
 {
-	char	**buf[1][1];
+	int		j;
 
-	if (!*env)
+	j = -1;
+	while (object.env[++j])
 	{
-		buf[0][0] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/ \
-				local/munki:/opt/X11/bin:/Library/Apple/usr/bin";
+		if (strnstr(object.env[j], "PATH", ft_strlen(object.env[j])))
+			return (object.env[j] + 5);
 	}
+	return ("/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/opt/X11/bin:/Library/Apple/usr/bin");
 }
 
 int	has_access(t_data object)
@@ -44,12 +46,12 @@ char	*command_access(char *env, char *cmd)
 	{
 		buf = ft_strjoin(split[i], "/");
 		final = ft_strjoin(buf, cmd);
+		free(buf);
 		if (access(final, X_OK) == 0)
 		{
-			free(buf);
+			ft_free(split);
 			return (final);
 		}
-		free(buf);
 		free(final);
 	}
 	ft_free(split);
@@ -58,20 +60,15 @@ char	*command_access(char *env, char *cmd)
 
 char	*find_command(t_data object, int i)
 {
-	int		j;
 	char	*buf;
+	char	*path;
 	char	**cmd;
 
 	cmd = split_args(object, i);
 	if (!*cmd)
 		return (NULL);
-	j = -1;
-	while (object.env[++j])
-	{
-		if (strnstr(object.env[j], "PATH", ft_strlen(object.env[j])))
-			break ;
-	}
-	buf = command_access(object.env[j] + 5, cmd[0]);
+	path = environment(object);
+	buf = command_access(path, cmd[0]);
 	ft_free(cmd);
 	return (buf);
 }

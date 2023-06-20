@@ -12,6 +12,17 @@
 
 #include "pipex.h"
 
+char	*environmet(char **env)
+{
+	char	**buf[1][1];
+
+	if (!*env)
+	{
+		buf[0][0] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/ \
+				local/munki:/opt/X11/bin:/Library/Apple/usr/bin";
+	}
+}
+
 int	has_access(t_data object)
 {
 	if (access(object.argv[1], R_OK) != -1)
@@ -67,24 +78,24 @@ char	*find_command(t_data object, int i)
 
 char	**split_args(t_data object, int i)
 {
-	int j;
-	char buf;
-	char **split;
+	int		j;
+	char	buf;
+	char	**split;
 
 	j = -1;
 	while (object.argv[i][++j])
 	{
 		if (object.argv[i][j] == ' ')
-			object.argv[i][j] = 29;
+			object.argv[i][j] = 26;
 		if (object.argv[i][j] == 39 || object.argv[i][j] == 34)
 		{
 			buf = object.argv[i][j];
-			object.argv[i][j] = 29;
+			object.argv[i][j] = 26;
 			while (object.argv[i][j] != buf && object.argv[i][j])
 				j++;
-			object.argv[i][j] = 29;
+			object.argv[i][j] = 26;
 		}
 	}
-	split = ft_split(object.argv[i], 29);
+	split = ft_split(object.argv[i], 26);
 	return (split);
 }

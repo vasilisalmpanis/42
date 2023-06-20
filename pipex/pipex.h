@@ -37,5 +37,8 @@ int		execute_commands(t_data object);
 char	*find_command(t_data object, int i);
 char	*command_access(char *env, char *cmd);
 char	**split_args(t_data object, int i);
+void	child_process(t_data object, int i);
+void	parent_process(t_data object, int i);
+char	*environmet(char **env);
 
 #endif

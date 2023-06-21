@@ -18,16 +18,22 @@
 # include <string.h>
 # include "../libft/libft.h"
 
+# define BUFFER_SIZE 512
+# define READ_END 0
+# define WRITE_END 1
+
 typedef struct s_data
 {
-	int		fd[2];
+	int		**fd;
 	int		file[2];
-	pid_t	pid[2];
+	pid_t	**pid;
 	char	**split;
 	char	*cmd;
 	int		argc;
 	char	**argv;
 	char	**env;
+	int		here_doc;
+	int 	here_d[2];
 }	t_data;
 
 int		main(int argc, char **argv, char **env);
@@ -42,5 +48,7 @@ char	*command_access(char *env, char *cmd);
 char	**split_args(t_data object, int i);
 int		has_access(t_data object);
 char	*environment(t_data object);
+void	check_arguments(int argc, char **argv, t_data *object, char **env);
+void	here_doc(t_data *object);
 
 #endif

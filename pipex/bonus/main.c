@@ -12,27 +12,36 @@
 
 #include "pipex.h"
 
-int	main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **env)
 {
 	t_data	object;
 
-	if (argc != 5)
-	{
-		ft_printf("file1 cmd1 cmd2 file2\n");
-		return (1);
-	}
-	object.argc = argc;
-	object.argv = argv;
-	object.env = env;
-	object.cmd = NULL;
-	object.file[0] = has_access(object);
-	if (object.file[0] == -1)
-		error_files(object.argv[1], object.argv[argc - 1]);
-	object.file[1] = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	if (object.file[1] == -1)
-		error_files(object.argv[argc - 1], object.argv[argc - 1]);
-	if (object.file[0] == -1 && object.file[1] == -1)
-		exit (1);
-	execute_commands(object);
-	return (0);
+	check_arguments(argc, argv, &object, env);
+	if (object.here_doc)
+		here_doc(&object);
 }
+
+//int	main(int argc, char **argv, char **env)
+//{
+//	t_data	object;
+//
+//	if (argc != 5)
+//	{
+//		ft_printf("file1 cmd1 cmd2 file2\n");
+//		return (1);
+//	}
+//	object.argc = argc;
+//	object.argv = argv;
+//	object.env = env;
+//	object.cmd = NULL;
+//	object.file[0] = has_access(object);
+//	if (object.file[0] == -1)
+//		error_files(object.argv[1], object.argv[argc - 1]);
+//	object.file[1] = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+//	if (object.file[1] == -1)
+//		error_files(object.argv[argc - 1], object.argv[argc - 1]);
+//	if (object.file[0] == -1 && object.file[1] == -1)
+//		exit (1);
+//	execute_commands(object);
+//	return (0);
+//}

@@ -22,7 +22,8 @@ char	*environment(t_data object)
 		if (strnstr(object.env[j], "PATH", ft_strlen(object.env[j])))
 			return (object.env[j] + 5);
 	}
-	return ("/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/opt/X11/bin:/Library/Apple/usr/bin");
+	return ("/usr/local/bin:/usr/bin:/bin:/usr/sbin: \
+			/sbin:/usr/local/munki:/opt/X11/bin:/Library/Apple/usr/bin");
 }
 
 int	has_access(t_data object)

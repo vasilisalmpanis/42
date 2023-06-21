@@ -1,5 +1,5 @@
 NAME    =   pipex
-SRC     =   main.c utils.c errors.c execute.c\
+SRC     =   mandatory/main.c mandatory/utils.c mandatory/errors.c mandatory/execute.c\
 
 LIBFT   =   ./libft
 RM      =   rm -rf
@@ -12,17 +12,17 @@ RED=\033[0;31m
 BLUE=\033[0;34m
 END=\033[0m
 
-all: ${LIBFT} ${NAME}
+all: norm  ${LIBFT} ${NAME}
 
 ${NAME}: ${OBJ} ${LIBFT}
 		@echo "${RED}----PUSH SWAP----${END}"
-		${CC} ${CFLAGS} ${OBJ} -o ${NAME} libft.a
+		${CC} ${CFLAGS} ${OBJ} -o ${NAME} mandatory/libft.a
 		@echo "${RED}----COMPLETED----${END}"
 
 ${LIBFT}:
 		@echo "${GREEN}----LIBFT----${END}"
 		make -C libft
-		cp ${LIBFT}/libft.a .
+		cp ${LIBFT}/libft.a mandatory/
 		@echo "${GREEN}----COMPLETED----${END}"
 		@echo "\n\n\n\n"
 
@@ -38,7 +38,7 @@ norm :
 clean:
 		@echo "${RED}----CLEAN----${END}"
 		make clean -C libft
-		${RM} libft.a
+		${RM} mandatory/libft.a
 		${RM} ${OBJ}
 		@echo "${RED}----COMPLETED----${END}"
 

@@ -24,9 +24,9 @@
 
 typedef struct s_data
 {
-	int		**fd;
+	int		fd[2];
 	int		file[2];
-	pid_t	**pid;
+	pid_t	pid[2];
 	char	**split;
 	char	*cmd;
 	int		argc;
@@ -50,5 +50,11 @@ int		has_access(t_data object);
 char	*environment(t_data object);
 void	check_arguments(int argc, char **argv, t_data *object, char **env);
 void	here_doc(t_data *object);
+void	make_elements(t_data *object, int i);
+
+
+char	**ft_split(char const *s, char c);
+void	ft_free(char **b);
+int		ft_find_wc(char *n, char c);
 
 #endif

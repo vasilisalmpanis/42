@@ -58,13 +58,15 @@ void	execute_commands(t_data object)
 	if (pipe(object.fd) == -1)
 		cmd_failed("pipe");
 	i = 1;
+	object.argc--;
+	object.argv++;
 	if (object.file[0] == -1)
 		i++;
 	while (++i < object.argc -1)
 	{
+		object.pid[i - 2] = fork();
 		object.cmd = find_command(object, i);
 		object.split = ft_split(object.argv[i], 26);
-		object.pid[i - 2] = fork();
 		if (object.pid[i - 2] == -1)
 			cmd_failed("fork");
 		if (object.pid[i - 2] == 0)

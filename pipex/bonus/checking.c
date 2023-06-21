@@ -27,7 +27,7 @@ void	here_doc(t_data *object)
 	{
 		buf[bytes] = 0;
 		if (bytes == len + 1 && ft_memcmp(object->argv[2], buf, len) == 0)
-				break ;
+			break ;
 		write(object->here_d[WRITE_END], buf, bytes);
 		write(1, "heredoc> ", 9);
 		bytes = read(0, buf, BUFFER_SIZE);
@@ -61,8 +61,23 @@ void	check_arguments(int argc, char **argv, t_data *object, char **env)
 	}
 	else
 		object->here_doc = 0;
-	if (object->here_doc)
-		object->fd = malloc((argc - 4) * sizeof(int **));
-	else
-		object->fd = malloc((argc - 4) * sizeof(int **));
+//	if (object->here_doc)
+//		make_elements(object, 4);
+//	else
+//		make_elements(object, 3);
 }
+
+
+//void	make_elements(t_data *object, int i)
+//{
+//	int	j;
+//
+//	j = -1;
+//	object->fd = malloc((i - 3) * sizeof(int **));
+//	object->pid = malloc((i - 3) * sizeof(int **));
+//	while (++j < i)
+//	{
+//		object->fd[j] = (int *)malloc(2 * sizeof(int));
+//		object->pid[j] = (int *)malloc(2 * sizeof(int));
+//	}
+//}

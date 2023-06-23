@@ -35,34 +35,6 @@ int main(int argc, char **argv, char **env)
 	if (object.file[0] == -1 && object.file[1] == -1)
 		exit (1);
 	execute_commands(object);
-//	dup2(object.file[0], STDIN_FILENO);
-//	close(object.file[0]);
-//	buf = ft_split("cat -e", ' ');
-//	if (execve("/bin/cat", buf, NULL) == -1)
-//		cmd_not_found(object.split[0]);
+	return (0);
 }
 
-//int	main(int argc, char **argv, char **env)
-//{
-//	t_data	object;
-//
-//	if (argc != 5)
-//	{
-//		ft_printf("file1 cmd1 cmd2 file2\n");
-//		return (1);
-//	}
-//	object.argc = argc;
-//	object.argv = argv;
-//	object.env = env;
-//	object.cmd = NULL;
-//	object.file[0] = has_access(object);
-//	if (object.file[0] == -1)
-//		error_files(object.argv[1], object.argv[argc - 1]);
-//	object.file[1] = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
-//	if (object.file[1] == -1)
-//		error_files(object.argv[argc - 1], object.argv[argc - 1]);
-//	if (object.file[0] == -1 && object.file[1] == -1)
-//		exit (1);
-//	execute_commands(object);
-//	return (0);
-//}

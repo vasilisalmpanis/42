@@ -24,16 +24,17 @@
 
 typedef struct s_data
 {
-	int		fd[2];
+	int		**fd;
 	int		file[2];
-	pid_t	pid[2];
+	pid_t	*pid;
+	int		*random;
 	char	**split;
 	char	*cmd;
 	int		argc;
 	char	**argv;
 	char	**env;
 	int		here_doc;
-	int 	here_d[2];
+	int		here_d[2];
 }	t_data;
 
 int		main(int argc, char **argv, char **env);
@@ -43,6 +44,7 @@ void	cmd_failed(char *str);
 void	execute_commands(t_data object);
 void	child_process(t_data object, int i);
 void	parent_process(t_data object);
+void	pipes(t_data *object);
 char	*find_command(t_data object, int i);
 char	*command_access(char *env, char *cmd);
 char	**split_args(t_data object, int i);

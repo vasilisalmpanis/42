@@ -12,6 +12,16 @@
 
 #include "pipex.h"
 
+void	pipes(t_data *object)
+{
+	int	i;
+
+	i = -1;
+	while (++i < (object->argc - 2 + object->here_doc))
+		if (pipe(object->fd[i]) == -1)
+			cmd_failed("pipe");
+}
+
 void	child_process(t_data object, int i)
 {
 	if (i == 2)
@@ -55,11 +65,8 @@ void	execute_commands(t_data object)
 {
 	int	i;
 
-	if (pipe(object.fd) == -1)
-		cmd_failed("pipe");
-	i = 1;
-	object.argc--;
-	object.argv++;
+	pipes(&object);
+	i = 1 + obje;
 	if (object.file[0] == -1)
 		i++;
 	while (++i < object.argc -1)

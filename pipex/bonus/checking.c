@@ -62,9 +62,9 @@ void	check_arguments(int argc, char **argv, t_data *object, char **env)
 	else
 		object->here_doc = 0;
 	if (object->here_doc)
-		make_elements(object, 3);
+		make_elements(object, 4);
 	else
-		make_elements(object, 2);
+		make_elements(object, 3);
 }
 
 
@@ -75,7 +75,7 @@ void	make_elements(t_data *object, int i)
 	j = -1;
 	object->fd = malloc((object->argc - i) * sizeof(int **));
 	object->pid = malloc((object->argc - i) * sizeof(pid_t));
-	while (++j < i)
+	while (++j < (object->argc - i))
 	{
 		object->fd[j] = (int *)malloc(2 * sizeof(int));
 		object->pid[j] = 0;

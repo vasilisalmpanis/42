@@ -12,7 +12,7 @@ RED=\033[0;31m
 BLUE=\033[0;34m
 END=\033[0m
 
-all: norm  ${LIBFT} ${NAME}
+all: ${LIBFT} ${NAME}
 
 ${NAME}: ${OBJ} ${LIBFT}
 		@echo "${RED}----PUSH SWAP----${END}"

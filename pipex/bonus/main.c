@@ -15,7 +15,6 @@
 int main(int argc, char **argv, char **env)
 {
 	t_data	object;
-	char	**buf;
 
 	check_arguments(argc, argv, &object, env);
 	object.argv = argv;

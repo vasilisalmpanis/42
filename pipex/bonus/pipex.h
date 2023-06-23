@@ -42,7 +42,7 @@ void	error_files(char *object, char *argv);
 void	cmd_not_found(char *cmd);
 void	cmd_failed(char *str);
 void	execute_commands(t_data object);
-void	child_process(t_data object, int i);
+void	child_process(t_data object, int i, int process);
 void	parent_process(t_data object);
 void	pipes(t_data *object);
 char	*find_command(t_data object, int i);

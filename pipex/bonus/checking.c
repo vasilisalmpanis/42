@@ -73,11 +73,11 @@ void	make_elements(t_data *object, int i)
 	int	j;
 
 	j = -1;
-	object->fd = malloc((object->argc - i) * sizeof(int **));
+	object->fd = malloc((object->argc - i - 1) * sizeof(int **));
 	object->pid = malloc((object->argc - i) * sizeof(pid_t));
-	while (++j < (object->argc - i))
-	{
+	while (++j < object->argc - i + 1)
 		object->fd[j] = (int *)malloc(2 * sizeof(int));
+	j = -1;
+	while (++j < (object->argc - i))
 		object->pid[j] = 0;
-	}
 }

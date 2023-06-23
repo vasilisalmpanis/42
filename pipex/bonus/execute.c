@@ -26,56 +26,55 @@ void	pipes(t_data *object)
 	}
 }
 
-void	close_fds(t_data object, int i)
-{
-	int	j;
+//void	close_fds(t_data object, int i)
+//{
+//	int	j;
+//
+//	j = -1;
+//	while (++j < object.argc - 4 - object.here_doc )
+//	{
+//		if (j != i)
+//			close(object.fd[i][READ_END]);
+//		if (j != i + 1 || i != 0)
+//			close(object.fd[j + 1][WRITE_END]);
+//	}
+//	if (i == 0)
+//}
 
-	j = -1;
-	while (++j < object.argc - 4 - object.here_doc )
-	{
-		if (j != i)
-			close(object.fd[i][READ_END]);
-		if (j != i + 1 || i != 0)
-			close(object.fd[j + 1][WRITE_END]);
-	}
-	if (i == 0)
-}
-
-void	child_process(t_data object, int i)
+void	child_process(t_data object, int i, int process)
 {
-	if (i == (object.argc - 2 - object.here_doc))
+	if (i == 2 + object.here_doc)
 	{
-//		close_fds(object, i - 2 - object.here_doc);
-		close(object.fd[0][READ_END];)
+		close(object.fd[1][0]);
+		close(object.fd[1][1]);
+		close(object.fd[process][READ_END]);
+		close(object.file[WRITE_END]);
 		dup2(object.file[READ_END], STDIN_FILENO);
 		close(object.file[READ_END]);
-		dup2(object.fd[0][WRITE_END], STDOUT_FILENO);
-		close(object.fd[1][WRITE_END]);
+		dup2(object.fd[process][WRITE_END], STDOUT_FILENO);
+		close(object.fd[process][WRITE_END]);
 	}
 	else if (i == object.argc - 2)
 	{
-		dup2(object.fd[i - 1][READ_END], STDIN_FILENO);
-		close(object.fd[i - 1][READ_END]);
+		close(object.fd[0][1]);
+		close(object.fd[0][0]);
+		close(object.file[READ_END]);
+		close(object.fd[process - 1][WRITE_END]);
+		dup2(object.fd[object.argc -5 - object.here_doc][0], STDIN_FILENO);
+		close(object.fd[object.argc -5 - object.here_doc][READ_END]);
 		dup2(object.file[WRITE_END], STDOUT_FILENO);
 		close(object.file[WRITE_END]);
 	}
-	else if (i > 2 + object.here_doc)
+	else
 	{
-//		close_fds(object, i - 2 - object.here_doc);
-		close(object.fd[0][1]);
-		close(object.fd[1][0]);
 		close(object.file[0]);
 		close(object.file[1]);
-//		ft_putnbr_fd(object.fd[2][0], 1);
-//		ft_putstr_fd("\n", 1);
-//		ft_putnbr_fd(object.fd[2][1], 1);
-//		ft_putstr_fd("\n", 1);
-		if (dup2(object.fd[0][READ_END], STDIN_FILENO) == -1)
-			ft_putstr_fd("dup1\n", 1);
-		close(object.fd[1][READ_END]);
-		if (dup2(object.fd[1][WRITE_END], STDOUT_FILENO) == -1)
-			ft_putstr_fd("dup2\n", 1);
-		close(object.fd[1][WRITE_END]);
+		close(object.fd[process - 1][1]);
+		close(object.fd[process][0]);
+		dup2(object.fd[process - 1][READ_END], STDIN_FILENO);
+		close(object.fd[process - 1][READ_END]);
+		dup2(object.fd[process][WRITE_END], STDOUT_FILENO);
+		close(object.fd[process][WRITE_END]);
 	}
 	if (execve(object.cmd, object.split, NULL) == -1)
 		cmd_not_found(object.split[0]);
@@ -85,8 +84,6 @@ void	parent_process(t_data object)
 {
 	int	i;
 
-	close(object.fd[0][0]);
-	close(object.fd[0][1]);
 	i = -1;
 	while (++i < object.argc - 4 - object.here_doc)
 	{
@@ -96,21 +93,20 @@ void	parent_process(t_data object)
 	close(object.file[0]);
 	close(object.file[1]);
 	i = -1;
-	waitpid(object.pid[0], NULL, 0);
-	waitpid(object.pid[1], NULL, 0);
-	waitpid(object.pid[2], NULL, 0);
-//	while (++i < object.argc - 3 - object.here_doc)
-//		waitpid(object.pid[i], NULL, 0);
+	while (++i < object.argc - 3 - object.here_doc)
+		waitpid(object.pid[i], NULL, 0);
 }
 
 void	execute_commands(t_data object)
 {
 	int	i;
+	int process;
 
 	pipes(&object);
 	i = 1 + object.here_doc;
 	if (object.file[0] == -1)
 		i++;
+	process = 0;
 	while (++i < object.argc - 1)
 	{
 		object.pid[i - 2 - object.here_doc] = fork();
@@ -119,9 +115,10 @@ void	execute_commands(t_data object)
 		if (object.pid[i - 2 - object.here_doc] == -1)
 			cmd_failed("fork");
 		if (object.pid[i - 2 - object.here_doc] == 0)
-			child_process(object, i);
+			child_process(object, i, process);
 		free(object.cmd);
 		ft_free(object.split);
+		process++;
 	}
 	parent_process(object);
 }

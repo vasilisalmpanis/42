@@ -53,6 +53,7 @@ char	*environment(t_data object);
 void	check_arguments(int argc, char **argv, t_data *object, char **env);
 void	here_doc(t_data *object);
 void	make_elements(t_data *object, int i);
+void	close_fds(t_data object, int i, int process);
 
 
 char	**ft_split(char const *s, char c);

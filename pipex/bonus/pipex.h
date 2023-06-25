@@ -24,7 +24,7 @@
 
 typedef struct s_data
 {
-	int		**fd;
+	int		fd[2];
 	int		file[2];
 	pid_t	*pid;
 	int		*random;
@@ -42,9 +42,8 @@ void	error_files(char *object, char *argv);
 void	cmd_not_found(char *cmd);
 void	cmd_failed(char *str);
 void	execute_commands(t_data object);
-void	child_process(t_data object, int i, int process);
+void	child_process(t_data object, int i);
 void	parent_process(t_data object);
-void	pipes(t_data *object);
 char	*find_command(t_data object, int i);
 char	*command_access(char *env, char *cmd);
 char	**split_args(t_data object, int i);
@@ -53,11 +52,5 @@ char	*environment(t_data object);
 void	check_arguments(int argc, char **argv, t_data *object, char **env);
 void	here_doc(t_data *object);
 void	make_elements(t_data *object, int i);
-void	close_fds(t_data object, int i, int process);
-
-
-char	**ft_split(char const *s, char c);
-void	ft_free(char **b);
-int		ft_find_wc(char *n, char c);
 
 #endif

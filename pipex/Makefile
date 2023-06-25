@@ -1,12 +1,16 @@
 NAME    =   pipex
 SRC     =   mandatory/main.c mandatory/utils.c mandatory/errors.c mandatory/execute.c\
 
+BSRC	=	bonus/main.c bonus/execute.c bonus/checking.c bonus/utils.c bonus/errors.c\
+
 LIBFT   =   ./libft
+BLIBFT   =   ./libft
 RM      =   rm -rf
 CC      =   gcc
 CFLAGS  =   -g -Wall -Wextra -Werror
 
 OBJ     =   $(SRC:.c=.o)
+BOBJ	=	${BSRC:.c=.o}
 GREEN=\033[0;32m
 RED=\033[0;31m
 BLUE=\033[0;34m
@@ -15,14 +19,14 @@ END=\033[0m
 all: ${LIBFT} ${NAME}
 
 ${NAME}: ${OBJ} ${LIBFT}
-		@echo "${RED}----PUSH SWAP----${END}"
-		${CC} ${CFLAGS} ${OBJ} -o ${NAME} mandatory/libft.a
+		@echo "${RED}------PIPEX------${END}"
+		${CC} ${CFLAGS} ${OBJ} -o ${NAME} libft.a
 		@echo "${RED}----COMPLETED----${END}"
 
 ${LIBFT}:
 		@echo "${GREEN}----LIBFT----${END}"
 		make -C libft
-		cp ${LIBFT}/libft.a mandatory/
+		cp ${LIBFT}/libft.a .
 		@echo "${GREEN}----COMPLETED----${END}"
 		@echo "\n\n\n\n"
 
@@ -34,6 +38,12 @@ norm :
 		@echo "${BLUE}    NORMINETTE    ${END}"
 		norminette
 		@echo "${BLUE}----COMPLETED----\n\n\n\n${END}"
+
+bonus: ${BOBJ} ${LIBFT}
+		@echo "${BLUE}******************${END}"
+		@echo "${BLUE}       BONUS      ${END}"
+		${CC} ${CFLAGS} ${BOBJ} -o ${NAME} libft.a
+		@echo "${RED}----COMPLETED----${END}"
 
 clean:
 		@echo "${RED}----CLEAN----${END}"
@@ -50,4 +60,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re ${LIBFT}
+.PHONY: all clean fclean re ${LIBFT} ${BLIBFT}

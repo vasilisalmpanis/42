@@ -52,7 +52,7 @@ void	check_arguments(int argc, char **argv, t_data *object, char **env)
 		exit(1);
 	}
 	make(argc, argv, env, object);
-	if (strncmp(object->argv[1], "heredoc", 7) == 0 && ft_strlen(argv[1]) == 7)
+	if (strncmp(object->argv[1], "here_doc", 8) == 0 && ft_strlen(argv[1]) == 8)
 	{
 		if (argc < 6)
 			object->here_doc = 0;
@@ -67,17 +67,12 @@ void	check_arguments(int argc, char **argv, t_data *object, char **env)
 		make_elements(object, 3);
 }
 
-
 void	make_elements(t_data *object, int i)
 {
 	int	j;
 
 	j = -1;
-	object->fd = malloc((object->argc - i - 1) * sizeof(int **));
 	object->pid = malloc((object->argc - i) * sizeof(pid_t));
-	while (++j < object->argc - i + 1)
-		object->fd[j] = (int *)malloc(2 * sizeof(int));
-	j = -1;
 	while (++j < (object->argc - i))
 		object->pid[j] = 0;
 }

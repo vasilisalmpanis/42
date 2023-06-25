@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-int main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
 	t_data	object;
 
@@ -36,4 +36,3 @@ int main(int argc, char **argv, char **env)
 	execute_commands(object);
 	return (0);
 }
-

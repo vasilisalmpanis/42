@@ -16,11 +16,12 @@ RED=\033[0;31m
 BLUE=\033[0;34m
 END=\033[0m
 
-all: ${LIBFT} ${NAME}
+all: norm ${LIBFT} ${NAME}
 
 ${NAME}: ${OBJ} ${LIBFT}
 		@echo "${RED}------PIPEX------${END}"
 		${CC} ${CFLAGS} ${OBJ} -o ${NAME} libft.a
+		${RM} libft.a
 		@echo "${RED}----COMPLETED----${END}"
 
 ${LIBFT}:
@@ -43,6 +44,7 @@ bonus: ${BOBJ} ${LIBFT}
 		@echo "${BLUE}******************${END}"
 		@echo "${BLUE}       BONUS      ${END}"
 		${CC} ${CFLAGS} ${BOBJ} -o ${NAME} libft.a
+		${RM} libft.a
 		@echo "${RED}----COMPLETED----${END}"
 
 clean:
@@ -52,8 +54,21 @@ clean:
 		${RM} ${OBJ}
 		@echo "${RED}----COMPLETED----${END}"
 
+bclean:
+		@echo "${RED}----BCLEAN----${END}"
+		make clean -C libft
+		${RM} bonus/libft.a
+		${RM} ${BOBJ}
+		@echo "${RED}----COMPLETED----${END}"
+
 fclean: clean
 		@echo "${RED}----FCLEAN----${END}"
+		${RM} ${NAME}
+		make fclean -C libft
+		@echo "${RED}----COMPLETED----${END}"
+
+bfclean: bclean
+		@echo "${RED}----BFCLEAN----${END}"
 		${RM} ${NAME}
 		make fclean -C libft
 		@echo "${RED}----COMPLETED----${END}"

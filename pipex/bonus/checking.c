@@ -73,6 +73,11 @@ void	make_elements(t_data *object, int i)
 
 	j = -1;
 	object->pid = malloc((object->argc - i) * sizeof(pid_t));
+	if (!object->pid)
+	{
+		ft_printf("Malloc failed\n");
+		exit(1);
+	}
 	while (++j < (object->argc - i))
 		object->pid[j] = 0;
 }

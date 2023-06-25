@@ -34,7 +34,10 @@ void	parent_process(t_data object)
 	close(object.file[1]);
 	i = object.argc - 3 - object.here_doc;
 	while (--i < 0)
+	{
 		waitpid(object.pid[i], NULL, 0);
+	}
+	free(object.pid);
 }
 
 void	execute_commands(t_data object)

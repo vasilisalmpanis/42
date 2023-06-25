@@ -25,7 +25,7 @@ void	cmd_not_found(char *cmd)
 	write(STDERR_FILENO, "pipex: ", 7);
 	ft_putstr_fd(cmd, STDERR_FILENO);
 	ft_putstr_fd(": command not found\n", STDERR_FILENO);
-	exit(0);
+	exit(2);
 }
 
 void	cmd_failed(char *str)

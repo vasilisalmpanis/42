@@ -41,8 +41,7 @@ norm :
 		@echo "${BLUE}----COMPLETED----\n\n\n\n${END}"
 
 bonus: ${BOBJ} ${LIBFT}
-		@echo "${BLUE}******************${END}"
-		@echo "${BLUE}       BONUS      ${END}"
+		@echo "${RED}----PIPEX BONUS----${END}"
 		${CC} ${CFLAGS} ${BOBJ} -o ${NAME} libft.a
 		${RM} libft.a
 		@echo "${RED}----COMPLETED----${END}"

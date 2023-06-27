@@ -6,18 +6,16 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 12:58:45 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/19 14:07:39 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/27 11:05:08 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	error_files(char *object, char *argv)
+void	error_files(char *object)
 {
 	write(STDERR_FILENO, "pipex: ", 7);
 	perror(object);
-	if (ft_strncmp(object, argv, ft_strlen(object)) == 0)
-		exit(0);
 }
 
 void	cmd_not_found(char *cmd)

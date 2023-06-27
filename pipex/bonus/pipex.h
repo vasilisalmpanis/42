@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 10:47:12 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/19 17:22:18 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/27 11:05:17 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef struct s_data
 }	t_data;
 
 int		main(int argc, char **argv, char **env);
-void	error_files(char *object, char *argv);
+void	error_files(char *object);
 void	cmd_not_found(char *cmd);
 void	cmd_failed(char *str);
 void	execute_commands(t_data object);

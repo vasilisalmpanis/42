@@ -15,11 +15,10 @@ Welcome to my coding journey! This repository, aptly named "42," serves as a cap
 
 ## Description
 
-Within these digital walls, you will discover a diverse collection of creations that highlight my relentless pursuit of coding excellence. From innovative web applications to mind-bending algorithms, each project represents a milestone in my growth as a programmer.
-
-Delve into the realm of creativity and precision, where lines of code converge to form impactful solutions. With each project, I have sought to challenge myself, pushing the boundaries of what I thought possible, all while honing my skills as a developer.
-
-This README serves as a portal into my coding odyssey, inviting you to witness my passion for innovation, my meticulous attention to detail, and my relentless pursuit of excellence. Explore the projects, learn about the ideas behind them, and witness firsthand the growth that I have achieved throughout my journey.
+Welcome to my coding portfolio repository, "42"! Here, you'll find a collection of my projects as a student at 42 Wolfsburg, showcasing my growth and skills as a programmer.
+Explore a diverse range of creations, including web applications and algorithms, each representing a milestone in my coding journey. These projects reflect my passion for innovation and problem-solving.
+This repository serves as a window into my coding odyssey, inviting you to witness my growth over time. Dive into the projects, discover their ideas, and witness firsthand the progress I've made throughout my journey.
+Feel free to explore each project folder for detailed information and delve into the code that powers these creations.
 
 ## Installation
 

@@ -7,7 +7,7 @@ Welcome to my coding journey! This repository, aptly named "42," serves as a cap
 ## Table of Contents
 
 - [Description](#description)
-- [Projects](#projects)
+- [Projects](#project)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -41,7 +41,7 @@ Contributions to this portfolio repository are not open to the public. It serves
 This repository is licensed under the [MIT License](LICENSE). Feel free to explore the code, learn from it, and adapt it for your own projects. However, please respect the intellectual property rights and give appropriate credit if you choose to use any part of the code.
 
 
-|      Project     | Mark | Tries | Took |    Note    |       With      | Language |
+|      #Projects     | Mark | Tries | Took |    Note    |       With      | Language |
 |:----------------:|:----:|:-----:|:----:|:----------:|:---------------:|:-:|
 |<a href="https://github.com/vasilisalmpanis/42/tree/main/Piscine%20Reloaded">Piscine Reloaded</a>  | 0%   |      |   1d  | Problems with server not evaluated |                 |<img src="https://info.varonis.com/hubfs/UNIX%20LOGO@2x.png" alt="c" width="40" height="40"/> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |
 |       <a href="https://github.com/vasilisalmpanis/42/tree/main/libft">Libft</a>       | 123%    |   2   |  5d  |            |                 | <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-plain.svg" alt="c" width="40" height="40"/> |

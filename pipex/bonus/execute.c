@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 16:58:14 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/27 11:16:32 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/28 15:05:43 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	child_process(t_data object, int i)
 void	parent_process(t_data object)
 {
 	int	i;
+	int	statuscode;
+	int	exitstatus;
 
 	close(object.fd[0]);
 	close(object.fd[1]);
@@ -40,7 +42,13 @@ void	parent_process(t_data object)
 	i = object.argc - 3 - object.here_doc;
 	while (--i < 0)
 	{
-		waitpid(object.pid[i], NULL, 0);
+		waitpid(object.pid[i], &statuscode, 0);
+		if (WIFEXITED(statuscode))
+		{
+			exitstatus = WEXITSTATUS(statuscode);
+			if (exitstatus == 2)
+				exit(2);
+		}
 	}
 	free(object.pid);
 }

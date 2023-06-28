@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 16:58:14 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/19 17:27:18 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/06/28 12:33:20 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	child_process(t_data object, int i)
 		close(object.fd[1]);
 		dup2(object.fd[0], STDIN_FILENO);
 		close(object.fd[0]);
-		dup2(object.file[1], STDOUT_FILENO);
+		if (dup2(object.file[1], STDOUT_FILENO) == -1)
+			exit(0);
 		close(object.file[1]);
 	}
 	if (execve(object.cmd, object.split, NULL) == -1)

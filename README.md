@@ -17,6 +17,7 @@ Welcome to my coding journey! This repository, aptly named "42," serves as a cap
 
 Welcome to my coding portfolio repository, "42"! Here, you'll find a collection of my projects as a student at 42 Wolfsburg, showcasing my growth and skills as a programmer.
 Explore a diverse range of creations, including web applications and algorithms, each representing a milestone in my coding journey. These projects reflect my passion for innovation and problem-solving.
+
 This repository serves as a window into my coding odyssey, inviting you to witness my growth over time. Dive into the projects, discover their ideas, and witness firsthand the progress I've made throughout my journey.
 Feel free to explore each project folder for detailed information and delve into the code that powers these creations.
 

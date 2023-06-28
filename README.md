@@ -26,6 +26,7 @@ This README serves as a portal into my coding odyssey, inviting you to witness m
 To run any of the projects locally, clone the repo below and run make into the specific folder you want to compile.
 ```bash
 git clone https://github.com/vasilisalmpanis/42.git
+```
 
 ## Usage
 

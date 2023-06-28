@@ -7,11 +7,11 @@ Welcome to my coding journey! This repository, aptly named "42," serves as a cap
 ## Table of Contents
 
 - [Description](#description)
-- [Projects](#project)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
+- [Projects](#projects)
 
 ## Description
 

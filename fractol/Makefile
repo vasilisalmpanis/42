@@ -17,7 +17,7 @@ all: ${LIBFT} ${NAME}
 ${NAME}: ${OBJ} ${LIBFT}
 		@echo "${RED}------FRACTOL------${END}"
 		make -C mlx
-		$(CC) ${CFLAGS} $(OBJ) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+		$(CC) ${CFLAGS} $(OBJ) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME) libft.a
 		${RM} libft.a
 		@echo "${RED}----COMPLETED----${END}"
 

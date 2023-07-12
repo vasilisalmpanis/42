@@ -1,10 +1,17 @@
 NAME    =   fractol
-SRC     =   mandatory/main.c
+SRC     =   mandatory/main.c\
+			mandatory/calculations.c\
+			mandatory/draw.c\
+			mandatory/errors.c\
+			mandatory/initialize.c\
+			mandatory/colours.c\
+			mandatory/mouse_hooks.c\
+
 
 LIBFT   =   ./libft
 RM      =   rm -rf
 CC      =   gcc
-CFLAGS  =   -g -Wall -Wextra -Werror
+CFLAGS  =   -g -Wall -Ofast
 
 OBJ     =   $(SRC:.c=.o)
 GREEN=\033[0;32m

@@ -1,31 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   calculations.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/10 20:52:03 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/12 19:54:48 by valmpani         ###   ########.fr       */
+/*   Created: 2023/07/12 13:00:26 by valmpani          #+#    #+#             */
+/*   Updated: 2023/07/12 20:21:23 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
 
-int	main(int argc, char **argv)
+void	mandlel_calc_c(t_complex *f)
 {
-	t_complex	f;
+	f->c_r = f->x * ((f->max_r - f->min_r) / WIDTH) + f->min_r;
+	f->c_i = f->y * ((f->max_i - f->min_i) / HEIGHT) - f->max_i;
+	f->z_r = 0.0;
+	f->z_i = 0.0;
+	f->iter = 0;
+}
 
-	if (argc != 2)
-		no_parameters();
-	if (ft_strncmp(argv[1], "Mandelbrot", 10) == 0)
-	{
-		init_fractol(&f, "Mandelbrot");
-		mlx_mouse_hook(f.win, &handle_mouse, &f);
-		draw_set(&f);
-		mlx_loop(f.mlx);
-	}
-	else if (ft_strncmp(argv[1], "Julia", 5) == 0)
-		ft_printf("Julia\n");
-	return (0);
+void	mandel_calc_z(t_complex *f)
+{
+	f->temp = f->z_r * f->z_r - f->z_i * f->z_i + f->c_r;
+	f->z_i = (2 * f->z_i * f->z_r) + f->c_i;
+	f->z_r = f->temp;
+	f->iter++;
 }

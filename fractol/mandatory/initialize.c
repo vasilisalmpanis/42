@@ -1,31 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/10 20:52:03 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/12 19:54:48 by valmpani         ###   ########.fr       */
+/*   Created: 2023/07/12 12:59:30 by valmpani          #+#    #+#             */
+/*   Updated: 2023/07/12 20:02:23 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
 
-int	main(int argc, char **argv)
+void	init_fractol(t_complex *f, char *title)
 {
-	t_complex	f;
-
-	if (argc != 2)
-		no_parameters();
-	if (ft_strncmp(argv[1], "Mandelbrot", 10) == 0)
-	{
-		init_fractol(&f, "Mandelbrot");
-		mlx_mouse_hook(f.win, &handle_mouse, &f);
-		draw_set(&f);
-		mlx_loop(f.mlx);
-	}
-	else if (ft_strncmp(argv[1], "Julia", 5) == 0)
-		ft_printf("Julia\n");
-	return (0);
+	f->mlx = mlx_init();
+	f->win = mlx_new_window(f->mlx, WIDTH, HEIGHT, title);
+	f->img = mlx_new_image(f->mlx, WIDTH, HEIGHT);
+	f->img_data = mlx_get_data_addr(f->img, &f->bpp, &f->size_line, &f->endian);
+	f->max_r = 2.0;
+	f->min_r = -2.0;
+	f->max_i = 1.0;
+	f->min_i = -1.0;
+	f->calc_color = calc_color;
 }

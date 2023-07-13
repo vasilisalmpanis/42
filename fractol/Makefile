@@ -11,7 +11,7 @@ SRC     =   mandatory/main.c\
 LIBFT   =   ./libft
 RM      =   rm -rf
 CC      =   gcc
-CFLAGS  =   -g -Wall -Ofast
+CFLAGS  =   -g -Wall
 
 OBJ     =   $(SRC:.c=.o)
 GREEN=\033[0;32m
@@ -19,7 +19,7 @@ RED=\033[0;31m
 BLUE=\033[0;34m
 END=\033[0m
 
-all: ${LIBFT} ${NAME}
+all: norm ${LIBFT} ${NAME}
 
 ${NAME}: ${OBJ} ${LIBFT}
 		@echo "${RED}------FRACTOL------${END}"
@@ -41,7 +41,7 @@ ${LIBFT}:
 norm :
 		@echo "${BLUE}******************${END}"
 		@echo "${BLUE}    NORMINETTE    ${END}"
-		norminette
+		norminette mandatory
 		@echo "${BLUE}----COMPLETED----\n\n\n\n${END}"
 
 clean:

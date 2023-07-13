@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:33:25 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/12 20:23:55 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/13 13:47:40 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,11 @@
 
 # define WIDTH 1200
 # define HEIGHT (WIDTH / 2)
-# define M_I 70
+# define M_I 50
 # define MOUSE_SCROLL_UP 4
 # define MOUSE_SCROLL_DOWN 5
 # define MOUSE_CLICK_LEFT 1
 # define MOUSE_CLICK_RIGHT 2
-
-// typedef struct s_color
-// {
-// 	int	red;
-// 	int	green;
-// 	int	blue;
-// }	t_color;
 
 typedef struct s_complex
 {

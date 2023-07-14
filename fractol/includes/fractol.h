@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:33:25 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/13 13:47:40 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/14 15:45:52 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,10 @@
 # include "../mlx/mlx.h"
 # include "../libft/libft.h"
 # include <math.h>
+# include "key_macros.h"
 
 # define WIDTH 1200
-# define HEIGHT (WIDTH / 2)
 # define M_I 50
-# define MOUSE_SCROLL_UP 4
-# define MOUSE_SCROLL_DOWN 5
-# define MOUSE_CLICK_LEFT 1
-# define MOUSE_CLICK_RIGHT 2
 
 typedef struct s_complex
 {
@@ -32,8 +28,8 @@ typedef struct s_complex
 	double		max_r;
 	double		min_i;
 	double		max_i;
-	double		factor_r;
-	double		factor_i;
+	double		r_origin;
+	double		i_origin;
 	double		c_r;
 	double		c_i;
 	double		z_r;
@@ -45,6 +41,8 @@ typedef struct s_complex
 	double		x;
 	double		y;
 	double		temp;
+	int			width;
+	int			height;
 	int			iter;
 	int			bpp;
 	int			size_line;

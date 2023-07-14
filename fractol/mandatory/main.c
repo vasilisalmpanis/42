@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 20:52:03 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/12 19:54:48 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/13 20:53:18 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int	main(int argc, char **argv)
 		mlx_mouse_hook(f.win, &handle_mouse, &f);
 		draw_set(&f);
 		mlx_loop(f.mlx);
+		mlx_destroy_image(f.mlx, f.img);
+		mlx_destroy_window(f.mlx, f.win);
 	}
 	else if (ft_strncmp(argv[1], "Julia", 5) == 0)
 		ft_printf("Julia\n");

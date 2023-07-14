@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 12:58:33 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/12 19:23:42 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/14 15:17:22 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ void	draw_set(t_complex *f)
 {
 	f->y = -1;
 	f->temp = 0;
-	while (++(f->y) < HEIGHT)
+	while (++(f->y) < f->height)
 	{
 		f->x = -1;
-		while (++(f->x) < WIDTH)
+		while (++(f->x) < f->width)
 		{
 			mandlel_calc_c(f);
 			while ((f->z_r * f->z_r + f->z_i * f->z_i) < 4 && f->iter < M_I)

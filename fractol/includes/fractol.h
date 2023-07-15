@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:33:25 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/14 15:45:52 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/15 12:40:21 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include "key_macros.h"
 
 # define WIDTH 1200
-# define M_I 50
+# define M_I 20
 
 typedef struct s_complex
 {

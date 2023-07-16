@@ -14,8 +14,10 @@
 
 void	mandlel_calc_c(t_complex *f)
 {
-	f->c_r = ((f->x / f->width) * (f->max_r - f->min_r)) - (f->max_r - f->min_r) / 2 + f->r_origin;
-	f->c_i = ((f->y / f->height) * (f->max_i - f->min_i)) - (f->max_i - f->min_i) / 2 + f->i_origin;
+	f->c_r = ((f->x / f->width) * (f->max_r - f->min_r)) \
+	- (f->max_r - f->min_r) / 2 + f->r_origin;
+	f->c_i = ((f->y / f->height) * (f->max_i - f->min_i)) \
+	- (f->max_i - f->min_i) / 2 + f->i_origin;
 	f->z_r = 0.0;
 	f->z_i = 0.0;
 	f->iter = 0;

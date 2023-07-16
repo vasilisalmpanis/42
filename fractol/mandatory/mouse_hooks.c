@@ -32,10 +32,6 @@ int	handle_mouse(int button, int x, int y, t_complex *f)
 		f->max_i = f->max_r / 2;
 		f->min_i = (f->max_r / 2) * (-1);
 	}
-	printf("%f\n", f->max_r);
-	printf("%f\n", f->min_r);
-	printf("%f\n", f->max_i);
-	printf("%f\n", f->max_i);
 	mlx_clear_window(f->mlx, f->win);
 	draw_window(f);
 	return (1);

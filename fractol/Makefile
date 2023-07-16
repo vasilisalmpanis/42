@@ -6,12 +6,13 @@ SRC     =   mandatory/main.c\
 			mandatory/initialize.c\
 			mandatory/colours.c\
 			mandatory/mouse_hooks.c\
+			mandatory/keyboard_hooks.c\
 
 
 LIBFT   =   ./libft
 RM      =   rm -rf
 CC      =   gcc
-CFLAGS  =   -g -Wall -O3
+CFLAGS  =   -g -Wall -O2 -flto
 
 OBJ     =   $(SRC:.c=.o)
 GREEN=\033[0;32m

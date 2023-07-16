@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:33:25 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/15 12:40:21 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/16 13:39:04 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <math.h>
 # include "key_macros.h"
 
-# define WIDTH 1200
-# define M_I 20
+# define WIDTH 1600
+# define M_I 50
 
 typedef struct s_complex
 {
@@ -28,6 +28,8 @@ typedef struct s_complex
 	double		max_r;
 	double		min_i;
 	double		max_i;
+	double		range_r;
+	double		range_i;
 	double		r_origin;
 	double		i_origin;
 	double		c_r;
@@ -43,6 +45,7 @@ typedef struct s_complex
 	double		temp;
 	int			width;
 	int			height;
+	int			max_it;
 	int			iter;
 	int			bpp;
 	int			size_line;
@@ -51,11 +54,6 @@ typedef struct s_complex
 	int			color;
 	int			(*calc_color)(int iter);
 }	t_complex;
-
-// void	init_fractol(t_complex *f, char *title);
-// void	draw_mandelbrot_set(t_complex f);
-// int		handle_mouse(int button, int x, int y, t_complex *f);
-// void	set_color(t_color *color, int red, int green, int blue);
 
 void	draw_set(t_complex *f);
 void	init_fractol(t_complex *f, char *title);
@@ -68,5 +66,12 @@ int		calc_color(int iter);
 int		polynomial(int iter);
 int		basic(int iter);
 int		set_color(int t, int r, int g, int b);
+int		keyboard_input(int keycode, t_complex *f);
+void	change_max_it(t_complex *f, int keycode);
+void	draw_window(t_complex *f);
+void	print_lines(t_complex *f);
+void	reset_view(t_complex *f);
+void	change_colour(t_complex *f, int keycode);
+int		ft_end(t_complex *f);
 
 #endif

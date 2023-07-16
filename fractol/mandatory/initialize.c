@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 12:59:30 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/14 15:33:48 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/16 13:31:37 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ void	init_fractol(t_complex *f, char *title)
 	f->min_i = -1.25;
 	f->r_origin = 0.0;
 	f->i_origin = 0.0;
-	f->calc_color = calc_color;
+	f->max_it = M_I;
+	f->calc_color = polynomial;
 }

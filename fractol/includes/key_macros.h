@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 15:14:01 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/14 15:14:58 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/15 15:37:16 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@
 # define KEY_4 21
 # define KEY_5 22
 # define KEY_R 15
-# define KEY_PLUS 30
-# define KEY_MINUS 44
+# define KEY_PLUS 24
+# define KEY_MINUS 27
+# define KEY_GREEN 5
+# define KEY_BLUE 11
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 12:58:33 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/17 17:09:40 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/17 17:21:58 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ void	print_lines(t_complex *f)
 	free(itoa);
 }
 
-void	draw_window(t_complex *f)
+void	draw_window(t_var *ui)
 {
-	f->set(f);
-	print_lines(f);
+	ui->set(ui->f);
+	print_lines(ui->f);
 }
 
 void	draw_mandelbrot(t_complex *f)

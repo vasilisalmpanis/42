@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 13:54:14 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/17 17:12:20 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/17 17:23:04 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@
 
 #include "../includes/fractol.h"
 
-int	ft_end(t_complex *f)
+int	ft_end(t_var *ui)
 {
-	mlx_destroy_image(f->mlx, f->img);
-	mlx_destroy_window(f->mlx, f->win);
-	free(f);
+	mlx_destroy_image(ui->f->mlx, ui->f->img);
+	mlx_destroy_window(ui->f->mlx, ui->f->win);
+	free(ui);
 	exit(1);
 }
 
@@ -39,15 +39,15 @@ int	main(int argc, char **argv)
 	if (argc != 2)
 		no_parameters();
 	if (ft_strncmp(argv[1], "Mandelbrot", 10) == 0)
-	{
 		ui = init_fractol("Mandelbrot", draw_mandelbrot);
-		mlx_mouse_hook(f->win, &handle_mouse, f);
-		mlx_key_hook(f->win, &keyboard_input, f);
-		mlx_hook(f->win, 17, 0L, ft_end, f);
-		draw_window(f);
-		mlx_loop(f->mlx);
-	}
-	else if (ft_strncmp(argv[1], "Julia", 5) == 0)
-		ft_printf("Julia\n");
+	else if (ft_strncmp(argv[1], "Burning ship", 12) == 0)
+		ui = init_fractol("Burning ship", draw_bs);
+	else
+		exit(1);
+	mlx_mouse_hook(ui->f->win, &handle_mouse, ui);
+	mlx_key_hook(ui->f->win, &keyboard_input, ui);
+	mlx_hook(ui->f->win, 17, 0L, ft_end, ui);
+	draw_window(ui);
+	mlx_loop(ui->f->mlx);
 	return (0);
 }

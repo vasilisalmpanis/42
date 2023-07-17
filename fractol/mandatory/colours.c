@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 18:55:57 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/15 15:53:18 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/17 17:26:43 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,12 @@ int	set_color(int t, int r, int g, int b)
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
-void	change_colour(t_complex *f, int keycode)
+void	change_colour(t_var *ui, int keycode)
 {
 	if (keycode == KEY_GREEN)
-		f->calc_color = calc_color;
+		ui->f->calc_color = calc_color;
 	if (keycode == KEY_BLUE)
-		f->calc_color = polynomial;
-	mlx_clear_window(f->mlx, f->win);
-	draw_window(f);
+		ui->f->calc_color = polynomial;
+	mlx_clear_window(ui->f->mlx, ui->f->win);
+	draw_window(ui);
 }

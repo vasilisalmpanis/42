@@ -6,76 +6,76 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 13:04:30 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/17 17:01:37 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/17 17:28:15 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
 
-int	keyboard_input(int keycode, t_complex *f)
+int	keyboard_input(int keycode, t_var *ui)
 {
 	if (keycode == KEY_PLUS || keycode == KEY_MINUS)
-		change_max_it(f, keycode);
+		change_max_it(ui, keycode);
 	else if (keycode == KEY_R)
-		reset_view(f);
+		reset_view(ui);
 	else if (keycode == KEY_BLUE || keycode == KEY_GREEN)
-		change_colour(f, keycode);
+		change_colour(ui, keycode);
 	else if (keycode == KEY_ESCAPE)
-		ft_end(f);
+		ft_end(ui);
 	else if (keycode == KEY_UP || keycode == KEY_DOWN \
 			|| keycode == KEY_RIGHT || keycode == KEY_LEFT)
-		move_view(keycode, f);
+		move_view(keycode, ui);
 	return (1);
 }
 
-void	move_view(int keycode, t_complex *f)
+void	move_view(int keycode, t_var *ui)
 {
 	if (keycode == KEY_UP)
-		f->i_origin -= (f->max_r / 2) * 0.1;
+		ui->f->i_origin -= (ui->f->max_r / 2) * 0.1;
 	else if (keycode == KEY_DOWN)
-		f->i_origin += (f->max_r / 2) * 0.1;
+		ui->f->i_origin += (ui->f->max_r / 2) * 0.1;
 	else if (keycode == KEY_RIGHT)
-		f->r_origin += (f->max_r / 2) * 0.1;
+		ui->f->r_origin += (ui->f->max_r / 2) * 0.1;
 	else if (keycode == KEY_LEFT)
-		f->r_origin -= (f->max_r / 2) * 0.1;
-	mlx_clear_window(f->mlx, f->win);
-	draw_mandelbrot(f);
+		ui->f->r_origin -= (ui->f->max_r / 2) * 0.1;
+	mlx_clear_window(ui->f->mlx, ui->f->win);
+	draw_window(ui);
 }
 
-void	reset_view(t_complex *f)
+void	reset_view(t_var *ui)
 {
-	f->max_r = 2.5;
-	f->min_r = -2.5;
-	f->max_i = 1.25;
-	f->min_i = -1.25;
-	f->max_it = M_I;
-	f->r_origin = -0.8;
-	f->i_origin = 0.0;
-	mlx_clear_window(f->mlx, f->win);
-	draw_window(f);
+	ui->f->max_r = 2.5;
+	ui->f->min_r = -2.5;
+	ui->f->max_i = 1.25;
+	ui->f->min_i = -1.25;
+	ui->f->max_it = M_I;
+	ui->f->r_origin = -0.8;
+	ui->f->i_origin = 0.0;
+	mlx_clear_window(ui->f->mlx, ui->f->win);
+	draw_window(ui);
 }
 
-void	change_max_it(t_complex *f, int keycode)
+void	change_max_it(t_var *ui, int keycode)
 {
 	if (keycode == KEY_PLUS)
 	{
-		if (f->max_it < 10)
-			f->max_it += 1;
+		if (ui->f->max_it < 10)
+			ui->f->max_it += 1;
 		else
-			f->max_it += 10;
+			ui->f->max_it += 10;
 	}
 	if (keycode == KEY_MINUS)
 	{
-		if (f->max_it == 1)
+		if (ui->f->max_it == 1)
 		{
 			write(1, "Max_it < 0 produces undef. behaviour and will therefore"\
 				"not be shown.\n", 70);
 		}
-		else if (f->max_it <= 10 && f->max_it > 0)
-			f->max_it -= 1;
+		else if (ui->f->max_it <= 10 && ui->f->max_it > 0)
+			ui->f->max_it -= 1;
 		else
-			f->max_it -= 10;
+			ui->f->max_it -= 10;
 	}
-	mlx_clear_window(f->mlx, f->win);
-	draw_window(f);
+	mlx_clear_window(ui->f->mlx, ui->f->win);
+	draw_window(ui);
 }

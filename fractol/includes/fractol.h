@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:33:25 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/17 17:11:38 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/17 17:31:43 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,24 +60,24 @@ typedef struct s_var
 }	t_var;
 
 void		draw_mandelbrot(t_complex *f);
-t_complex	*init_fractol(char *title, void *set);
+t_var		*init_fractol(char *title, void *set);
 void		mandlel_calc_c(t_complex *f);
 void		mandel_calc_z(t_complex *f);
 void		my_put_pixel(t_complex *f, int color);
 void		no_parameters(void);
-int			handle_mouse(int button, int x, int y, t_complex *f);
+int			handle_mouse(int button, int x, int y, t_var *ui);
 int			calc_color(int iter);
 int			polynomial(int iter);
 int			basic(int iter);
 int			set_color(int t, int r, int g, int b);
-int			keyboard_input(int keycode, t_complex *f);
-void		change_max_it(t_complex *f, int keycode);
-void		draw_window(t_complex *f);
+int			keyboard_input(int keycode, t_var *ui);
+void		change_max_it(t_var *ui, int keycode);
+void		draw_window(t_var *ui);
 void		print_lines(t_complex *f);
-void		reset_view(t_complex *f);
-void		change_colour(t_complex *f, int keycode);
-int			ft_end(t_complex *f);
-void		move_view(int keycode, t_complex *f);
+void		reset_view(t_var *ui);
+void		change_colour(t_var *ui, int keycode);
+int			ft_end(t_var *ui);
+void		move_view(int keycode, t_var *ui);
 void		draw_bs(t_complex *f);
 void		bs_calc_c(t_complex *f);
 void		bs_calc_z(t_complex *f);

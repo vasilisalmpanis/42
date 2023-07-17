@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/12 10:59:56 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/12 11:05:54 by valmpani         ###   ########.fr       */
+/*   Created: 2023/07/17 10:59:56 by valmpani          #+#    #+#             */
+/*   Updated: 2023/07/17 11:05:54 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	ft_atoi(const char *str)
 	index = 0;
 	minus = 1;
 	number = 0;
+	printf("hello world");
 	while ((str[index] >= '\t' && str[index] <= '\r') || str[index] == ' ')
 		index++;
 	if (str[index] == '-')

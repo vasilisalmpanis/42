@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   calculations.c                                     :+:      :+:    :+:   */
+/*   burning_ship.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/12 13:00:26 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/16 13:36:29 by valmpani         ###   ########.fr       */
+/*   Created: 2023/07/17 16:51:08 by valmpani          #+#    #+#             */
+/*   Updated: 2023/07/17 16:52:22 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
 
-void	mandlel_calc_c(t_complex *f)
+void	bs_calc_c(t_complex *f)
 {
 	f->c_r = ((f->x / f->width) * (f->max_r - f->min_r)) \
 	- (f->max_r - f->min_r) / 2 + f->r_origin;
@@ -23,12 +23,15 @@ void	mandlel_calc_c(t_complex *f)
 	f->iter = 0;
 }
 
-void	mandel_calc_z(t_complex *f)
+void	bs_calc_z(t_complex *f)
 {
 	while ((pow(f->z_r, 2) + pow(f->z_i, 2)) < 4 && f->iter < f->max_it)
 	{
 		f->temp = f->z_r * f->z_r - f->z_i * f->z_i + f->c_r;
-		f->z_i = (2 * f->z_i * f->z_r) - f->c_i;
+		if (2 * f->z_r * f->z_i < 0)
+			f->z_i = (2 * f->z_r * f->z_i) - f->c_i;
+		else
+			f->z_i = (-2 * f->z_r * f->z_i) - f->c_i;
 		f->z_r = f->temp;
 		f->iter++;
 	}

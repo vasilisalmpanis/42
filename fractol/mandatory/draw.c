@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 12:58:33 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/15 15:24:36 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/17 17:09:40 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,27 @@ void	my_put_pixel(t_complex *f, int color)
 
 void	print_lines(t_complex *f)
 {
-	mlx_string_put(f->mlx, f->win, f->width - 150, 25, "0xFFFFFF", "Iterations:");
-	mlx_string_put(f->mlx, f->win, f->width - 70, 25, "0xFFFFFF", ft_itoa(f->max_it));
+	int		i;
+	char	*str;
+	char	*itoa;
+	int		space;
+
+	i = 255;
+	str = "Iterations:";
+	space = f->width - 150;
+	itoa = ft_itoa(f->max_it);
+	mlx_string_put(f->mlx, f->win, space, 25, i, str);
+	mlx_string_put(f->mlx, f->win, f->width - 40, 25, i, itoa);
+	free(itoa);
 }
 
 void	draw_window(t_complex *f)
 {
-	draw_set(f);
+	f->set(f);
 	print_lines(f);
 }
 
-void	draw_set(t_complex *f)
+void	draw_mandelbrot(t_complex *f)
 {
 	double	p;
 
@@ -49,10 +59,29 @@ void	draw_set(t_complex *f)
 				my_put_pixel(f, f->calc_color(0));
 			else
 			{
-				while ((pow(f->z_r, 2) + pow(f->z_i, 2)) < 4 && f->iter < f->max_it)
-					mandel_calc_z(f);
+				mandel_calc_z(f);
 				my_put_pixel(f, f->calc_color(f->iter));
 			}
+		}
+	}
+	mlx_put_image_to_window(f->mlx, f->win, f->img, 0, 0);
+}
+
+void	draw_bs(t_complex *f)
+{
+	double	p;
+
+	f->y = -1;
+	f->temp = 0;
+	while (++(f->y) < f->height)
+	{
+		f->x = -1;
+		while (++(f->x) < f->width)
+		{
+			bs_calc_c(f);
+			p = pow((f->x + 1), 2) + pow(f->y, 2);
+			bs_calc_z(f);
+			my_put_pixel(f, f->calc_color(f->iter));
 		}
 	}
 	mlx_put_image_to_window(f->mlx, f->win, f->img, 0, 0);

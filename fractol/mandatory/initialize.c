@@ -6,14 +6,17 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 12:59:30 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/16 13:31:37 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/17 17:12:26 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
 
-void	init_fractol(t_complex *f, char *title)
+t_var	*init_fractol(char *title, void *set)
 {
+	t_complex	*f;
+
+	f = (t_complex *)malloc(sizeof(t_complex));
 	f->width = WIDTH;
 	f->height = WIDTH / 2;
 	f->mlx = mlx_init();
@@ -24,8 +27,10 @@ void	init_fractol(t_complex *f, char *title)
 	f->min_r = -2.5;
 	f->max_i = 1.25;
 	f->min_i = -1.25;
-	f->r_origin = 0.0;
+	f->r_origin = -0.8;
 	f->i_origin = 0.0;
 	f->max_it = M_I;
 	f->calc_color = polynomial;
+	f->set = set;
+	return (f);
 }

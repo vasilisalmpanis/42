@@ -21,23 +21,23 @@ CFLAGS	=	-Wall -Wextra -Werror
 all : ${NAME}
 
 ${NAME}:	${OBJS}
-	${LIBC}	${NAME}	${OBJS}
+	@${LIBC}	${NAME}	${OBJS}
 
-${OBJS} : ${SRC}
-	${CC} ${CFLAGS} -c ${SRC}
+%.o: %.c
+		${CC} ${CFLAGS} -Imlx -c $< -o $@
 
 ${BOBJS} : ${BSRC}
-	${CC} ${CFLAGS} -c ${BSRC}
+	@${CC} ${CFLAGS} -c ${BSRC}
 
 
 bonus: ${BOBJS} ${OBJS}
-	${LIBC}	${NAME}	${BOBJS}
+	@${LIBC}	${NAME}	${BOBJS}
 
 fclean : clean
-	${RM} ${NAME}
+	@${RM} ${NAME}
 
 clean :
-	${RM}	${OBJS}	${BOBJS}
+	@${RM}	${OBJS}	${BOBJS}
 	
 re: fclean all
 

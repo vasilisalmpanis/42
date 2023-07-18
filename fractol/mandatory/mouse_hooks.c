@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 20:21:46 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/17 17:31:02 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/18 11:26:47 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int	handle_mouse(int button, int x, int y, t_var *ui)
 		ui->f->max_i = ui->f->max_r / 2;
 		ui->f->min_i = (ui->f->max_r / 2) * (-1);
 	}
+	else if (button == MOUSE_CLICK_RIGHT)
+		julia_change_c(x, y, ui);
 	mlx_clear_window(ui->f->mlx, ui->f->win);
 	draw_window(ui);
 	return (1);

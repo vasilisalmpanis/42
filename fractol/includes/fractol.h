@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:33:25 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/17 17:31:43 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/18 12:06:08 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <math.h>
 # include "key_macros.h"
 
-# define WIDTH 1900
+# define WIDTH 900
 # define M_I 50
 
 typedef struct s_complex
@@ -81,5 +81,10 @@ void		move_view(int keycode, t_var *ui);
 void		draw_bs(t_complex *f);
 void		bs_calc_c(t_complex *f);
 void		bs_calc_z(t_complex *f);
+void		draw_julia(t_complex *f);
+void		julia_calc_z(t_complex *f);
+void		julia_calc_start(t_complex *f);
+void		julia_change_c(int x, int y, t_var *ui);
+void		change_set(t_var *ui, int keycode);
 
 #endif

@@ -8,6 +8,7 @@ SRC     =   mandatory/main.c\
 			mandatory/mouse_hooks.c\
 			mandatory/keyboard_hooks.c\
 			mandatory/burning_ship.c\
+			mandatory/julia_set.c\
 
 
 LIBFT   =   ./libft

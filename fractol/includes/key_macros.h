@@ -33,5 +33,6 @@
 # define KEY_MINUS 27
 # define KEY_GREEN 5
 # define KEY_BLUE 11
+# define KEY_SHIFT 1
 
 #endif

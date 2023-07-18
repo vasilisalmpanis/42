@@ -33,15 +33,6 @@ int	ft_end(t_var *ui)
 	exit(1);
 }
 
-int	handle_no_events(t_var	*ui)
-{
-	if (ui->set == draw_mandelbrot)
-		ft_putnbr_fd(1, 1);
-	else if (ui->set == draw_julia)
-		ft_putnbr_fd(2, 1);
-	return (1);
-}
-
 int	main(int argc, char **argv)
 {
 	t_var	*ui;
@@ -57,6 +48,7 @@ int	main(int argc, char **argv)
 	mlx_mouse_hook(ui->f->win, &handle_mouse, ui);
 	mlx_key_hook(ui->f->win, &keyboard_input, ui);
 	mlx_hook(ui->f->win, 17, 0L, ft_end, ui);
+	mlx_loop_hook(ui->f->mlx, &handle_no_events, ui);
 	draw_window(ui);
 	mlx_loop(ui->f->mlx);
 	return (0);

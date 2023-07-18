@@ -27,6 +27,8 @@ int	keyboard_input(int keycode, t_var *ui)
 		move_view(keycode, ui);
 	else if (keycode == KEY_1 || keycode == KEY_2 || keycode == KEY_3)
 		change_set(ui, keycode);
+	else if (keycode == KEY_SHIFT)
+		shift_mode(ui, keycode);
 	return (1);
 }
 

@@ -21,10 +21,12 @@
 
 # define WIDTH 900
 # define M_I 50
+# define SHIFT_RATE 0.01
 
 typedef struct s_complex
 {
 	double		min_r;
+	int			shift;
 	double		max_r;
 	double		min_i;
 	double		max_i;
@@ -86,5 +88,7 @@ void		julia_calc_z(t_complex *f);
 void		julia_calc_start(t_complex *f);
 void		julia_change_c(int x, int y, t_var *ui);
 void		change_set(t_var *ui, int keycode);
+void		shift_mode(t_var *ui, int keycode);
+int			handle_no_events(t_var	*ui);
 
 #endif

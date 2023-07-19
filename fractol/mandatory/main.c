@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 13:54:14 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/18 12:03:12 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/19 20:11:49 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,17 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 		no_parameters();
-	if (ft_strncmp(argv[1], "Mandelbrot", 10) == 0)
+	if (ft_strncmp(argv[1], "Mandelbrot", ft_strlen(argv[1])) == 0 && \
+		ft_strlen(argv[1]) == 10)
 		ui = init_fractol("Mandelbrot", draw_mandelbrot);
-	else if (ft_strncmp(argv[1], "Burning ship", 12) == 0)
+	else if ((ft_strncmp(argv[1], "Burning ship", ft_strlen(argv[1])) == 0) \
+		&& ft_strlen(argv[1]) == 12)
 		ui = init_fractol("Burning ship", draw_bs);
-	else
+	else if (ft_strncmp(argv[1], "Julia", ft_strlen(argv[1])) \
+			== 0 && ft_strlen(argv[1]) == 5)
 		ui = init_fractol("Julia", draw_julia);
+	else
+		exit(1);
 	mlx_mouse_hook(ui->f->win, &handle_mouse, ui);
 	mlx_key_hook(ui->f->win, &keyboard_input, ui);
 	mlx_hook(ui->f->win, 17, 0L, ft_end, ui);

@@ -16,7 +16,6 @@ LIBFT   =   ./libft
 RM      =   rm -rf
 CC      =   gcc
 CFLAGS  =   -g -Wall -O2 -Werror -Wextra
-
 OBJ     =   $(SRC:.c=.o)
 GREEN=\033[0;32m
 RED=\033[0;31m

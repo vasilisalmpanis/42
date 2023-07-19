@@ -24,10 +24,25 @@ int	handle_no_events(t_var	*ui)
 {
 	if (ui->f->shift == 1)
 	{
-		ui->f->c_r += SHIFT_RATE * (ui->f->c_r < 2);
-		ui->f->c_i += SHIFT_RATE * (ui->f->c_i < 2);
-		mlx_clear_window(ui->f->mlx, ui->f->win);
-		draw_window(ui);
+		ui->f->c_r += ui->f->shift_rate * (ui->f->c_r < 2);
+		ui->f->c_i += ui->f->shift_rate * (ui->f->c_i < 2);
+		if ((ui->f->c_r > 2 || ui->f->c_i > 2))
+		{
+			ui->f->shift = 2;
+			ui->f->shift_rate = -1 * ui->f->shift_rate;
+		}
 	}
+	else if (ui->f->shift == 2)
+	{
+		ui->f->c_r += ui->f->shift_rate * (ui->f->c_r > -2);
+		ui->f->c_i += ui->f->shift_rate * (ui->f->c_i > -2);
+		if ((ui->f->c_r < -2 || ui->f->c_i < -2))
+		{
+			ui->f->shift = 1;
+			ui->f->shift_rate = -1 * ui->f->shift_rate;
+		}
+	}
+	mlx_clear_window(ui->f->mlx, ui->f->win);
+	draw_window(ui);
 	return (1);
 }

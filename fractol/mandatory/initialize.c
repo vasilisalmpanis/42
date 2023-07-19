@@ -35,6 +35,7 @@ t_var	*init_fractol(char *title, void *set)
 	ui->f->max_it = M_I;
 	ui->f->calc_color = polynomial;
 	ui->set = set;
+	ui->f->shift_rate = SHIFT_RATE;
 	ui->f->shift = 0;
 	return (ui);
 }

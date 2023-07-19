@@ -51,5 +51,6 @@ int	main(int argc, char **argv)
 	mlx_loop_hook(ui->f->mlx, &handle_no_events, ui);
 	draw_window(ui);
 	mlx_loop(ui->f->mlx);
+	ft_end(ui);
 	return (0);
 }

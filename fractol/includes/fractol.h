@@ -21,7 +21,7 @@
 
 # define WIDTH 900
 # define M_I 50
-# define SHIFT_RATE 0.01
+# define SHIFT_RATE 0.001
 
 typedef struct s_complex
 {
@@ -30,6 +30,7 @@ typedef struct s_complex
 	double		max_r;
 	double		min_i;
 	double		max_i;
+	double 		shift_rate;
 	double		r_origin;
 	double		i_origin;
 	double		c_r;

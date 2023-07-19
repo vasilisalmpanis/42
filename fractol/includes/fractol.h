@@ -91,5 +91,7 @@ void		julia_change_c(int x, int y, t_var *ui);
 void		change_set(t_var *ui, int keycode);
 void		shift_mode(t_var *ui, int keycode);
 int			handle_no_events(t_var	*ui);
+void		change_shift_rate(t_var *ui, int keycode);
+void		key_5(t_var *ui);
 
 #endif

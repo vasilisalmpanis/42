@@ -29,6 +29,8 @@ int	keyboard_input(int keycode, t_var *ui)
 		change_set(ui, keycode);
 	else if (keycode == KEY_SHIFT)
 		shift_mode(ui, keycode);
+	else if (keycode == KEY_4 || keycode == KEY_5)
+		change_shift_rate(ui, keycode);
 	return (1);
 }
 
@@ -78,6 +80,9 @@ void	reset_view(t_var *ui)
 	ui->f->max_it = M_I;
 	ui->f->r_origin = 0.0;
 	ui->f->i_origin = 0.0;
+	ui->f->c_r = 0.0;
+	ui->f->c_i = 0.0;
+	ui->f->shift_rate = SHIFT_RATE;
 	mlx_clear_window(ui->f->mlx, ui->f->win);
 	draw_window(ui);
 }

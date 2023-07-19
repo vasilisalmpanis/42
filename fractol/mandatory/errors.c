@@ -12,6 +12,11 @@
 
 #include "../includes/fractol.h"
 
+/*
+ * Function: no_parameters
+ * --------------------
+ * Prints the available options when the parameters passed are incorrect.
+ */
 void	no_parameters(void)
 {
 	ft_printf("Available sets:\n");

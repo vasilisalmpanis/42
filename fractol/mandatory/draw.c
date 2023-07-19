@@ -12,6 +12,13 @@
 
 #include "../includes/fractol.h"
 
+/*
+ * Function:  my_put_pixel
+ * --------------------
+ * @colour :  colour to be put
+ * @f : Pointer to the f struct
+ * Shifts the shift_rate
+ */
 void	my_put_pixel(t_complex *f, int color)
 {
 	char	*dst;
@@ -20,6 +27,12 @@ void	my_put_pixel(t_complex *f, int color)
 	*(unsigned int *)dst = color;
 }
 
+/*
+ * Function: print_lines
+ * --------------------
+ * @f : Pointer to the f struct
+ * Prints the overlay of iterations.
+ */
 void	print_lines(t_complex *f)
 {
 	int		i;
@@ -36,12 +49,24 @@ void	print_lines(t_complex *f)
 	free(itoa);
 }
 
+/*
+ * Function: draw_window
+ * --------------------
+ * @ui : Pointer to the ui struct
+ * Draws the set and prints the overlay.
+ */
 void	draw_window(t_var *ui)
 {
 	ui->set(ui->f);
 	print_lines(ui->f);
 }
 
+/*
+ * Function:  draw_Mandelbrot
+ * --------------------
+ * @f : Pointer to the f struct
+ * Calculates the colour for every pixel in the image and puts it.
+ */
 void	draw_mandelbrot(t_complex *f)
 {
 	double	p;
@@ -67,6 +92,12 @@ void	draw_mandelbrot(t_complex *f)
 	mlx_put_image_to_window(f->mlx, f->win, f->img, 0, 0);
 }
 
+/*
+ * Function:  draw_bs
+ * --------------------
+ * @f : Pointer to the f struct
+ * Calculates the colour for every pixel in the image and puts it.
+ */
 void	draw_bs(t_complex *f)
 {
 	double	p;

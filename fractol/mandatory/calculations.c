@@ -12,6 +12,13 @@
 
 #include "../includes/fractol.h"
 
+/*
+ * Function:  mandlel_calc_c
+ * --------------------
+ * @f : pointer to the f struct
+ * Calculates the c_r and c_i values for the Mandelbrot set.
+ * Clears the window and redraws the set.
+ */
 void	mandlel_calc_c(t_complex *f)
 {
 	f->c_r = ((f->x / f->width) * (f->max_r - f->min_r)) \
@@ -23,6 +30,13 @@ void	mandlel_calc_c(t_complex *f)
 	f->iter = 0;
 }
 
+/*
+ * Function:  mandlel_calc_z
+ * --------------------
+ * @f : pointer to the f struct
+ * Calculates the z_r and z_i values for the Mandelbrot set.
+ * Clears the window and redraws the set.
+ */
 void	mandel_calc_z(t_complex *f)
 {
 	while ((pow(f->z_r, 2) + pow(f->z_i, 2)) < 4 && f->iter < f->max_it)

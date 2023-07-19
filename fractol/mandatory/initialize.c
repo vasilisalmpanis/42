@@ -12,6 +12,15 @@
 
 #include "../includes/fractol.h"
 
+/*
+ * Function:  init_fractol
+ * --------------------
+ * title :  Title for the window
+ * set :  function for the initializing set.
+ * @f : Pointer to the f struct
+ * Creates the window and image
+ * Sets all the defaults values
+ */
 t_var	*init_fractol(char *title, void *set)
 {
 	t_var	*ui;

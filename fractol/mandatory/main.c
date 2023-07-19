@@ -24,6 +24,13 @@
 
 #include "../includes/fractol.h"
 
+/*
+ * Function:  ft_end
+ * --------------------
+ * Destroys the window and images created in the init_fractol
+ * Frees the set struct and the ui struct allocated in the
+ * init_fractol.
+ */
 int	ft_end(t_var *ui)
 {
 	mlx_destroy_image(ui->f->mlx, ui->f->img);
@@ -33,6 +40,15 @@ int	ft_end(t_var *ui)
 	exit(1);
 }
 
+/*
+ * Function:  main
+ * --------------------
+ * Parses input, and prints error messages,
+ * Initializes values for the GUI
+ * Hooks the keyboard and mouse to the respective functions
+ * Destroys the window and images created in the init_fractol
+ * Returns 0 if the program is executed successfully.
+ */
 int	main(int argc, char **argv)
 {
 	t_var	*ui;

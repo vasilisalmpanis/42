@@ -12,6 +12,12 @@
 
 #include "../includes/fractol.h"
 
+/*
+ * Function:  julia_start_calc
+ * --------------------
+ * @f : Pointer to the f struct
+ * Calculates the z_r and z_i values for the julia set.
+ */
 void	julia_calc_start(t_complex *f)
 {
 	f->z_r = ((f->x / f->width) * (f->max_r - f->min_r)) - \
@@ -21,6 +27,13 @@ void	julia_calc_start(t_complex *f)
 	f->iter = 0;
 }
 
+/*
+ * Function:  julia_calc_z
+ * --------------------
+ * @f : Pointer to the f struct
+ * Runs the iterations for the julia set numbers till max iter or
+ * until they escape to infinity.
+ */
 void	julia_calc_z(t_complex *f)
 {
 	while ((pow(f->z_r, 2) + pow(f->z_i, 2)) <= 4 && f->iter < f->max_it)
@@ -32,6 +45,15 @@ void	julia_calc_z(t_complex *f)
 	}
 }
 
+/*
+ * Function:  julia_change_c
+ * --------------------
+ * x :  position for calculating the c_r
+ * y :  position for calculating the c_i
+ * @ui : Pointer to the ui struct
+ * Calculates the c_r and c_i values for the julia set.
+ * Clears the window and redraws the set.
+ */
 void	julia_change_c(int x, int y, t_var *ui)
 {
 	ui->f->x = (double)x;
@@ -44,6 +66,12 @@ void	julia_change_c(int x, int y, t_var *ui)
 	draw_window(ui);
 }
 
+/*
+ * Function:  draw_julia
+ * --------------------
+ * @f : Pointer to the f struct
+ * calculates the colour for every pixel in the image and puts it.
+ */
 void	draw_julia(t_complex *f)
 {
 	f->y = -1;

@@ -19,7 +19,7 @@
 # include <math.h>
 # include "key_macros.h"
 
-# define WIDTH 900
+# define WIDTH 1200
 # define M_I 50
 # define SHIFT_RATE 0.001
 

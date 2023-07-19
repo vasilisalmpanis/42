@@ -12,6 +12,15 @@
 
 #include "../includes/fractol.h"
 
+/*
+ * Function:  handle_mouse
+ * --------------------
+ * @button : Button code of the mouse
+ * @x : X coordinate of the mouse
+ * @y : Y coordinate of the mouse
+ * @ui : They ui struct
+ * executes the corresponding function according to button pressed
+ */
 int	handle_mouse(int button, int x, int y, t_var *ui)
 {
 	if (button == MOUSE_SCROLL_UP)

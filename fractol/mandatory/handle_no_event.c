@@ -45,7 +45,7 @@ int	handle_no_events(t_var	*ui)
 	{
 		ui->f->c_r += ui->f->shift_rate * (ui->f->c_r < 2);
 		ui->f->c_i += ui->f->shift_rate * (ui->f->c_i < 2);
-		if ((ui->f->c_r > 2 || ui->f->c_i > 2))
+		if ((ui->f->c_r > 2 && ui->f->c_i > 2))
 		{
 			ui->f->shift = 2;
 			ui->f->shift_rate = -1 * ui->f->shift_rate;
@@ -55,7 +55,7 @@ int	handle_no_events(t_var	*ui)
 	{
 		ui->f->c_r += ui->f->shift_rate * (ui->f->c_r > -2);
 		ui->f->c_i += ui->f->shift_rate * (ui->f->c_i > -2);
-		if ((ui->f->c_r < -2 || ui->f->c_i < -2))
+		if ((ui->f->c_r < -2 && ui->f->c_i < -2))
 		{
 			ui->f->shift = 1;
 			ui->f->shift_rate = -1 * ui->f->shift_rate;

@@ -88,3 +88,32 @@ void	draw_julia(t_complex *f)
 	}
 	mlx_put_image_to_window(f->mlx, f->win, f->img, 0, 0);
 }
+
+/*
+ * Function:  init_julia
+ * --------------------
+ * @title : Title of the window
+ * @set : Function pointer
+ * @argv : Arguments
+ * Checks the x and y of julia and exits with error if unspecified chars are used
+ * Otherwise initializes julia with the given parameters
+ */
+t_var	*init_julia(char *title, void *set, char **argv, int argc)
+{
+	double	c_r;
+	double	c_i;
+	t_var	*ui;
+
+	if (argc != 4)
+		no_parameters();
+	check_input(argv[2]);
+	check_input(argv[3]);
+	c_r = ft_datoi(argv[2]);
+	c_i = ft_datoi(argv[3]);
+	if ((c_r > 2.0 || c_r < -2.0) || (c_i > 2.0 || c_i < -2.0))
+		no_parameters();
+	ui = init_fractol(title, set);
+	ui->f->c_r = c_r;
+	ui->f->c_i = c_i;
+	return (ui);
+}

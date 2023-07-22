@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 08:08:00 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/19 11:27:21 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/22 15:58:19 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdarg.h>
+# include <stdbool.h>
 
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
@@ -54,6 +55,7 @@ void	ft_putnbr_fd(int n, int fd);
 char	**ft_split(char const *s, char c);
 void	ft_free(char **b);
 int		ft_find_wc(char *n, char c);
+double	ft_datoi(const char *str);
 
 typedef struct s_list
 {

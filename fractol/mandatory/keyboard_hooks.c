@@ -67,7 +67,11 @@ void	change_set(t_var *ui, int keycode)
 	if (keycode == KEY_1 && ui->set)
 		ui->set = draw_mandelbrot;
 	else if (keycode == KEY_2)
+	{
 		ui->set = draw_julia;
+		ui->f->c_r = 0;
+		ui->f->c_i = 0;
+	}
 	else if (keycode == KEY_3)
 		ui->set = draw_bs;
 	mlx_clear_window(ui->f->mlx, ui->f->win);

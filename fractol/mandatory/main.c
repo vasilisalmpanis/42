@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 13:54:14 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/19 20:11:49 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/23 20:34:35 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ int	main(int argc, char **argv)
 {
 	t_var	*ui;
 
+	if (argc == 1)
+		no_parameters();
 	if ((ft_strncmp(argv[1], "Julia", ft_strlen(argv[1])) \
 			== 0 && ft_strlen(argv[1]) == 5) && argc == 4)
 		ui = init_julia("Julia", draw_julia, argv, argc);

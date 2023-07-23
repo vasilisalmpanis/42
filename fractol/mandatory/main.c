@@ -31,7 +31,8 @@
  * Frees the set struct and the ui struct allocated in the
  * init_fractol.
  */
-int	ft_end(t_var *ui) {
+int	ft_end(t_var *ui)
+{
 	mlx_destroy_image(ui->f->mlx, ui->f->img);
 	mlx_destroy_window(ui->f->mlx, ui->f->win);
 	free(ui->f);
@@ -59,6 +60,25 @@ void	hooks(t_var *ui)
  * Destroys the window and images created in the init_fractol
  * Returns 0 if the program is executed successfully.
  */
+
+t_var	*mandel_bs(char **argv)
+{
+	t_var	*ui;
+
+	if (ft_strncmp(argv[1], "Mandelbrot", ft_strlen(argv[1])) == 0 && \
+		ft_strlen(argv[1]) == 10)
+		ui = init_fractol("Mandelbrot", draw_mandelbrot);
+	else if ((ft_strncmp(argv[1], "Burning ship", ft_strlen(argv[1])) == 0) \
+		&& ft_strlen(argv[1]) == 12)
+		ui = init_fractol("Burning ship", draw_bs);
+	else
+	{
+		no_parameters();
+		exit(1);
+	}
+	return (ui);
+}
+
 int	main(int argc, char **argv)
 {
 	t_var	*ui;
@@ -67,19 +87,7 @@ int	main(int argc, char **argv)
 			== 0 && ft_strlen(argv[1]) == 5) && argc == 4)
 		ui = init_julia("Julia", draw_julia, argv, argc);
 	else if (argc == 2)
-	{
-		if (ft_strncmp(argv[1], "Mandelbrot", ft_strlen(argv[1])) == 0 && \
-		ft_strlen(argv[1]) == 10)
-			ui = init_fractol("Mandelbrot", draw_mandelbrot);
-		else if ((ft_strncmp(argv[1], "Burning ship", ft_strlen(argv[1])) == 0) \
-		&& ft_strlen(argv[1]) == 12)
-			ui = init_fractol("Burning ship", draw_bs);
-		else
-		{
-			no_parameters();
-			exit(1);
-		}
-	}
+		ui = mandel_bs(argv);
 	else
 	{
 		no_parameters();

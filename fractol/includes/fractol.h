@@ -22,6 +22,7 @@
 # define WIDTH 1200
 # define M_I 50
 # define SHIFT_RATE 0.001
+# define EXIT_MESSAGE "Please specify the correct parameters for the julia set\n"
 
 typedef struct s_complex
 {
@@ -30,7 +31,7 @@ typedef struct s_complex
 	double		max_r;
 	double		min_i;
 	double		max_i;
-	double 		shift_rate;
+	double		shift_rate;
 	double		r_origin;
 	double		i_origin;
 	double		c_r;

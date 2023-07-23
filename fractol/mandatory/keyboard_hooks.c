@@ -34,7 +34,7 @@ int	keyboard_input(int keycode, t_var *ui)
 		move_view(keycode, ui);
 	else if (keycode == KEY_1 || keycode == KEY_2 || keycode == KEY_3)
 		change_set(ui, keycode);
-	else if (keycode == KEY_SHIFT)
+	else if (keycode == KEY_SHIFT && ui->set == draw_julia)
 		shift_mode(ui, keycode);
 	else if (keycode == KEY_4 || keycode == KEY_5)
 		change_shift_rate(ui, keycode);

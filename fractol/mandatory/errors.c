@@ -29,14 +29,22 @@ void	no_parameters(void)
 void	check_input(char *argv)
 {
 	int	i;
+	int	dotflag;
+	int	pmflag;
 
 	i = -1;
+	dotflag = 0;
+	pmflag = 0;
 	if (ft_strlen(argv) == 0)
 		no_parameters();
 	while (argv[++i])
 	{
-		if (!(ft_isdigit(argv[i])) && !(argv[i] == '.') \
-			&& !(argv[i] == '-'))
+		if (argv[i] == '.' | argv[i] == ',')
+			dotflag++;
+		else if (argv[i] == '+' | argv[i] == '-')
+			pmflag++;
+		if (!(ft_strchr("0123456789.,+-", argv[i])) \
+			|| pmflag > 1 || dotflag > 1)
 		{
 			write(1, "Please specify the correct", 26);
 			write(1, " parameters for the julia set\n", 31);

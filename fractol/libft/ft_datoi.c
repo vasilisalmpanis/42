@@ -63,7 +63,7 @@ double	ft_datoi(const char *str)
 	else if (str[index] == '+')
 		index++;
 	number = parse_integer(str, &index, &minus);
-	if (str[index] == '.')
+	if (str[index] == '.' || str[index] == ',')
 	{
 		hasdecimal = true;
 		number += parse_decimal(str, &index);

@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 15:54:39 by valmpani          #+#    #+#             */
-/*   Updated: 2023/07/22 16:00:28 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/07/24 11:48:09 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ double	ft_datoi(const char *str)
 	if (str[index] == '.' || str[index] == ',')
 	{
 		hasdecimal = true;
-		number += parse_decimal(str, &index);
+		number += parse_decimal(str, &index) * minus;
 	}
-	return (number * minus);
+	return (number);
 }

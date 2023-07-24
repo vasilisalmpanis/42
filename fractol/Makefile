@@ -24,7 +24,7 @@ PINK = \033[95m
 END=\033[0m
 MAKE = make
 
-all: norm ${LIBFT} ${NAME}
+all: norm  ${LIBFT} ${NAME}
 
 ${NAME}: ${OBJ} ${LIBFT}
 		@if [[ ! -f mlx/libmlx.a ]]; then \

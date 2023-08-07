@@ -33,4 +33,5 @@ else
     echo "Oh My Zsh has been installed. Please restart your terminal to start using it."
 fi
 
-
+#brew tap LouisBrunner/valgrind
+#brew install --HEAD LouisBrunner/valgrind/valgrind

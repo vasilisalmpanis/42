@@ -97,7 +97,7 @@ char	*ft_read_file(int fd, char *rest)
 	return (rest);
 }
 
-char	*get_next_line(int fd)
+char *get_next_line(int fd)
 {
 	char		*line;
 	static char	*rest;
@@ -108,9 +108,11 @@ char	*get_next_line(int fd)
 	if (!rest)
 		return (NULL);
 	line = ft_line(rest);
-	rest = ft_line_rest(rest);
+//	rest = ft_line_rest(rest);
+//	free(rest);
 	return (line);
 }
+
 
 // int main()
 // {

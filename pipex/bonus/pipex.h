@@ -6,7 +6,7 @@
 /*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 10:47:12 by valmpani          #+#    #+#             */
-/*   Updated: 2023/06/27 11:05:17 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/08/16 10:42:23 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <string.h>
 # include "../libft/libft.h"
 
-# define BUFFER_SIZE 512
+# define BUFFER_SIZE 4096
 # define READ_END 0
 # define WRITE_END 1
 

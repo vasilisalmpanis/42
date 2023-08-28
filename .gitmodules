@@ -1,0 +1,4 @@
+[submodule "Minishell"]
+	path = Minishell
+	url = https://github.com/vasilisalmpanis/Minishell
+	branch = main

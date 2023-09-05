@@ -18,6 +18,12 @@
 # include <stdio.h>
 # include <sys/time.h>
 # include "../libft/libft.h"
+# define THINKING "is thinking"
+# define SLEEPING "is sleeping"
+# define EATING "is eating"
+# define FIRST	"has taken a fork"
+# define SECOND	"has taken a fork"
+
 
 typedef	struct s_prog t_prog;
 
@@ -41,9 +47,11 @@ typedef struct s_prog
 	size_t			start_time;
 	int				meals;
 	int				dead;
+	int				all_fed;
 	int				phil_num;
 	pthread_mutex_t	is_dead;
 	pthread_mutex_t	meal_proc;
+	pthread_mutex_t	print;
 	t_philo			*threads;
 }		t_prog;
 
@@ -58,5 +66,15 @@ int		*parse(char **argv, int argc);
 
 // ROUTINE
 void	*routine(void *prog);
+int		eat(t_philo *thread);
 
+// CHECK_PHILO
+int		check_is_dead(t_prog *prog);
+int		check_if_full(t_prog *prog);
+int		join_threads(t_prog *prog);
+void	print_message(t_philo *thread, char *message);
+
+int	take_forks(t_philo *thread);
+int philo_died(t_philo *thread);
+int	think(t_philo *thread);
 #endif

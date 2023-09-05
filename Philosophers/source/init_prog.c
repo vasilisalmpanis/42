@@ -18,7 +18,7 @@ int	*parse(char **argv, int argc)
 
 	if (argc != 5 && argc != 6)
 		return (NULL);
-	num = ft_calloc((argc - 1) , sizeof(int));
+	num = ft_calloc((argc - 1) ,sizeof(int));
 	if (!num)
 		return (NULL);
 	num[0] = ft_atoi(argv[1]);
@@ -59,7 +59,8 @@ t_prog	*initialize_prog(int *num, int argc)
 	else
 		prog->meals = -1;
 	if (pthread_mutex_init(&prog->is_dead, NULL) != 0 || \
-		pthread_mutex_init(&prog->meal_proc, NULL) != 0)
+		pthread_mutex_init(&prog->meal_proc, NULL) != 0 || \
+		pthread_mutex_init(&prog->print, NULL) != 0)
 		return (free(num), NULL);
 	if (init_philo(&prog, num[0]))
 		return (free(num), NULL);
@@ -78,14 +79,21 @@ int	init_philo(t_prog **prog, int num)
 	{
 		(*prog)->threads[i].id = i;
 		(*prog)->threads[i].right_fork = malloc(sizeof(pthread_mutex_t));
-		(*prog)->threads[i].left_fork = malloc(sizeof(pthread_mutex_t));
-		if (pthread_mutex_init((*prog)->threads[i].right_fork, NULL) != 0
-			|| pthread_mutex_init((*prog)->threads[i].left_fork, NULL) != 0)
+		if (pthread_mutex_init((*prog)->threads[i].right_fork, NULL) != 0)
 			return (1);
+		if (i != 0)
+			(*prog)->threads[i].left_fork = (*prog)->threads[i - 1].right_fork;
 		(*prog)->threads[i].dead = &(*prog)->dead;
 		(*prog)->threads[i].prog = (*prog);
+	}
+	(*prog)->threads[0].left_fork = (*prog)->threads[num - 1].right_fork;
+	i = -1;
+	while (++i < num)
+	{
+		if (!(*prog)->start_time)
+			(*prog)->start_time = get_time();
 		if (pthread_create(&(*prog)->threads[i].philo, NULL,
-				routine, (void *)(&(*prog)->threads[i].philo)) != 0)
+						   routine, (void *)(&(*prog)->threads[i].philo)) != 0)
 		{
 			perror("thread\n");
 			return (1);

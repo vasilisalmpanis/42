@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valmpani <valmpani@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:30:34 by valmpani          #+#    #+#             */
-/*   Updated: 2023/05/23 13:40:56 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/09/05 08:09:16 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,7 @@ char *get_next_line(int fd)
 	if (!rest)
 		return (NULL);
 	line = ft_line(rest);
-//	rest = ft_line_rest(rest);
-//	free(rest);
+	rest = ft_line_rest(rest);
 	return (line);
 }
 

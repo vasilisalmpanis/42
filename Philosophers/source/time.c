@@ -20,18 +20,17 @@ size_t	get_time(void)
 
 	if (gettimeofday(&time, NULL) == -1)
 		printf("Error with time\n");
-	return (time.tv_sec * 1000000 + time.tv_usec);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
 int	ft_usleep(size_t millisec)
 {
 	size_t	start;
+	size_t	time;
 
 	start = get_time();
-	while ((get_time() - start) < millisec)
-	{
-		usleep(0);
-	}
+	while (get_time() < start + millisec)
+		usleep(1000);
 	return (0);
 }
 

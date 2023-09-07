@@ -12,24 +12,44 @@
 
 #include "philosophers.h"
 
+void	destroy_prog(t_prog *prog)
+{
+	int	i;
+
+	i = -1;
+	while (++i < prog->phil_num)
+	{
+		pthread_mutex_destroy(prog->threads[i].right_fork);
+		free(prog->threads[i].right_fork);
+	}
+	free(prog->threads);
+	free(prog->philo);
+	pthread_mutex_destroy(&prog->is_dead);
+	pthread_mutex_destroy(&prog->meal_proc);
+	pthread_mutex_destroy(&prog->print);
+	free(prog);
+}
+
 int	main(int argc, char **argv)
 {
 	t_prog	*prog;
-	int		*num;
+	int		num;
 	int		i;
 
 	num = parse(argv, argc);
-	if (!num)
-		return (printf("Parsing error please give the correct parameters.\n"), 1);
-	prog = initialize_prog(num, argc);
+	if (num)
+		return (printf(PARSE"\n"), 1);
+	prog = initialize_prog(argc, argv);
 	if (!prog)
 		return (1);
 	i = -1;
 	while (1)
 	{
-		if (check_if_full(prog))
+		ft_usleep(100);
+		if (check_is_dead(prog) || check_if_full(prog))
 			break ;
 	}
 	join_threads(prog);
+	destroy_prog(prog);
 	return (0);
 }

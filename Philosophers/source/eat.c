@@ -42,6 +42,11 @@ int	take_left_fork(t_philo *thread, char *msg)
 
 int	take_forks(t_philo *thread)
 {
+	if (thread->id % 2 == 1 && thread->meals_eatten == 0)
+	{
+		print_message(thread, THINKING);
+		ft_usleep(thread->prog->time_to_eat / 2);
+	}
 	if (thread->id % 2 == 0)
 	{
 		if (take_right_fork(thread, FIRST))

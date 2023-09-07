@@ -17,19 +17,20 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <sys/time.h>
+# include <string.h>
 # include "../libft/libft.h"
 # define THINKING "is thinking"
 # define SLEEPING "is sleeping"
 # define EATING "is eating"
 # define FIRST	"has taken a fork"
 # define SECOND	"has taken a fork"
-
+# define DIED "died"
+# define PARSE "Parsing error please give the correct parameters."
 
 typedef	struct s_prog t_prog;
 
 typedef struct s_philo
 {
-	pthread_t		philo;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*left_fork;
 	int				id;
@@ -52,6 +53,7 @@ typedef struct s_prog
 	pthread_mutex_t	is_dead;
 	pthread_mutex_t	meal_proc;
 	pthread_mutex_t	print;
+	pthread_t		*philo;
 	t_philo			*threads;
 }		t_prog;
 
@@ -60,9 +62,9 @@ int		ft_usleep(size_t millisec);
 size_t	get_time(void);
 
 // INIT_PROG
-t_prog	*initialize_prog(int *num, int argc);
+t_prog	*initialize_prog(int argc, char **argv);
 int		init_philo(t_prog **prog, int num);
-int		*parse(char **argv, int argc);
+int		parse(char **argv, int argc);
 
 // ROUTINE
 void	*routine(void *prog);

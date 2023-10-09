@@ -2,3 +2,6 @@
 	path = Minishell
 	url = https://github.com/vasilisalmpanis/Minishell
 	branch = main
+[submodule "cub3D"]
+	path = cub3D
+	url = https://github.com/memaar92/cub3D

@@ -18,7 +18,7 @@
 # include "string.h"
 
 class PhoneBook {
-private:
+public:
 	std::string Contacts[8];
 	std::string firstName[8];
 	std::string lastName[8];

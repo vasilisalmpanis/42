@@ -41,7 +41,15 @@ void PhoneBook::add() {
 void PhoneBook::search() {
 	std::cout << "Index     |First name|Last Name |Nick Name" << std::endl;
 	for (int i = 0; i < index; ++i) {
-		std::cout << i << " " << firstName[i] << " " << lastName[i] << " " << nickname[i] << std::endl;
+		std::cout << std::right << i;
+		int spaces = 9 - std::to_string(i).length(); // Change 'index' to 'i' here
+		for (int j = 0; j < spaces; j++) {
+			std::cout << ' ';
+		}
+		std::cout << " | " << (firstName[i].length() > 10 ? firstName[i].substr(0, 10) + '.' : firstName[i])
+				  << " | " << (lastName[i].length() > 10 ? lastName[i].substr(0, 10) + '.' : lastName[i])
+				  << " | " << (nickname[i].length() > 10 ? nickname[i].substr(0, 10) + '.' : nickname[i])
+				  << std::endl;
 	}
 }
 

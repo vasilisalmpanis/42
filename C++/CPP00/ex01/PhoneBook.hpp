@@ -15,6 +15,7 @@
 
 # include "iostream"
 # include "stdlib.h"
+# include "Contacts.hpp"
 
 # define ANSI_RESET "\033[0m"
 # define ANSI_RED "\033[31m"
@@ -24,29 +25,15 @@
 
 class PhoneBook {
 private:
-	std::string firstName[8];
-	std::string lastName[8];
-	std::string nickname[8];
-	std::string phoneNumber[8];
-	std::string darkestSecret[8];
+	Contacts contacts[8];
 	int index;
 public:
-//	void setFirstName(std::string string, int index);
-//	std::string setFirstName(int i);
-//	void setLastName(std::string string, int index);
-//	std::string setLastName(int i);
-//	void setNickname(std::string string, int index);
-//	std::string setNickname(int i);
-//	void setPhoneNumber(std::string string, int index);
-//	std::string getPhoneNumber(int i);
-//	void setDarkestSecret(std::string string, int index);
-//	std::string getDarkestSecret(int i);
 	void setIndex(int index);
-//	int getIndex(void);
 	void add(void);
 	void search(void);
 	void getUserInput(void);
-	void clearContact(void);
+	void clearContacts(void);
+	void printContact(void);
 	PhoneBook (void);
 	~PhoneBook(void);
 };

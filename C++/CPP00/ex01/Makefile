@@ -1,6 +1,6 @@
 NAME	=	PhoneBook
 CFLAGS	=	-Wall -Wextra -Werror -std=c++98
-SRCS	=	Phonebook.cpp
+SRCS	=	Phonebook.cpp Contacts.cpp main.cpp
 
 INCS	=	PhoneBook.hpp
 OBJ     =   $(SRCS:.cpp=.o)
@@ -12,7 +12,7 @@ all : ${NAME}
 ${NAME}:	${OBJ}
 		${CC} ${CFLAGS} ${OBJ} -I ${INCS} -o ${NAME}
 
-%.o: %.c
+%.o: %.cpp
 		${CC} ${CFLAGS} -I ${INCS} -c $< -o $@
 
 clean:

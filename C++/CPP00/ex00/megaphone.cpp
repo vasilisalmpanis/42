@@ -4,6 +4,7 @@ int main(int argc, char **argv)
 {
 	int	i;
 	int j;
+	std::string temp;
 
 	if (argc == 1)
 	{
@@ -14,11 +15,12 @@ int main(int argc, char **argv)
 	while (argv[++i])
 	{
 		j = -1;
+		temp = argv[i];
 		while (argv[i][++j])
 		{
-			argv[i][j] = toupper(argv[i][j]);
-			std::cout << argv[i][j];
+			temp[j] = toupper(temp[j]);
 		}
+		std::cout << temp;
 	}
 	std::cout << "\n";
 	return (0);

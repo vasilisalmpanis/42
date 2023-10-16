@@ -1,0 +1,26 @@
+NAME	=	PhoneBook
+CFLAGS	=	-Wall -Wextra -Werror -std=c++98
+SRCS	=	Account.cpp tests.cpp
+
+INCS	=	Account.hpp
+OBJ     =   $(SRCS:.cpp=.o)
+RM	=	rm -rf
+CC	=	g++
+
+all : ${NAME}
+
+${NAME}:	${OBJ}
+		${CC} ${CFLAGS} ${OBJ} -I ${INCS} -o ${NAME}
+
+%.o: %.cpp
+		${CC} ${CFLAGS} -I ${INCS} -c $< -o $@
+
+clean:
+		${RM} ${OBJ}
+
+fclean: clean
+		${RM} ${NAME}
+
+re: fclean all
+
+.PHONY: all clean fclean re

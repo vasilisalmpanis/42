@@ -15,7 +15,7 @@
 int main(void)
 {
 	Zombie *zombie;
-//	randomChump("vasilis");
+	randomChump("vasilis");
 	zombie = newZombie("almpanis");
 	zombie->announce();
 	delete zombie;

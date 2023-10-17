@@ -16,7 +16,6 @@ int main(void)
 {
 	Zombie *zombie;
 	int n = 5;
-	randomChump("vasilis");
 	zombie = zombieHorde(5, "vasilis");
 	for (int i = 0; i < n; ++i) {
 		zombie[i].announce();

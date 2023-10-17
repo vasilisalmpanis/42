@@ -1,6 +1,6 @@
-NAME	=	replacement
+NAME	=	harl
 CFLAGS	=	-Wall -Wextra -Werror -g -std=c++98 #-fsanitize=address
-SRCS	=	main.cpp
+SRCS	=	main.cpp Harl.cpp
 
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf

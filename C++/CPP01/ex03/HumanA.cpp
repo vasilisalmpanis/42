@@ -4,14 +4,12 @@
 
 #include "HumanA.h"
 
-HumanA::HumanA(std::string name1, Weapon   &weapon1) {
-	this->name = name1;
-	weapon = &weapon1;
+HumanA::HumanA(std::string name1, Weapon   &weapon1) : _name(name1), _weapon(weapon1) {
 }
 
 HumanA::~HumanA() {
 }
 
 void HumanA::attack() {
-	std::cout << name << " attacks with their " << weapon->getType() << std::endl;
+	std::cout << _name << " attacks with their " << _weapon.getType() << std::endl;
 }

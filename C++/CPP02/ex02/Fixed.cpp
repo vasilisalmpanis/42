@@ -114,6 +114,28 @@ Fixed	Fixed::operator-- (int number) {
 	return (original);
 }
 
+Fixed &Fixed::max(Fixed &a, Fixed &b) {
+	if (a > b)
+		return (a);
+	return (b);
+}
+Fixed &Fixed::min(Fixed &a, Fixed &b){
+	if (a < b)
+		return (a);
+	return (b);
+}
+const Fixed &Fixed::max(Fixed const &a, Fixed const &b){
+	if (a > b)
+		return (a);
+	return (b);
+}
+const Fixed &Fixed::min(Fixed const &a, Fixed const &b){
+	if (a < b)
+		return (a);
+	return (b);
+}
+
+
 std::ostream & operator << (std::ostream &out, const Fixed &obj){
 	out << obj.toFloat();
 	return out;

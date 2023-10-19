@@ -21,8 +21,11 @@ Point::Point(Point const &obj) : _x(obj._x), _y(obj._y){
 }
 
 Point &Point::operator=(Point const &obj) {
-	this->~Point();
-	new(this) Point(obj._x.toFloat(),   obj._y.toFloat());
+	if (this != &obj)
+	{
+		(Fixed) this->_x = obj._x;
+		(Fixed) this->_y = obj._x;
+	}
 	return (*this);
 }
 

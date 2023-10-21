@@ -87,7 +87,7 @@ bool Account::makeWithdrawal(int withdrawal) {
 }
 
 void Account::_displayTimestamp() {
-	std::time_t t = std::time(nullptr);
+	std::time_t t = std::time(NULL);
 	char mbstr[100];
 
 	if (std::strftime(mbstr, sizeof(mbstr), "[%Y%m%d_%H%M%S] ", std::localtime(&t)))

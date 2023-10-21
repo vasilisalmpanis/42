@@ -69,11 +69,16 @@ void PhoneBook::getUserInput(void)
 	while (true) {
 		std::cout << "Please provide an index from 1-8: ";
 		std::getline(std::cin, input);
-		input = input.substr(input.find_first_not_of(" \n\r\t"), input.find_last_not_of(" \n\r\t") + 1);
-		if (input.length() == 1 && input[0] >= '1' && input[0] <= '8') {
-			break ;
-		} else {
+		if (input.empty())
 			std::cout << "Invalid input. Please provide an index from 1-8." << std::endl;
+		else
+		{
+			input = input.substr(input.find_first_not_of(" \n\r\t"), input.find_last_not_of(" \n\r\t") + 1);
+			if (input.length() == 1 && input[0] >= '1' && input[0] <= '8') {
+				break ;
+			} else {
+				std::cout << "Invalid input. Please provide an index from 1-8." << std::endl;
+			}
 		}
 	}
 	i = atoi(input.c_str());

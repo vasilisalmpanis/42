@@ -4,15 +4,16 @@ SRCS	=	main.cpp randomChump.cpp Zombie.cpp newZombie.cpp
 
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
-CC	=	c++
+CXX	=	clang++
+INC	=	.
 
 all : ${NAME}
 
 ${NAME}:	${OBJ}
-		${CC} ${CFLAGS} ${OBJ} -o ${NAME}
+		${CXX} ${CFLAGS} ${OBJ}  -I ${INC} -o ${NAME}
 
 %.o: %.c
-		${CC} ${CFLAGS} -c $< -o $@
+		${CXX} ${CFLAGS}  -I ${INC} -c $< -o $@
 
 clean:
 		${RM} ${OBJ}

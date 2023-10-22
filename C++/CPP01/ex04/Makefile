@@ -4,15 +4,15 @@ SRCS	=	main.cpp
 
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
-CC	=	c++
+CXX	=	c++
 
 all : ${NAME}
 
 ${NAME}:	${OBJ}
-		${CC} ${CFLAGS} ${OBJ} -o ${NAME}
+		${CXX} ${CFLAGS} ${OBJ} -o ${NAME}
 
 %.o: %.c
-		${CC} ${CFLAGS} -c $< -o $@
+		${CXX} ${CFLAGS} -c $< -o $@
 
 clean:
 		${RM} ${OBJ}

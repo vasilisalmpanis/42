@@ -4,15 +4,16 @@ SRCS	=	main.cpp Weapon.cpp HumanA.cpp  HumanB.cpp
 
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
-CC	=	c++
+CXX	=	c++
+INC	=	.
 
 all : ${NAME}
 
 ${NAME}:	${OBJ}
-		${CC} ${CFLAGS} ${OBJ} -o ${NAME}
+		${CXX} ${CFLAGS} -I ${INC} ${OBJ} -o ${NAME}
 
 %.o: %.c
-		${CC} ${CFLAGS} -c $< -o $@
+		${CXX} ${CFLAGS} -I ${INC}-c $< -o $@
 
 clean:
 		${RM} ${OBJ}

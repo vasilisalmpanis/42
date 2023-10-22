@@ -26,7 +26,8 @@ int main() {
 		if (prompt.compare("SEARCH") == 0)
 			phone.search();
 		std::cout << "Type ADD SEARCH or EXIT" << std::endl;
-		std::getline(std::cin, prompt);
+		if (!std::getline(std::cin, prompt))
+			return (1);
 	}
 	return (0);
 }

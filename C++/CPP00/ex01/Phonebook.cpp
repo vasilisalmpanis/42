@@ -68,8 +68,11 @@ void PhoneBook::getUserInput(void)
 
 	while (true) {
 		std::cout << "Please provide an index from 1-8: ";
-		std::getline(std::cin, input);
-		if (input.empty())
+		if (!std::getline(std::cin, input))
+		{
+			return;
+		}
+		else if (input.empty() )
 			std::cout << "Invalid input. Please provide an index from 1-8." << std::endl;
 		else
 		{

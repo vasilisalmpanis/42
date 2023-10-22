@@ -41,27 +41,32 @@ void Contacts::addContact(){
 	while (firstName.empty() || isValidName(firstName))
 	{
 		std::cout << "First Name :" << std::endl;
-		std::getline(std::cin, firstName);
+		if (!std::getline(std::cin, firstName))
+			return ;
 	}
 	while (lastName.empty() || isValidName(lastName))
 	{
 		std::cout << "Last Name :" << std::endl;
-		std::getline(std::cin, lastName);
+		if (!std::getline(std::cin, lastName))
+			return;
 	}
 	while (nickname.empty() || isValidName(nickname))
 	{
 		std::cout << "Nickname :" << std::endl;
-		std::getline(std::cin, nickname);
+		if (!std::getline(std::cin, nickname))
+			return;
 	}
 	while (phoneNumber.empty() || isNotAllNum())
 	{
 		std::cout << "Phone Number :" << std::endl;
-		std::getline(std::cin, phoneNumber);
+		if (!std::getline(std::cin, phoneNumber))
+			return;
 	}
 	while (darkestSecret.empty())
 	{
 		std::cout << "Darkest Secret:" << std::endl;
-		std::getline(std::cin, darkestSecret);
+		if (!std::getline(std::cin, darkestSecret))
+			return;
 	}
 	filled = 1;
 };

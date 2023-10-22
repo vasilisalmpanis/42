@@ -5,15 +5,15 @@ SRCS	=	Phonebook.cpp Contacts.cpp main.cpp
 INCS	=	PhoneBook.hpp
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
-CC	=	g++
+CXX	=	clang++
 
 all : ${NAME}
 
 ${NAME}:	${OBJ}
-		${CC} ${CFLAGS} ${OBJ} -I ${INCS} -o ${NAME}
+		${CXX} ${CFLAGS} ${OBJ} -I ${INCS} -o ${NAME}
 
 %.o: %.cpp
-		${CC} ${CFLAGS} -I ${INCS} -c $< -o $@
+		${CXX} ${CFLAGS} -I ${INCS} -c $< -o $@
 
 clean:
 		${RM} ${OBJ}

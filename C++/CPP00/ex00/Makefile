@@ -2,17 +2,17 @@ NAME	=	megaphone
 CFLAGS	=	-Wall -Wextra -Werror -std=c++98
 SRCS	=	megaphone.cpp
 
-OBJ     =   $(SRCS:.cpp=.o)
+OBJ     =	 $(SRCS:.cpp=.o)
 RM	=	rm -rf
-CC	=	c++
-
+CXX	=	clang++
+INCS	=	megaphone.hpp
 all : ${NAME}
 
 ${NAME}:	${OBJ}
-		${CC} ${CFLAGS} ${OBJ} -o ${NAME}
+		${CXX}  ${CFLAGS} ${OBJ} -o ${NAME} -I ${INCS}
 
 %.o: %.c
-		${CC} ${CFLAGS} -c $< -o $@
+		${CXX} ${CFLAGS} -c $< -o $@ -I ${INCS}
 
 clean:
 		${RM} ${OBJ}

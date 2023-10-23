@@ -1,5 +1,5 @@
 NAME	=	Zombie
-CFLAGS	=	-Wall -Wextra -Werror -g -std=c++98
+CXXFLAGS	=	-Wall -Wextra -Werror -g -std=c++98
 SRCS	=	main.cpp randomChump.cpp Zombie.cpp newZombie.cpp
 
 OBJ     =   $(SRCS:.cpp=.o)
@@ -10,10 +10,10 @@ INC	=	.
 all : ${NAME}
 
 ${NAME}:	${OBJ}
-		${CXX} ${CFLAGS} ${OBJ}  -I ${INC} -o ${NAME}
+		${CXX} ${CXXFLAGS} ${OBJ}  -I ${INC} -o ${NAME}
 
 %.o: %.c
-		${CXX} ${CFLAGS}  -I ${INC} -c $< -o $@
+		${CXX} ${CXXFLAGS}  -I ${INC} -c $< -o $@
 
 clean:
 		${RM} ${OBJ}

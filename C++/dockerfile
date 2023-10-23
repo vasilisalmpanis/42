@@ -7,6 +7,13 @@ RUN apt-get install -y \
     build-essential \
     clang \
     make \
+    git \
+    zsh \
+    curl \
+    man \
     nano
+
+RUN rm -rf /root/oh-my-zsh
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 RUN ["/bin/bash"]

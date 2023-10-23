@@ -1,5 +1,5 @@
 NAME	=	brain
-CFLAGS	=	-Wall -Wextra -Werror -g -std=c++98 #-fsanitize=address
+CXXFLAGS	=	-Wall -Wextra -Werror -g -std=c++98 #-fsanitize=address
 SRCS	=	main.cpp
 
 OBJ     =   $(SRCS:.cpp=.o)
@@ -9,10 +9,10 @@ CXX	=	c++
 all : ${NAME}
 
 ${NAME}:	${OBJ}
-		${CXX} ${CFLAGS} ${OBJ} -o ${NAME}
+		${CXX} ${CXXFLAGS} ${OBJ} -o ${NAME}
 
 %.o: %.c
-		${CXX} ${CFLAGS} -c $< -o $@
+		${CXX} ${CXXFLAGS} -c $< -o $@
 
 clean:
 		${RM} ${OBJ}

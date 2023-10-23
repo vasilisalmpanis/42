@@ -1,5 +1,5 @@
 NAME	=	Bank
-CFLAGS	=	-Wall -Wextra -Werror -std=c++98
+CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98
 SRCS	=	Account.cpp tests.cpp
 
 INCS	=	Account.hpp
@@ -10,10 +10,10 @@ CXX	=	clang++
 all : ${NAME}
 
 ${NAME}:	${OBJ}
-		${CXX} ${CFLAGS} ${OBJ} -I ${INCS} -o ${NAME}
+		${CXX} ${CXXFLAGS} ${OBJ} -I ${INCS} -o ${NAME}
 
 %.o: %.cpp
-		${CXX} ${CFLAGS} -I ${INCS} -c $< -o $@
+		${CXX} ${CXXFLAGS} -I ${INCS} -c $< -o $@
 
 clean:
 		${RM} ${OBJ}

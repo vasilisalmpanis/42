@@ -4,16 +4,20 @@
 
 #include "ClapTrap.h"
 
+ClapTrap::ClapTrap(void) {
+	std::cout << "ClapTrap default constructor initialized" << std::endl;
+}
+
 ClapTrap::ClapTrap(std::string name) : _name(name), _hp(10), _ep(10), _ad(0) {
-	std::cout << "Default constructor initialized" << std::endl;
+	std::cout << "ClapTrap constructor initialized" << std::endl;
 }
 
 ClapTrap::~ClapTrap() {
-	std::cout << "Destructor initialized" << std::endl;
+	std::cout << "ClapTrap Destructor initialized" << std::endl;
 }
 
 ClapTrap::ClapTrap(ClapTrap const &obj) {
-	std::cout << "Copy constructor called" << std::endl;
+	std::cout << "ClapTrap Copy constructor called" << std::endl;
 	if (this != &obj)
 	{
 		*this = obj;
@@ -21,7 +25,7 @@ ClapTrap::ClapTrap(ClapTrap const &obj) {
 }
 
 ClapTrap &ClapTrap::operator=(ClapTrap const &obj) {
-	std::cout << "Copy assignment operator called" << std::endl;
+	std::cout << "ClapTrap Copy assignment operator called" << std::endl;
 	if (this != &obj)
 	{
 		this->_ad = obj._ad;
@@ -40,6 +44,17 @@ int ClapTrap::getEp(void){
 }
 int ClapTrap::getAd(void){
 	return (_ad);
+}
+
+void ClapTrap::setHp(int hp) {
+	_hp = hp;
+}
+
+void ClapTrap::setEp(int ep) {
+	_ep = ep;
+}
+void ClapTrap::setAd(int ad){
+	_ad = ad;
 }
 std::string ClapTrap::getName(void){
 	return (_name);

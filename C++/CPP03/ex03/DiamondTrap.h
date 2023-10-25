@@ -1,8 +1,8 @@
 #ifndef DiamondTrap_HPP
 #define DiamondTrap_HPP 
 #include "ScavTrap.h"
-#include "FlagTrap.h"
-class DiamondTrap: public ScavTrap, public FlagTrap {
+#include "FragTrap.h"
+class DiamondTrap: public ScavTrap, public FragTrap {
 private:
 	std::string _name;
 public:

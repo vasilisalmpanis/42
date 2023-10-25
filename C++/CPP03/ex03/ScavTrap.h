@@ -7,8 +7,8 @@
 #include "ClapTrap.h"
 
 class ScavTrap: virtual public ClapTrap {
-private:
-
+protected:
+	unsigned int _ep;
 public:
 	void guardGate(void);
 	ScavTrap(void);
@@ -17,6 +17,7 @@ public:
 	ScavTrap(ScavTrap const &obj);
 	ScavTrap &operator=(const ScavTrap &obj);
 	void attack(const std::string& target);
+	unsigned int getEp(void);
 };
 
 

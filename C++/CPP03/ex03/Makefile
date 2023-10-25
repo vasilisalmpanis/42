@@ -1,18 +1,17 @@
 NAME	=	ClapTrap
 CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98
-INC		= .
-SRCS	=	main.cpp ClapTrap.cpp ScavTrap.cpp FlagTrap.cpp DiamondTrap.cpp
-OBJ     =   $(SRCS:.cpp=.o
+SRCS	=	main.cpp ClapTrap.cpp FragTrap.cpp ScavTrap.cpp DiamondTrap.cpp
+OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
 CXX	=	c++
 
 all : ${NAME}
 
 ${NAME}:	${OBJ}
-		${CXX} ${CXXFLAGS} -I ${INC} ${OBJ} -o ${NAME}
+		${CXX} ${CXXFLAGS} ${OBJ} -o ${NAME}
 
 %.o: %.c
-		${CXX} ${CXXFLAGS} -I ${INC} -c $< -o $@
+		${CXX} ${CXXFLAGS} -c $< -o $@
 
 clean:
 		${RM} ${OBJ}

@@ -1,15 +1,14 @@
 #include "DiamondTrap.h"
-
+#include "FragTrap.h"
+#include "ScavTrap.h"
+#include <stdio.h>
 int main(void) {
-	DiamondTrap bla("vasilis");
-
-	bla.whoAmI();
-	bla.attack("1");
-	bla.attack("2");
-
-	std::cout << bla.getHp() << std::endl;
-	std::cout << bla.getEp() << std::endl;
-	std::cout << bla.getAd() << std::endl;
-	std::cout << bla.getName() << std::endl;
-	std::cout << bla.getAd() << std::endl;
+	DiamondTrap a("hello");
+	std::cout <<  a.getEp() << std::endl;;
+	std::cout << a.getHp() << std::endl;
+	std::cout << a.getAd() << std::endl;
+	a.attack("hello");
+	a.whoAmI();
+	a.attack("radom");
+	a.attack("radom");
 }

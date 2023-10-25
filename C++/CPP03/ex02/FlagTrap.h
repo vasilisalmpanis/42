@@ -7,11 +7,11 @@ private:
 
 public:
 	void highFiveGuys(void);
+	FlagTrap(void);
 	FlagTrap(std::string name);
 	~FlagTrap();
 	FlagTrap(FlagTrap const &obj);
 	FlagTrap &operator=(const FlagTrap &obj);
-	void attack(const std::string& target);
 };
 
 #endif

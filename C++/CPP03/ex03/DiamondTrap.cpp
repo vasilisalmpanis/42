@@ -4,16 +4,19 @@
 
 #include "DiamondTrap.h"
 #include "ClapTrap.h"
-#include "FlagTrap.h"
+#include "FragTrap.h"
 #include "ScavTrap.h"
 
-DiamondTrap::DiamondTrap(void) : ScavTrap(), FlagTrap() {
-};
+DiamondTrap::DiamondTrap(void) {
+	std::cout << "DiamondTrap Default constructor called" << std::endl;
+}
 
 
 DiamondTrap::DiamondTrap(std::string name) {
-	ClapTrap::_name = name + "_clap_name";
-	std::cout << "DiamondTrap default constructor called." << std::endl;	
+	ClapTrap::_name = name + "_clasdlkj";
+	this->_ep = ScavTrap::_ep;
+	this->_name = name;
+	std::cout << "DiamondTrap constructor called." << std::endl;	
 }
 
 
@@ -21,7 +24,7 @@ DiamondTrap::~DiamondTrap() {
 	std::cout << "DiamondTrap Destructor called" << std::endl;
 }
 
-DiamondTrap::DiamondTrap(DiamondTrap const &obj): ClapTrap(obj._name) {
+DiamondTrap::DiamondTrap(DiamondTrap const &obj): ClapTrap(obj), ScavTrap(obj), FragTrap(obj) {
 	std::cout << "DiamondTrap Copy Constructor Called" << std::endl;
 	if (this != &obj)
 		*this = obj;
@@ -31,7 +34,7 @@ DiamondTrap &DiamondTrap::operator=(DiamondTrap const &obj) {
 	if (this != &obj)
 	{ this->_hp = obj._hp;
 		this->_ad = obj._ad;
-		this->_ep = obj._ep;
+		this->ClapTrap::_ep = obj._ep;
 		this->_hp = obj._hp;
 	}
 	return (*this);

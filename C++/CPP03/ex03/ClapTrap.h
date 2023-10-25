@@ -6,12 +6,13 @@
 #define ClapTrap_HPP
 #include <iostream>
 
+
 class ClapTrap {
-protected:
+	public:
 	std::string _name;
-	int _hp;
-	int _ep;
-	int _ad;
+	unsigned int _hp;
+	unsigned int _ep;
+	unsigned int _ad;
 public:
 	ClapTrap(void);
 	ClapTrap(std::string name);
@@ -19,7 +20,7 @@ public:
 	ClapTrap(ClapTrap const &obj);
 	ClapTrap &operator=(const ClapTrap &obj);
 	int getHp(void);
-	int getEp(void);
+	virtual unsigned int getEp(void);
 	int getAd(void);
 	void setHp(int hp);
 	void setEp(int ep);

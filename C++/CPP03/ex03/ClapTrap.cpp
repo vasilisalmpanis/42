@@ -3,14 +3,19 @@
 //
 
 #include "ClapTrap.h"
-ClapTrap::ClapTrap(void) {};
+
+ClapTrap::ClapTrap(void) : _name("ClapTrap"), _hp(10), _ep(10), _ad(0){
+	std::cout << "ClapTrap default constructor initialized" << std::endl;
+}
+
 ClapTrap::ClapTrap(std::string name) : _name(name), _hp(10), _ep(10), _ad(0) {
-	std::cout << "ClapTrap Default constructor initialized" << std::endl;
+	std::cout << "ClapTrap constructor initialized" << std::endl;
 }
 
 ClapTrap::~ClapTrap() {
 	std::cout << "ClapTrap Destructor initialized" << std::endl;
 }
+
 
 ClapTrap::ClapTrap(ClapTrap const &obj) {
 	std::cout << "ClapTrap Copy constructor called" << std::endl;
@@ -35,7 +40,7 @@ ClapTrap &ClapTrap::operator=(ClapTrap const &obj) {
 int ClapTrap::getHp(void){
 	return (_hp);
 }
-int ClapTrap::getEp(void){
+unsigned int ClapTrap::getEp(void){
 	return (_ep);
 }
 int ClapTrap::getAd(void){
@@ -57,14 +62,12 @@ std::string ClapTrap::getName(void){
 }
 
 void ClapTrap::attack(const std::string& target) {
-	for (int i = 0; i < _ad; ++i) {
-		if (_ep <= 0)
-		{
-			std::cout << "ClapTrap object " << _name << " has no more EP to attack " << target << std::endl;
-			return ;
-		}
-		_ep--;
+	if (_ep <= 0)
+	{
+		std::cout << "ClapTrap object " << _name << " has no more EP to attack" << std::endl;
+		return ;
 	}
+	_ep--;
 	std::cout << "ClapTrap object " << _name << " attacks " << target << " and causing " << _ad << " points of damage." << std::endl;
 }
 
@@ -76,18 +79,19 @@ void ClapTrap::takeDamage(unsigned int amount) {
 			std::cout << "ClapTrap object " << _name << " has no more HP." << std::endl;
 			return ;
 		}
-		std::cout << "ClapTrap object " << _name << " took " << amount << " points of damage." << std::endl;
+		_hp--;
 	}
+	std::cout << "ClapTrap object " << _name << " took " << amount << " points of damage." << std::endl;
 }
-void ClapTrap::beRepaired(unsigned int amount){
-	for (unsigned int i = 0; i < amount; ++i) {
-		if (_ep <= 0)
-		{
-			std::cout << "ClapTrap object " << _name << " has no more EP to repair itself." << std::endl;
-			return ;
-		}
-		_hp++;
-		_ep--;
+
+void ClapTrap::beRepaired(unsigned int amount){ 
+	if (!_ep || !_hp)
+	{
+		std::cout << "ClapTrap object " + _name << " cannot be repaired" << std::endl;
 	}
-	std::cout << "ClapTrap object " << _name << " regained " << amount << " HP." << std::endl;
+	else {
+	--_ep;
+	_hp+= amount;
+	std::cout << "ClapTrap object " + _name << " repaired itself gaining " << amount << " of Hit points" << std::endl;
+	}
 }

@@ -1,9 +1,7 @@
 #include "FlagTrap.h"
 
 int main(void) {
-	ClapTrap bla = FlagTrap("vasilis");
+	FlagTrap bla("hello");
 	bla.attack("vasilis");
-	FlagTrap obj("robot");
-	obj.highFiveGuys();
-	obj.takeDamage(10);
+	bla.highFiveGuys();
 }

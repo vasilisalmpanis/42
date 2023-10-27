@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valmpani <valmpani@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 11:38:31 by valmpani          #+#    #+#             */
-/*   Updated: 2023/10/17 11:38:31 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/10/27 19:00:45 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int main(void)
 	Zombie *zombie;
 	randomChump("vasilis");
 	zombie = newZombie("almpanis");
-	zombie->announce();
 	delete zombie;
-	return (1);
+	return (0);
 }

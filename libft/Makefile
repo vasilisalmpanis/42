@@ -23,10 +23,10 @@ ${NAME}:	${OBJS}
 	${LIBC}	${NAME}	${OBJS}
 
 ${OBJS} : ${SRC}
-	${CC} ${CFLAGS} -c ${SRC} -I ${INCS}
+	${CXX} ${CXXFLAGS} -c ${SRC} -I ${INCS}
 
 ${BOBJS} : ${BSRC}
-	${CC} ${CFLAGS} -c ${BSRC} -I ${INCS}
+	${CXX} ${CXXFLAGS} -c ${BSRC} -I ${INCS}
 
 
 bonus: ${BOBJS} ${OBJS}

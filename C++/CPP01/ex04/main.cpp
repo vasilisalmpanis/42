@@ -6,12 +6,13 @@
 /*   By: valmpani <valmpani@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 17:26:32 by valmpani          #+#    #+#             */
-/*   Updated: 2023/10/17 17:26:32 by valmpani         ###   ########.fr       */
+
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <fstream>
+#include <string>
 
 int	ft_strlen(char *str)
 {
@@ -42,6 +43,8 @@ int main(int argc, char **argv)
 	std::fstream re;
 	std::string line;
 	std::string output;
+	std::string replacement;
+
 	if (argc != 4) {
 		std::cout << "Please provide 3 arguments." << std::endl;
 		return (1);
@@ -50,13 +53,14 @@ int main(int argc, char **argv)
 		std::cout << "Please provide a valid string to replace." << std::endl;
 		return (1);
 	}
-	std::fstream file("replacement.txt", std::ios::out);
+	replacement = argv[1];
+	replacement += ".replace";
 	fs.open(argv[1]);
 	if (!fs.good()) {
 		std::cout << "Please provide a valid filename." << std::endl;
 		return (1);
 	}
-	re.open("replacement.txt", std::ios::out);
+	re.open(replacement.c_str(), std::ios::out);
 	while (fs.good())
 	{
 		getline(fs, line);

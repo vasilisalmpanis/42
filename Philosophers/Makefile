@@ -22,12 +22,12 @@ MAKE = make
 all: norm ${NAME}
 
 ${NAME}: ${OBJ}
-		@$(CC) ${CFLAGS} $(OBJ) -o $(NAME)
+		@$(CXX) ${CXXFLAGS} $(OBJ) -o $(NAME)
 		@echo ""
 		@echo "${RED}${NAME} completed${END}"
 
 %.o: %.c
-		${CC} ${CFLAGS} -I./readline -I./libft -c $< -o $@
+		${CXX} ${CXXFLAGS} -I./readline -I./libft -c $< -o $@
 
 norm:
 		@norminette . > /tmp/norminette_output.txt 2>&1

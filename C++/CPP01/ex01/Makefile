@@ -1,10 +1,10 @@
 NAME	=	Zombie
 CXXFLAGS	=	-Wall -Wextra -Werror -g -std=c++98 #-fsanitize=address
-SRCS	=	main.cpp randomChump.cpp Zombie.cpp newZombie.cpp zombieHorde.cpp
+SRCS	=	main.cpp Zombie.cpp zombieHorde.cpp
 
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
-CXX	=	c++
+CXX	=	clang++
 INC	=	.
 
 all : ${NAME}

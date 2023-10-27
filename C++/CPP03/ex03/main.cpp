@@ -11,4 +11,10 @@ int main(void) {
 	a.whoAmI();
 	a.attack("radom");
 	a.attack("radom");
+
+	for (int i = 0; i <= 51; i++)
+	{
+		a.beRepaired(10);
+	}
+
 }

@@ -20,7 +20,7 @@ all: norm ${LIBFT} ${NAME}
 
 ${NAME}: ${OBJ} ${LIBFT}
 		@echo "${RED}------PIPEX------${END}"
-		${CC} ${CFLAGS} ${OBJ} -o ${NAME} libft.a
+		${CXX} ${CXXFLAGS} ${OBJ} -o ${NAME} libft.a
 		${RM} libft.a
 		@echo "${RED}----COMPLETED----${END}"
 
@@ -32,7 +32,7 @@ ${LIBFT}:
 		@echo "\n\n\n\n"
 
 %.o: %.c
-		${CC} ${CFLAGS} -c $< -o $@
+		${CXX} ${CXXFLAGS} -c $< -o $@
 
 norm :
 		@echo "${BLUE}******************${END}"
@@ -42,7 +42,7 @@ norm :
 
 bonus: ${BOBJ} ${LIBFT}
 		@echo "${RED}----PIPEX BONUS----${END}"
-		${CC} ${CFLAGS} ${BOBJ} -o ${NAME} libft.a
+		${CXX} ${CXXFLAGS} ${BOBJ} -o ${NAME} libft.a
 		${RM} libft.a
 		@echo "${RED}----COMPLETED----${END}"
 

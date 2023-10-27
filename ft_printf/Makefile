@@ -17,7 +17,7 @@ ${NAME} : ${OBJ}
 		${LIBC} ${NAME} ${OBJ}
 
 ${OBJ}	:
-		${CC} ${CFLAGS} -c ${SRC}
+		${CXX} ${CXXFLAGS} -c ${SRC}
 
 ${LIBFT}:
 		make -C libft

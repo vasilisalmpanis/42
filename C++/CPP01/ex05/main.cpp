@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: valmpani <valmpani@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: valmpani <valmpanis@student.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 19:43:02 by valmpani          #+#    #+#             */
-/*   Updated: 2023/10/17 19:43:02 by valmpani         ###   ########.fr       */
+/*   Updated: 2023/10/27 18:55:47 by valmpani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 int main(void)
 {
 	Harl harl;
+	harl.complain("DEBUG");
+	harl.complain("INFO");
 	harl.complain("WARNING");
+	harl.complain("ERROR");
+	harl.complain("WARfkjbdfkNING");
 	return (0);
 }

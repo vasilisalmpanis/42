@@ -4,7 +4,7 @@ SRCS	=	main.cpp Weapon.cpp HumanA.cpp  HumanB.cpp
 
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
-CXX	=	c++
+CXX	=	clang++
 INC	=	.
 
 all : ${NAME}

@@ -30,7 +30,7 @@ ${NAME}: ${OBJ} ${LIBFT}
 		@if [[ ! -f mlx/libmlx.a ]]; then \
     		make -C mlx; \
 		fi
-		@$(CC) ${CFLAGS} $(OBJ) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME) libft.a
+		@$(CXX) ${CXXFLAGS} $(OBJ) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME) libft.a
 		@${RM} libft.a
 		@echo "${RED}${NAME} completed${RED}"
 
@@ -40,7 +40,7 @@ ${LIBFT}:
 		@echo "${GREEN}libft completed\n${END}"
 
 %.o: %.c
-		${CC} ${CFLAGS} -I includes/fractol.h -Imlx -c $< -o $@
+		${CXX} ${CXXFLAGS} -I includes/fractol.h -Imlx -c $< -o $@
 
 norm :
 		@norminette mandatory > /tmp/norminette_output.txt 2>&1

@@ -19,7 +19,7 @@ $(NOM): space $(OBJ)
 	@echo "$(PINK)mlx completed\n$(END)"
 
 %.o: %.c
-		${CC} ${CFLAGS} -c $< -o $@
+		${CXX} ${CXXFLAGS} -c $< -o $@
 space:
 		@echo ""
 

@@ -1,5 +1,5 @@
 NAME	=	Zombie
-CXXFLAGS	=	-Wall -Wextra -Werror -g -std=c++98
+CXXFLAGS	=	-Wall -Wextra -Werror -g -std=c++98 --debug
 SRCS	=	main.cpp randomChump.cpp Zombie.cpp newZombie.cpp
 
 OBJ     =   $(SRCS:.cpp=.o)

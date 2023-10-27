@@ -17,7 +17,7 @@ all: norm ${LIBFT} ${NAME}
 
 ${NAME}: ${OBJ} ${LIBFT}
 		@echo "${RED}----PUSH SWAP----${END}"
-		${CC} ${CFLAGS} ${OBJ} -o ${NAME} libft.a
+		${CXX} ${CXXFLAGS} ${OBJ} -o ${NAME} libft.a
 		@echo "${RED}----COMPLETED----${END}"
 
 ${LIBFT}:
@@ -28,7 +28,7 @@ ${LIBFT}:
 		@echo "\n\n\n\n"
 
 %.o: %.c
-		${CC} ${CFLAGS} -c $< -o $@
+		${CXX} ${CXXFLAGS} -c $< -o $@
 
 norm :
 		@echo "${BLUE}******************${END}"

@@ -4,7 +4,7 @@ SRCS	=	main.cpp
 
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
-CXX	=	c++
+CXX	=	clang++
 
 all : ${NAME}
 

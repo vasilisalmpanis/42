@@ -25,6 +25,6 @@ int main(void)
 
 	std::cout << "Value Original: " <<string << std::endl;
 	std::cout << "Value Ref: " <<r << std::endl;
-	std::cout << "Value Pointer: " << p << std::endl;
+	std::cout << "Value Pointer: " << *p << std::endl;
 	return (1);
 }

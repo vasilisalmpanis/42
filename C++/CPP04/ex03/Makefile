@@ -1,6 +1,6 @@
-NAME	=	Animal	
+NAME	=	Materia	
 CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98
-SRCS	=	main.cpp AMateria.cpp Ice.cpp
+SRCS	=	main.cpp AMateria.cpp Ice.cpp Cure.cpp
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
 CXX	=	clang++

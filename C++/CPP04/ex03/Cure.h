@@ -9,5 +9,5 @@ public:
     Cure &operator=(Cure const &);
     ~Cure();
     AMateria *clone() const;
-    // void use(ICharacter& target);
+    void use(ICharacter& target);
 };

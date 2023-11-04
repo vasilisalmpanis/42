@@ -8,5 +8,5 @@ public:
     Ice &operator=(Ice const &);
     ~Ice();
     AMateria* clone() const;
-    // void use(ICharacter& target);
+    void use(ICharacter& target);
 };

@@ -1,5 +1,6 @@
 #include "Cure.h"
 #include "Ice.h"
+#include "Character.h"
 
 int main()
 {
@@ -19,4 +20,14 @@ int main()
 
     other1 = tmp1->clone();
     std::cout << other1->getType() << std::endl;
-}
+	Character whatever("first time");
+	Ice *i = new Ice();
+	whatever.equip(i);
+	whatever.equip(i);
+	whatever.equip(i);
+	whatever.equip(i);
+	whatever.equip(i);
+	whatever.equip(i);
+	whatever.equip(i);
+	whatever.equip(i);
+ }

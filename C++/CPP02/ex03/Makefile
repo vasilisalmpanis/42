@@ -3,7 +3,7 @@ CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98
 SRCS	=	main.cpp Fixed.cpp Point.cpp bsp.cpp
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
-CXX	=	c++
+CXX	=	clang++
 
 all : ${NAME}
 

@@ -10,7 +10,7 @@ all : ${NAME}
 ${NAME}:	${OBJ}
 		${CXX} ${CXXFLAGS} ${OBJ} -o ${NAME}
 
-%.o: %.c
+%.o: %.cpp %.h
 		${CXX} ${CXXFLAGS} -c $< -o $@
 
 clean:

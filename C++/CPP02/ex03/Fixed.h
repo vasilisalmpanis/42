@@ -22,9 +22,9 @@ public:
 	Fixed	operator/ (Fixed const &other) const;
 	Fixed	operator+ (Fixed const &other) const;
 	Fixed	operator- (Fixed const &other) const;
-	Fixed	operator++ (int number);
+	Fixed	operator++ (int);
 	Fixed	operator++ (void);
-	Fixed	operator-- (int number);
+	Fixed	operator-- (int);
 	Fixed	operator-- (void);
 	static Fixed &max(Fixed &a, Fixed &b);
 	static Fixed &min(Fixed &a, Fixed &b);

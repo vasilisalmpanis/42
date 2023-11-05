@@ -5,19 +5,21 @@
 #include "Point.h"
 
 Point::Point() : _x(Fixed()), _y(Fixed()){
-
+	std::cout << "Point Default constructor called." << std::endl;
 }
 
 Point::Point(const float x, const float y): _x(Fixed(x)), _y(Fixed(y)) {
-
+	std::cout << "Point Float constructor called." << std::endl;
 }
 
 Point::~Point() {
-	std::cout << "Destructor Called" << std::endl;
+	std::cout << "Point Destructor Called" << std::endl;
 }
 
-Point::Point(Point const &obj) : _x(obj._x), _y(obj._y){
-
+Point::Point(Point const &obj){
+	std::cout << "Point Copy constructor called." << std::endl;
+	if (this != &obj)
+		*this = obj;
 }
 
 Point &Point::operator=(Point const &obj) {

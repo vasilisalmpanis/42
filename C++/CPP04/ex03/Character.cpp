@@ -9,16 +9,7 @@ Character::Character(std::string name) : _name(name){
 }
 
 Character::~Character() {
-	for (int i = 0; i < 4; ++i) {
-		for (int j = i + 1; j < 4; ++j) {
-			if (this->_ptr[i] == this->_ptr[j])
-				this->_ptr[j] = NULL;
-		}
-	}
-	for (int i = 0; i < 4; ++i) {
-		if (this->_ptr[i] != NULL)
-			delete this->_ptr[i];
-	}
+	std::cout << "Character destructor called" << std::endl;
 }
 
 Character::Character(Character const &obj) {

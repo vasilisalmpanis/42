@@ -97,7 +97,7 @@ Fixed	Fixed::operator++ (void) {
 	return (*this);
 }
 
-Fixed	Fixed::operator++ (int number) {
+Fixed	Fixed::operator++ (int) {
 	Fixed original(*this);
 	++_fixedPoint;
 	return (original);
@@ -108,7 +108,7 @@ Fixed	Fixed::operator-- (void) {
 	return (*this);
 }
 
-Fixed	Fixed::operator-- (int number) {
+Fixed	Fixed::operator-- (int) {
 	Fixed original(*this);
 	--_fixedPoint;
 	return (original);

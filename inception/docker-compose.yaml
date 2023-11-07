@@ -1,0 +1,42 @@
+version : "3.8"
+
+services:
+  mariadb:
+    build: ./mariadb
+    env_file:
+      - .env
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+        - wordpress
+    restart: on-failure
+  wordpress:
+    depends_on:
+      - mariadb
+    build: ./wordpress/
+    env_file:
+      - .env
+    restart: on-failure
+    volumes:
+      - wordpress_data:/var/www/html/
+    networks:
+      - wordpress
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device : $HOME/data/mysql
+      o: bind
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: $HOME/data/wordpress
+      o: bind
+networks:
+  wordpress:
+    driver: bridge
+➜  inception git:(main) ✗ docker volume rm inception_wordpress_data
+inception_wordpress_data
+

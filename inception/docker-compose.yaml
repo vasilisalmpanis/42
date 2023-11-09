@@ -33,7 +33,7 @@ services:
           - $WPHOST
   nginx:
     container_name : nginx
-    image: nginx
+    build: ./nginx/
     volumes:
       - wordpress_data:/var/www/html
     depends_on :
@@ -41,7 +41,7 @@ services:
     networks:
       wordpress:
         aliases:
-          - $WPHOST
+          - nginx
     ports:
       - "8080:8080"
     expose:

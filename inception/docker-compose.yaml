@@ -2,25 +2,51 @@ version : "3.8"
 
 services:
   mariadb:
+    container_name: mariadb
     build: ./mariadb
     env_file:
       - .env
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
-        - wordpress
-    restart: on-failure
+      wordpress:
+        aliases:
+          - $DBHOST 
+    expose:
+      - "3306:3306"
+    restart: always 
   wordpress:
+    container_name: wordpress
     depends_on:
       - mariadb
+    restart: always
     build: ./wordpress/
     env_file:
       - .env
-    restart: on-failure
+    expose:
+      - "9000:80"
     volumes:
       - wordpress_data:/var/www/html/
     networks:
+      wordpress:
+        aliases:
+          - $WPHOST
+  nginx:
+    container_name : nginx
+    image: nginx
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on :
       - wordpress
+    networks:
+      wordpress:
+        aliases:
+          - $WPHOST
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080:8080"
+    restart: always
 volumes:
   mariadb_data:
     driver: local
@@ -36,7 +62,6 @@ volumes:
       o: bind
 networks:
   wordpress:
+    name: wordpress
     driver: bridge
-➜  inception git:(main) ✗ docker volume rm inception_wordpress_data
-inception_wordpress_data
 

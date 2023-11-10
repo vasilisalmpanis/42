@@ -1,5 +1,5 @@
 #!/bin/bash
-
+rm -f /var/www/html/lock
 mkdir /run/php
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
@@ -16,12 +16,13 @@ if ! wp core --allow-root is-installed ; then
 	sed -i "43i define( 'WP_REDIS_PASSWORD', '$REDIS_PASS');" /var/www/html/wp-config.php
 	wp --allow-root user create $WP_USER  $WP_EMAIL --role=author
 	wp --allow-root user update $WP_USER --user_pass=$WP_PASS --display_name="Ron_loves_harry"
-	wp --allow-root --path=/var/www/html theme install bizboost
-	wp --allow-root --path=/var/www/html theme activate bizboost
+	wp --allow-root --path=/var/www/html theme install generatepress 
+	wp --allow-root --path=/var/www/html theme activate generatepress
 else
 	echo "core already downloaded"
 fi
 wp --allow-root plugin install redis-cache  --activate --path=/var/www/html
 wp --allow-root plugin update --all --path=/var/www/html
 wp --allow-root --path=/var/www/html redis enable
+touch /var/www/html/lock
 php-fpm7.4 -F

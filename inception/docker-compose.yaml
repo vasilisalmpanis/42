@@ -19,6 +19,7 @@ services:
     container_name: wordpress
     depends_on:
       - mariadb
+      - redis
     restart: always
     build: ./wordpress/
     env_file:
@@ -34,6 +35,9 @@ services:
   nginx:
     container_name : nginx
     build: ./nginx/
+    depends_on:
+      - wordpress
+      - adminer
     volumes:
       - wordpress_data:/var/www/html
     depends_on :
@@ -45,10 +49,8 @@ services:
         aliases:
           - nginx
     ports:
-      - "8080:8080"
       - "443:443"
     expose:
-      - "8080:8080"
       - "443:443"
     restart: always
   redis:
@@ -65,7 +67,20 @@ services:
       - wordpress_data:/var/www/html/
     expose:
       - "6379:6379"
-
+  adminer:
+    container_name: adminer
+    depends_on:
+      - wordpress
+    restart: always
+    build: ./bonus/adminer/
+    env_file:
+      - .env
+    networks:
+      wordpress:
+        aliases:
+          - adminer
+    volumes:
+      - wordpress_data:/var/www/html/
 volumes:
   mariadb_data:
     driver: local

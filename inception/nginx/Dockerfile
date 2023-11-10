@@ -4,7 +4,8 @@ RUN apt update
 
 RUN apt-get install -y \
 	nginx \
-	openssl
+	openssl \
+	ufw
 
 
 COPY ./script.sh /scripts/

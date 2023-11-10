@@ -38,15 +38,34 @@ services:
       - wordpress_data:/var/www/html
     depends_on :
       - wordpress
+    env_file:
+      - .env
     networks:
       wordpress:
         aliases:
           - nginx
     ports:
       - "8080:8080"
+      - "443:443"
     expose:
       - "8080:8080"
+      - "443:443"
     restart: always
+  redis:
+    container_name: redis
+    restart: always
+    build: ./bonus/redis
+    env_file:
+      - .env
+    networks:
+      wordpress:
+        aliases:
+          - redis
+    volumes:
+      - wordpress_data:/var/www/html/
+    expose:
+      - "6379:6379"
+
 volumes:
   mariadb_data:
     driver: local

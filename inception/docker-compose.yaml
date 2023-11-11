@@ -38,7 +38,10 @@ services:
     depends_on:
       - wordpress
       - adminer
+<<<<<<< HEAD
       - python_blog
+=======
+>>>>>>> f0b2ea8d3167a385d004c431f05da04ceaf85214
     volumes:
       - wordpress_data:/var/www/html
     depends_on :
@@ -71,7 +74,11 @@ services:
   adminer:
     container_name: adminer
     depends_on:
+<<<<<<< HEAD
       - mariadb
+=======
+      - wordpress
+>>>>>>> f0b2ea8d3167a385d004c431f05da04ceaf85214
     restart: always
     build: ./bonus/adminer/
     env_file:
@@ -80,6 +87,7 @@ services:
       wordpress:
         aliases:
           - adminer
+<<<<<<< HEAD
     expose:
       - "81:81"
     volumes:
@@ -97,6 +105,10 @@ services:
           - python_blog
     volumes:
       - python_blog_data:/database/
+=======
+    volumes:
+      - wordpress_data:/var/www/html/
+>>>>>>> f0b2ea8d3167a385d004c431f05da04ceaf85214
 volumes:
   mariadb_data:
     driver: local

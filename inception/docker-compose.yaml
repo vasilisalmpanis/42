@@ -38,6 +38,7 @@ services:
     depends_on:
       - wordpress
       - adminer
+      - python_blog
     volumes:
       - wordpress_data:/var/www/html
     depends_on :
@@ -70,7 +71,7 @@ services:
   adminer:
     container_name: adminer
     depends_on:
-      - wordpress
+      - mariadb
     restart: always
     build: ./bonus/adminer/
     env_file:
@@ -79,8 +80,23 @@ services:
       wordpress:
         aliases:
           - adminer
+    expose:
+      - "81:81"
     volumes:
       - wordpress_data:/var/www/html/
+  python_blog:
+    container_name: python_blog
+    restart: always
+    build: ./bonus/python_blog/
+    env_file: .env
+    ports:
+      - "80:80"
+    networks:
+      wordpress:
+        aliases:
+          - python_blog
+    volumes:
+      - python_blog_data:/database/
 volumes:
   mariadb_data:
     driver: local
@@ -93,6 +109,12 @@ volumes:
     driver_opts:
       type: none
       device: $HOME/data/wordpress
+      o: bind
+  python_blog_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: $HOME/data/python_blog_data
       o: bind
 networks:
   wordpress:

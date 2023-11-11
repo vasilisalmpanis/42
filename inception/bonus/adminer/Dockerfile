@@ -5,7 +5,8 @@ RUN apt-get install -y \
 	php-mysqlnd \
 	php \
 	php-curl \
-	wget
+	wget \
+	adminer
 
 COPY ./script.sh /scripts/
 

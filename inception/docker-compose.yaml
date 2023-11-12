@@ -38,10 +38,7 @@ services:
     depends_on:
       - wordpress
       - adminer
-<<<<<<< HEAD
       - python_blog
-=======
->>>>>>> f0b2ea8d3167a385d004c431f05da04ceaf85214
     volumes:
       - wordpress_data:/var/www/html
     depends_on :
@@ -74,11 +71,7 @@ services:
   adminer:
     container_name: adminer
     depends_on:
-<<<<<<< HEAD
       - mariadb
-=======
-      - wordpress
->>>>>>> f0b2ea8d3167a385d004c431f05da04ceaf85214
     restart: always
     build: ./bonus/adminer/
     env_file:
@@ -87,17 +80,14 @@ services:
       wordpress:
         aliases:
           - adminer
-<<<<<<< HEAD
     expose:
       - "81:81"
-    volumes:
-      - wordpress_data:/var/www/html/
   python_blog:
     container_name: python_blog
     restart: always
     build: ./bonus/python_blog/
     env_file: .env
-    ports:
+    expose:
       - "80:80"
     networks:
       wordpress:
@@ -105,10 +95,21 @@ services:
           - python_blog
     volumes:
       - python_blog_data:/database/
-=======
+  ftp:
+    container_name: ftp
+    restart: always
+    build: ./bonus/ftp/
+    env_file: .env
+    ports:
+      - "20:20"
+      - "21:21"
+      - "40000:40000"
     volumes:
-      - wordpress_data:/var/www/html/
->>>>>>> f0b2ea8d3167a385d004c431f05da04ceaf85214
+      - wordpress_data:/home/ftp/files
+    networks:
+      wordpress:
+        aliases:
+          - ftp
 volumes:
   mariadb_data:
     driver: local

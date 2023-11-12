@@ -110,6 +110,18 @@ services:
       wordpress:
         aliases:
           - ftp
+  portainer:
+    container_name: portainer
+    restart: always
+    build: ./bonus/portainer
+    ports:
+      - "8080:8080"
+    networks:
+      wordpress:
+        aliases:
+          - portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 volumes:
   mariadb_data:
     driver: local

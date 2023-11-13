@@ -1,0 +1,148 @@
+version : "3.8"
+
+services:
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb/
+    env_file:
+      - .env
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      wordpress:
+        aliases:
+          - $DBHOST 
+    expose:
+      - "3306:3306"
+    restart: always 
+  wordpress:
+    container_name: wordpress
+    depends_on:
+      - mariadb
+      - redis
+    restart: always
+    build: ./requirements/wordpress/
+    env_file:
+      - .env
+    expose:
+      - "9000:80"
+    volumes:
+      - wordpress_data:/var/www/html/
+    networks:
+      wordpress:
+        aliases:
+          - $WPHOST
+  nginx:
+    container_name : nginx
+    build: ./requirements/nginx/
+    depends_on:
+      - wordpress
+      - adminer
+      - python_blog
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on :
+      - wordpress
+    env_file:
+      - .env
+    networks:
+      wordpress:
+        aliases:
+          - nginx
+    ports:
+      - "443:443"
+    expose:
+      - "443:443"
+    restart: always
+  redis:
+    container_name: redis
+    restart: always
+    build: ./requirements/bonus/redis
+    env_file:
+      - .env
+    networks:
+      wordpress:
+        aliases:
+          - redis
+    volumes:
+      - wordpress_data:/var/www/html/
+    expose:
+      - "6379:6379"
+  adminer:
+    container_name: adminer
+    depends_on:
+      - mariadb
+    restart: always
+    build: ./requirements/bonus/adminer/
+    env_file:
+      - .env
+    networks:
+      wordpress:
+        aliases:
+          - adminer
+    expose:
+      - "81:81"
+  python_blog:
+    container_name: python_blog
+    restart: always
+    build: ./requirements/bonus/python_blog/
+    env_file: .env
+    expose:
+      - "80:80"
+    networks:
+      wordpress:
+        aliases:
+          - python_blog
+    volumes:
+      - python_blog_data:/database/
+  ftp:
+    container_name: ftp
+    restart: always
+    build: ./requirements/bonus/ftp/
+    env_file: .env
+    ports:
+      - "20:20"
+      - "21:21"
+      - "40000:40000"
+    volumes:
+      - wordpress_data:/home/ftp/files
+    networks:
+      wordpress:
+        aliases:
+          - ftp
+  portainer:
+    container_name: portainer
+    restart: always
+    build: ./requirements/bonus/portainer
+    expose:
+      - "8080:8080"
+    networks:
+      wordpress:
+        aliases:
+          - portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device : $HOME/data/mysql
+      o: bind
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: $HOME/data/wordpress
+      o: bind
+  python_blog_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: $HOME/data/python_blog_data
+      o: bind
+networks:
+  wordpress:
+    name: wordpress
+    driver: bridge
+

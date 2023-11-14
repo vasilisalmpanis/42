@@ -41,8 +41,6 @@ services:
       - python_blog
     volumes:
       - wordpress_data:/var/www/html
-    depends_on :
-      - wordpress
     env_file:
       - .env
     networks:

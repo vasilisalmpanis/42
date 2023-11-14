@@ -1,3 +1,4 @@
+#include "ClapTrap.h"
 #include "DiamondTrap.h"
 #include "FragTrap.h"
 #include "ScavTrap.h"
@@ -12,9 +13,14 @@ int main(void) {
 	a.attack("radom");
 	a.attack("radom");
 
-	for (int i = 0; i <= 51; i++)
+	for (int i = 0; i <= 100; i++)
 	{
 		a.beRepaired(10);
 	}
-
+	DiamondTrap b(a);
+	std::cout << "b name: " << b.getName() << " a name: " << a.getName() << std::endl;
+	ScavTrap *ptr = new DiamondTrap("vasilis");
+	ptr->attack(a.getName());
+	//ptr.whoAmI();
+	delete ptr;
 }

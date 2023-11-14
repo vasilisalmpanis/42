@@ -13,7 +13,7 @@ DiamondTrap::DiamondTrap(void) {
 
 
 DiamondTrap::DiamondTrap(std::string name) {
-	ClapTrap::_name = name + "_clasdlkj";
+	ClapTrap::_name = name + "_clap_name";
 	this->ClapTrap::_ep = ScavTrap::_ep;
 	this->_name = name;
 	std::cout << "DiamondTrap constructor called." << std::endl;	

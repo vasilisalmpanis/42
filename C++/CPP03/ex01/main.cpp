@@ -1,3 +1,4 @@
+#include "ClapTrap.h"
 #include "ScavTrap.h"
 
 int main(void) {
@@ -8,4 +9,9 @@ int main(void) {
 	bla.guardGate();
 	std::cout << bla.getHp() << std::endl;
 	std::cout << bla.getEp() << std::endl;
+	ClapTrap *ptr = new ScavTrap("vasilis");
+	for (int i = 0; i < 200; i++) {
+		ptr->attack("hello");
+	}
+	delete ptr;
 }

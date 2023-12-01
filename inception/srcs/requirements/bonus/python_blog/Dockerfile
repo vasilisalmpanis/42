@@ -6,9 +6,11 @@ RUN apt-get install -y \
 	pip \
 	python3-venv \
 	python3-openssl \
-	vim 
+	vim \
+	git
+RUN git clone https://github.com/vasilisalmpanis/Python-Company-Blog app
 
-WORKDIR /app 
-COPY ./app/ .
+COPY ./app/main.py /main.py
+WORKDIR /app
 COPY ./schript.sh .
 ENTRYPOINT [ "sh", "./schript.sh" ]

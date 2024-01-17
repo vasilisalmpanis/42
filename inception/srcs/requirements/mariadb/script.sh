@@ -13,7 +13,7 @@ chown -R mysql:mysql /var/lib/mysql
 mkdir /run/mysqld
 chown -R mysql:mysql /run/mysqld
 touch /var/lib/mysql/initialized
-mariadb-install-db --user=mysql --data-dir=/var/lib/mysql
+mariadb-install-db --user=mysql --datadir=/var/lib/mysql
 /etc/init.d/mariadb start
 mariadb -e "CREATE DATABASE IF NOT EXISTS $DBNAME;"
 mariadb -e "CREATE USER IF NOT EXISTS '$DBUSER'@'$WPHOST.$WPHOST' IDENTIFIED BY '$DBPASS';"

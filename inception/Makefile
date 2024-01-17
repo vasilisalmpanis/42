@@ -16,7 +16,7 @@ clean:
 	rm -rf ~/data/python_blog_data/*
 fclean:
 	@echo "Pruning all docker data"
-	@docker system prune --all --forde --volumes
+	@docker system prune --all --force --volumes
 	rm -rf ~/data/mysql/*
 	rm -rf ~/data/wordpress/*
 	rm -rf ~/data/python_blog_data/*

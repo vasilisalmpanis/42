@@ -15,7 +15,8 @@ RUN apt-get install -y \
 	php-gd \
 	php-xml \
 	php-intl \
-	php-zip 
+	php-zip \ 
+	php-cgi
 
 RUN rm /etc/php/7.4/fpm/pool.d/www.conf
 COPY ./www.conf /etc/php/7.4/fpm/pool.d/

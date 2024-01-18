@@ -15,7 +15,7 @@ SRC     =   mandatory/main.c\
 LIBFT   =   ./libft
 RM      =   rm -rf
 CC      =   gcc
-CFLAGS  =   -g -Wall -O2 -Werror -Wextra
+CFLAGS  =   -g -Wall -Werror -Wextra
 OBJ     =   $(SRC:.c=.o)
 GREEN=\033[0;32m
 RED=\033[0;31m
@@ -30,7 +30,7 @@ ${NAME}: ${OBJ} ${LIBFT}
 		@if [[ ! -f mlx/libmlx.a ]]; then \
     		make -C mlx; \
 		fi
-		@$(CXX) ${CXXFLAGS} $(OBJ) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME) libft.a
+		@$(CC) ${CCFLAGS} $(OBJ) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME) libft.a
 		@${RM} libft.a
 		@echo "${RED}${NAME} completed${RED}"
 
@@ -40,7 +40,7 @@ ${LIBFT}:
 		@echo "${GREEN}libft completed\n${END}"
 
 %.o: %.c
-		${CXX} ${CXXFLAGS} -I includes/fractol.h -Imlx -c $< -o $@
+		${CC} ${CCFLAGS} -I includes/fractol.h -Imlx -c $< -o $@
 
 norm :
 		@norminette mandatory > /tmp/norminette_output.txt 2>&1

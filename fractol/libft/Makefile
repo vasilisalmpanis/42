@@ -24,10 +24,10 @@ ${NAME}:	${OBJS}
 	@${LIBC}	${NAME}	${OBJS}
 
 %.o: %.c
-		${CXX} ${CXXFLAGS} -Imlx -c $< -o $@
+		${CC} ${CXXFLAGS} -Imlx -c $< -o $@
 
 ${BOBJS} : ${BSRC}
-	@${CXX} ${CXXFLAGS} -c ${BSRC}
+	@${CC} ${CXXFLAGS} -c ${BSRC}
 
 
 bonus: ${BOBJS} ${OBJS}

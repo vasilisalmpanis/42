@@ -5,6 +5,7 @@ class RobotomyRequestForm : public AForm {
 	std::string	_target;
     void        action() const;
     int         _rand() const;
+	int			nameToNumber() const;
 	public:
 	RobotomyRequestForm();
 	RobotomyRequestForm(std::string target);

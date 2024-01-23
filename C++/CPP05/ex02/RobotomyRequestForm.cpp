@@ -18,14 +18,17 @@ RobotomyRequestForm &RobotomyRequestForm::operator=(const RobotomyRequestForm &o
     return *this;
 }
 
-// Getters
-
-std::string RobotomyRequestForm::getTarget() const {
-    return this->_target;
+int RobotomyRequestForm::nameToNumber() const {
+    int total = 0;
+    std::string name = this->getName();
+    for (std::size_t i = 0; i < name.length(); ++i) {
+        total += static_cast<int>(name[i]);
+    }
+    return total;
 }
 
-//Public
-
+#include <ctime>
+#include <unistd.h>
 int RobotomyRequestForm::_rand() const
 {
 	unsigned long a = clock();
@@ -46,9 +49,16 @@ int RobotomyRequestForm::_rand() const
 
 void RobotomyRequestForm::action() const
 {
-    int randomNumber = this->_rand();
-    if (randomNumber % 2 == 0)
+    if (this->_rand() % 2 == 0)
         std::cout << this->_target << " has been robotomized succesfully" << std::endl;
     else
         std::cout << this->_target << " could not be robotomized" << std::endl;
 }
+
+// Getters
+
+std::string RobotomyRequestForm::getTarget() const {
+    return this->_target;
+}
+
+//Public

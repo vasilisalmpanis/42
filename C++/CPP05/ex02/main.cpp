@@ -74,6 +74,10 @@ int main() {
         {
             RobotForm.beSigned(BureaucratCanSign); // No Exception
             BureaucratCanSign.executeForm(RobotForm);
+            BureaucratCanSign.executeForm(RobotForm);
+            BureaucratCanSign.executeForm(RobotForm);
+            BureaucratCanSign.executeForm(RobotForm);
+
         }
         catch(const std::exception& e)
         {

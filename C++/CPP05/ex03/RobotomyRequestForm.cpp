@@ -26,11 +26,20 @@ std::string RobotomyRequestForm::getTarget() const {
 
 //Public
 
+int RobotomyRequestForm::nameToNumber() const {
+    int total = 0;
+    std::string name = this->getName();
+    for (std::size_t i = 0; i < name.length(); ++i) {
+        total += static_cast<int>(name[i]);
+    }
+    return total;
+}
+
 int RobotomyRequestForm::_rand() const
 {
 	unsigned long a = clock();
 	unsigned long b = time(NULL);
-	unsigned long c = this->getGradeSign();
+	unsigned long c = this->nameToNumber();
 	a=a-b;  a=a-c;  a=a^(c >> 13);
     b=b-c;  b=b-a;  b=b^(a << 8);
     c=c-a;  c=c-b;  c=c^(b >> 13);

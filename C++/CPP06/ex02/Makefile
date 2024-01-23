@@ -1,6 +1,6 @@
-NAME	=	Convert	
+NAME	=	Factory	
 CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98
-SRCS	=	main.cpp ScalarConverter.cpp Convert.cpp
+SRCS	=	main.cpp Base.cpp
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
 CXX	=	clang++

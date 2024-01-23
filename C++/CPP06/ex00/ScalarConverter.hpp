@@ -4,21 +4,10 @@
 #include <cstdlib>
 #include <limits>
 #include <string>
+#include <math.h>
 
 class ScalarConverter
 {
-		
-	static	bool	isPrintable(std::string &);
-	static	bool	isChar(std::string &);
-	static	bool	isInt(std::string &);
-	static	bool	isFloat(std::string &);
-	static	bool	isDouble(std::string &);
-	static	bool	isPseudoLiteral(std::string &);
-	static void	printChar(std::string str);
-	static void	printInt(std::string str);
-	static void	printFloat(std::string str);
-	static void	printDouble(std::string str);
-	static void	printPseudoLiteral(std::string str);
 	public:
 		ScalarConverter();
 		ScalarConverter(ScalarConverter const & src);
@@ -28,3 +17,15 @@ class ScalarConverter
 		// Public methods
 		static void convert(std::string str);
 };
+
+bool	isPrintable(std::string &);
+bool	isChar(std::string &);
+bool	isInt(std::string &);
+bool	isFloat(std::string &);
+bool	isDouble(std::string &);
+bool	isPseudoLiteral(std::string &);
+void	printChar(std::string str);
+void	printInt(std::string str);
+void	printFloat(std::string str);
+void	printDouble(std::string str);
+void	printPseudoLiteral(std::string str);

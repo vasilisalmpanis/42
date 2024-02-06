@@ -1,6 +1,6 @@
 NAME	=	ex01
 CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98
-SRCS	=	main.cpp Snap.cpp
+SRCS	=	main.cpp Span.cpp
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
 CXX	=	clang++

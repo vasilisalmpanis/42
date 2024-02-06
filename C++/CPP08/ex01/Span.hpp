@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+#include <exception>
 #include <iostream>
 
 class Span {
@@ -17,6 +19,7 @@ class Span {
 		// Public methods
 
 		void 			addNumber(int number);
+		void 			addNumber(std::vector<int>::iterator begin, std::vector<int>::iterator end);
 		int 			shortestSpan(void);
 		int 			longestSpan(void);
 

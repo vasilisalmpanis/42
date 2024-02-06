@@ -30,12 +30,22 @@ void Span::addNumber(int number) {
     _array[_size++] = number;
 }
 
+void Span::addNumber(std::vector<int>::iterator begin, std::vector<int>::iterator end) {
+    if (_size + std::distance(begin, end) > _N)
+	throw FullArrayException();
+    for (std::vector<int>::iterator it = begin; it != end; it++)
+	_array[_size++] = *it;
+}
+
 int Span::shortestSpan(void) {
     if (_size < 2)
-        throw NotEnoughNumbersException();
-    int min = findMin();
-    int secondMin = findSecondMin();
-    return secondMin - min;
+	throw NotEnoughNumbersException();
+    std::sort(_array, _array + _size);
+    int min = _array[1] - _array[0];
+    for (unsigned int i = 2; i < _size; i++)
+	if (_array[i] - _array[i - 1] < min)
+	    min = _array[i] - _array[i - 1];
+    return min;
 }
 
 int Span::longestSpan(void) {

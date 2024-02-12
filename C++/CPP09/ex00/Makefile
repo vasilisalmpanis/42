@@ -1,6 +1,6 @@
-NAME	=	easyfind
-CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98
-SRCS	=	main.cpp BitcoinExchange.cpp
+NAME	=	btc
+CXXFLAGS	=	-Wall -Wextra -Werror -std=c++14
+SRCS	=	main.cpp BitcoinExchange.cpp DateFormat.cpp
 OBJ     =   $(SRCS:.cpp=.o)
 RM	=	rm -rf
 CXX	=	clang++

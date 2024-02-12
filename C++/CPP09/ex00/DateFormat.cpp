@@ -1,5 +1,23 @@
 #include "BitcoinExchange.hpp"
 
+bool all_digits(std::string::iterator start, std::string::iterator end)
+{
+	while (start != end)
+	{
+		if (!std::isdigit(*start))
+			return false;
+		++start;
+	}
+	return true;
+}
+
+double stringToDouble(std::string num)
+{
+	char *end;
+	double value = strtod(num.c_str(), &end);
+	return value;
+}
+
 bool isDateValidFormat(std::string Date){
 	// Check if the date is in the correct format
 	// The date should be in the format "YYYY-MM-DD"
@@ -14,11 +32,11 @@ bool isDateValidFormat(std::string Date){
 	std::string month = Date.substr(5, 2);
 	std::string day = Date.substr(8, 2);
 
-	if (!std::all_of(year.begin(), year.end(), [](char c) { return std::isdigit(c); }))
+	if (!all_digits(year.begin(), year.end()) || year < "2009" || year > "2024")
 		return false;
-	if (!std::all_of(month.begin(), month.end(), [](char c) { return std::isdigit(c); }) || month > "12" || month < "01")
+	if (!all_digits(month.begin(), month.end()) || month > "12" || month < "01")
 		return false;
-	if (!std::all_of(day.begin(), day.end(), [](char c) { return std::isdigit(c); }) || day > "31" || day < "01")
+	if (!all_digits(day.begin(), day.end()) || day > "31" || day < "01")
 		return false;
 	return true;
 }

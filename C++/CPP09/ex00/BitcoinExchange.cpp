@@ -1,4 +1,7 @@
 #include "BitcoinExchange.hpp"
+#include <fstream>
+#include <limits>
+#include <sstream>
 
 void trim(std::string &val)
 {
@@ -25,9 +28,10 @@ BitcoinExchange::BitcoinExchange(std::string fileName)
 		throw std::runtime_error("File could not be opened");
 	populateRates(file);
 	file.close();
-	for (auto &i : exchangeRates)
-		std::cout << i.first << " " << i.second << std::endl;
-	(void)fileName;
+	std::fstream inputFile(fileName, std::ios::in);
+	if (!inputFile.is_open() && !inputFile.good())
+		throw std::runtime_error("Input File could not be opened");
+	splitResults(inputFile);
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &rhs)
@@ -49,6 +53,80 @@ BitcoinExchange::~BitcoinExchange()
 	// Destructor
 }
 
+// Private member functions
+
+void BitcoinExchange::calculateBitcoin(std::string date, double amount)
+{
+	double rate;
+	std::map<std::string, double>::iterator pos;
+	
+	pos = exchangeRates.find(date);
+	if (pos == exchangeRates.end())
+	{
+		pos = exchangeRates.lower_bound(date);
+		if (pos == exchangeRates.end())
+		{
+			std::cout << "No data available for " << date << std::endl;
+			return ;
+		}
+		if (pos != exchangeRates.begin())
+			pos--;
+		rate = pos->second;
+		std::cout << date << " => " << amount << " = " << amount * rate << std::endl;
+		return ;
+	}
+	std::cout << date << " => " << amount << " = " << amount * pos->second << std::endl;
+}
+
+void BitcoinExchange::printResults(std::string line)
+{
+	if (line.empty())
+		return ;
+	std::string date;
+	std::string value;
+	size_t pos;
+	double amount;
+
+	pos = line.find('|');
+	if (pos == std::string::npos)
+	{
+		std::cout << "Error: Bad Input: => " << line << std::endl;
+		return ;
+	}
+	date = line.substr(0, pos);
+	trim(date);
+	if (!isDateValidFormat(date) || !isDateValid(date))
+	{
+		std::cout << "Error: Bad Date Format: => " << date << std::endl;
+		return ;
+	}
+	value = line.substr(pos + 1);
+	trim(value);
+	amount = stringToDouble(value);
+	if (amount < 0)
+	{
+		std::cout << "Error: not a positive number" << std::endl;
+		return ;
+	}
+	else if (std::numeric_limits<int>::max() < amount)
+	{
+		std::cout << "Error: too large a number" << std::endl;
+		return ;
+	}
+	calculateBitcoin(date, amount);
+}
+
+void BitcoinExchange::splitResults(std::fstream &file)
+{
+	std::string line;
+	std::stringstream ss;
+	ss << file.rdbuf();
+	std::getline(ss, line);
+	if (line != "date | value")
+		throw std::runtime_error("Invalid input file format " + line);
+	while (std::getline(ss, line))
+		printResults(line);
+}
 
 void BitcoinExchange::populateRates(std::fstream &file)
 {
@@ -58,6 +136,9 @@ void BitcoinExchange::populateRates(std::fstream &file)
 	char *end;
 	size_t pos;
 	double rate;
+	std::getline(file, line);
+	if (line != "date,exchange_rate")
+		throw std::runtime_error("Invalid file format");
 	while (std::getline(file, line))
 	{
 		if (line == "")

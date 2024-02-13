@@ -15,7 +15,7 @@ class BitcoinExchange {
 		~BitcoinExchange();
 		BitcoinExchange &operator=(const BitcoinExchange &rhs);
 	private:
-		void addRate(std::string date, double rate);
+		void addRate(std::string date, std::string rate);
 		void populateRates(std::fstream &file);
 		void splitResults(std::fstream &file);
 		void printResults(std::string line);

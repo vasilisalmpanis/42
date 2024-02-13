@@ -2,9 +2,18 @@
 
 bool all_digits(std::string::iterator start, std::string::iterator end)
 {
+	int dotCount = 0;
+	if (*start == '-')
+		++start;
 	while (start != end)
 	{
-		if (!std::isdigit(*start))
+		if (*start == '.')
+		{
+			++dotCount;
+			if (dotCount > 1)
+				return false;
+		}
+		else if (!std::isdigit(*start))
 			return false;
 		++start;
 	}

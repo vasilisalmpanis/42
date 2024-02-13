@@ -23,12 +23,14 @@ BitcoinExchange::BitcoinExchange()
 
 BitcoinExchange::BitcoinExchange(std::string fileName)
 {
-	std::fstream file("database.csv", std::ios::in);
+	std::fstream file;
+	file.open("Database.csv", std::ios::in);
 	if (!file.is_open() && !file.good())
 		throw std::runtime_error("File could not be opened");
 	populateRates(file);
 	file.close();
-	std::fstream inputFile(fileName, std::ios::in);
+	std::fstream inputFile;
+	inputFile.open(fileName.c_str(), std::ios::in);
 	if (!inputFile.is_open() && !inputFile.good())
 		throw std::runtime_error("Input File could not be opened");
 	splitResults(inputFile);
@@ -102,6 +104,11 @@ void BitcoinExchange::printResults(std::string line)
 	}
 	value = line.substr(pos + 1);
 	trim(value);
+	if (!all_digits(value.begin(), value.end()))
+	{
+		std::cout << "Error: Bad Value: => " << value << std::endl;
+		return ;
+	}
 	amount = stringToDouble(value);
 	if (amount < 0)
 	{
@@ -133,9 +140,8 @@ void BitcoinExchange::populateRates(std::fstream &file)
 	std::string line;
 	std::string date;
 	std::string rateString;
-	char *end;
 	size_t pos;
-	double rate;
+
 	std::getline(file, line);
 	if (line != "date,exchange_rate")
 		throw std::runtime_error("Invalid file format");
@@ -144,7 +150,6 @@ void BitcoinExchange::populateRates(std::fstream &file)
 		if (line == "")
 			continue ;
 		date.clear();
-		rate = 0;
 		std::stringstream ss(line);
 		pos = line.find(',');
 		if (pos == std::string::npos || pos < 10)
@@ -153,19 +158,23 @@ void BitcoinExchange::populateRates(std::fstream &file)
 		trim(date);
 		rateString = line.substr(pos + 1);
 		trim(rateString);
-		rate = strtod(rateString.c_str(), &end);
-		addRate(date, rate);
+		addRate(date, rateString);
 	}
 }
 
-void BitcoinExchange::addRate(std::string date, double rate)
+void BitcoinExchange::addRate(std::string date, std::string rateString)
 {
+	char *end;
+	double rate;
 	if (exchangeRates.find(date) != exchangeRates.end())
 		throw std::runtime_error("Date already exists");
 	if (!isDateValidFormat(date))
 		throw std::runtime_error("Date is not in the correct format" + date);
 	if (!isDateValid(date))
 		throw std::runtime_error("Date is not valid");
+	if (!all_digits(rateString.begin(), rateString.end()))
+		throw std::runtime_error("Invalid file format");
+	rate = strtod(rateString.c_str(), &end);
 	if (rate < 0)
 		throw std::runtime_error("Rate is negative");
 	exchangeRates[date] = rate;

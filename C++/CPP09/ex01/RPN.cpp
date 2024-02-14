@@ -29,7 +29,7 @@ RPN::~RPN() {
 bool isOperator(std::string token)
 {
 	const std::string operators[] = {"+", "-", "*", "/"};
-	for (int i = 0; i < 4; i++)
+	for (long long i = 0; i < 4; i++)
 	{
 		if (token == operators[i])
 			return true;
@@ -50,12 +50,14 @@ void RPN::checkExpression(std::string expression) {
 
 	while(std::getline(ss, token, ' '))
 	{
+		if (token.empty())
+			continue;
 		if (token.length() != 1)
 			throw std::runtime_error("Invalid token length: " + token);
 		if (!std::isdigit(token[0]) && !isOperator(token))
 			throw std::runtime_error("Invalid token char: " + token);
 		if (std::isdigit(token[0]))
-			stack.push(std::atoi(token.c_str()));
+			stack.push(std::atol(token.c_str()));
 		else
 		{
 			if (stack.size() < 2)
@@ -77,34 +79,34 @@ void RPN::checkExpression(std::string expression) {
 
 
 void RPN::add() {
-	int a = stack.top();
+	long long a = stack.top();
 	stack.pop();
-	int b = stack.top();
+	long long b = stack.top();
 	stack.pop();
 	stack.push(a + b);
 }
 
 void RPN::subtract() {
-	int a = stack.top();
+	long long a = stack.top();
 	stack.pop();
-	int b = stack.top();
+	long long b = stack.top();
 	stack.pop();
 	stack.push(b - a);
 }
 
 
 void RPN::multiply() {
-	int a = stack.top();
+	long long a = stack.top();
 	stack.pop();
-	int b = stack.top();
+	long long b = stack.top();
 	stack.pop();
 	stack.push(a * b);
 }
 
 void RPN::divide() {
-	int a = stack.top();
+	long long a = stack.top();
 	stack.pop();
-	int b = stack.top();
+	long long b = stack.top();
 	stack.pop();
 	if (a == 0)
 		throw std::runtime_error("Division by zero");

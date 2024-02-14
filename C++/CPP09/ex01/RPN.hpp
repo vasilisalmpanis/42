@@ -16,7 +16,7 @@ class RPN {
 		RPN& operator=(const RPN&);
 		~RPN();
 	private:
-		std::stack<int> stack;
+		std::stack<long long int> stack;
 		void add();
 		void subtract();
 		void multiply();

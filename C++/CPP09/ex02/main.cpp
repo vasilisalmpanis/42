@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
 	}
 	try 
 	{
-		PmergeMe pmergeMe(argv, argc);
+		PmergeMeVector pmergeMe(argv, argc);
 	}
 	catch (std::exception& e)
 	{

@@ -1,1 +1,0 @@
-savedcmd_/root/42/drivers_and_interrupts/Module.symvers :=  scripts/mod/modpost -M        -o /root/42/drivers_and_interrupts/Module.symvers -n -T /root/42/drivers_and_interrupts/modules.order -i Module.symvers -e 

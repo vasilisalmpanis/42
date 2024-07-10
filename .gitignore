@@ -9,3 +9,15 @@ main_files
 .vscode/
 **/checker_Mac
 **/anna
+
+drivers_and_interrupts/.Module.symvers.cmd
+drivers_and_interrupts/.drivers-and-interrupts.ko.cmd
+drivers_and_interrupts/.drivers-and-interrupts.mod.cmd
+drivers_and_interrupts/.drivers-and-interrupts.mod.o.cmd
+drivers_and_interrupts/.drivers-and-interrupts.o.cmd
+drivers_and_interrupts/.modules.order.cmd
+drivers_and_interrupts/Module.symvers
+drivers_and_interrupts/drivers-and-interrupts.ko
+drivers_and_interrupts/drivers-and-interrupts.mod
+drivers_and_interrupts/drivers-and-interrupts.mod.c
+drivers_and_interrupts/modules.order

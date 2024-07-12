@@ -8,6 +8,7 @@
 # include <linux/hid.h>
 # include <linux/list.h>
 # include <linux/interrupt.h>
+# include <linux/timekeeping.h>
 # include <asm/io.h>
 
 # define PL2_IRQ 1
@@ -20,9 +21,24 @@
 # define RELEASED 0
 # define VOID -1
 
-struct keyboard_entry {
-    struct list_head list;
-    // add other necessary fields here
+#define CB_SIZE 10000
+
+struct key_press {
+	char			*name;
+	u8			scancode;
+	int			status;
+	char			ascii;
+	struct timespec64	*time;
 };
+
+struct scan_code {
+	u8	scancode;
+	char	*name;
+	int	status;
+};
+
+
+int CAPS_LOCK	= 0;
+int SHIFT	= 0;
 
 #endif // !KEYLOGGER_H

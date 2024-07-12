@@ -25,76 +25,8 @@ static int is_key_pressed(unsigned int scancode)
 	return !(scancode & RELEASED_MASK);
 }
 
-
-static int get_ascii(unsigned int scancode)
-{
-	static char* row1 = "1234567890";
-	static char* row2 = "qwertyuiop";
-	static char* row3 = "asdfghjkl";
-	static char* row4 = "zxcvbnm";
-
-	scancode &= ~RELEASED_MASK;
-	if(scancode >= 0x02 && scancode <= 0x0b)
-		return *(row1 + scancode - 0x02);
-	else if(scancode >= 0x10 && scancode <= 0x19)
-		return *(row2 + scancode - 0x10);
-	else if(scancode >= 0x1e && scancode <= 0x26)
-		return *(row3 + scancode - 0x1e);
-	else if(scancode >= 0x2c && scancode <= 0x32)
-		return *(row4 + scancode - 0x2c);
-	else if(scancode == 0x39)
-		return ' ';
-	else if(scancode == 0x0e) //backspace
-		return '<';
-	else if(scancode == 0x33 || scancode == 0xb3)
-		return ',';
-	else if(scancode == 0x29 || scancode == 0xa9)
-		return '`';
-	else if(scancode == 0x27 || scancode == 0xa7 || scancode == 0x4c)
-		return ';';
-	else if(scancode == 0x5b || scancode == 0xf0 || scancode == 0x1b)
-		return ']';
-	else if(scancode == 0x1a || scancode == 0x9a || scancode == 0x54)
-		return '[';
-	else if(scancode == 0x0d || scancode == 0x8d || scancode == 0x55)
-		return '=';
-	else if(scancode == 0x35 || scancode == 0xb5 || scancode == 0x4a)
-		return '/';
-	else if(scancode == 0x1d || scancode == 0x9d || scancode == 0x14) //ctrl
-		return 'C';
-	else if(scancode == 0x38 || scancode == 0xb8|| scancode == 0x11) //alt
-		return 'A';
-	else if(scancode == 0x3a || scancode == 0xba|| scancode == 0x58) //caps
-		return 'C';
-	else if(scancode == 0x0f || scancode == 0x8f || scancode == 0x0d) //tab
-		return 'T';
-	else if(scancode == 0x01 || scancode == 0x81 || scancode == 0x76) //escape
-		return 'E';
-	else if(scancode == 0x28 || scancode == 0xa8) //apostrof
-		return '\'';
-	else if(scancode == 0x4e || scancode == 0xce || scancode == 0x79) //plus
-		return '+';
-	else if(scancode == 0x0c || scancode == 0x4a || scancode == 0x8c || scancode == 0xca || scancode == 0x4e || scancode == 0x7b) //minus
-		return '-';
-	else if(scancode == 0x34 || scancode == 0x53 || scancode == 0xd3 || scancode == 0xb4 || scancode == 0x49 || scancode == 0x71) //punct
-		return '.';
-	else if(scancode == 0x37|| scancode == 0xb7 || scancode == 0xaa || scancode == 0x12 || scancode == 0x7c) //print screen
-		return 'P'; 
-	else if(scancode == 0x1c)
-		return '\n';
-	else if(scancode == 0x48 || scancode == 0x75) //up arrow
-		return '^';
-	else if(scancode == 0x50 || scancode == 0x72) //down arrow
-		return 'V';
-	else if(scancode == 0x36 || scancode == 0x12 || scancode == 0x59 || scancode == 0x2a) //shift
-		return 'S';
-	else
-		return '?';
-}
-
-
-
 struct scan_code codes[] = {
+	{0x0, "NULL", PRESSED},
 	{0x1, "escape", PRESSED},
 	{0x2, "1", PRESSED},
 	{0x3, "2", PRESSED},
@@ -129,6 +61,11 @@ struct scan_code codes[] = {
 	{0x24, "j", PRESSED},
 	{0x25, "k", PRESSED},
 	{0x26, "l", PRESSED},
+	{0x27, ";", PRESSED},
+	{0x28, "' (single quote)", PRESSED},
+	{0x29, "` (back tick)", PRESSED},
+	{0x2a, "left shift", PRESSED},
+	{0x2b, "\\", PRESSED},
 	{0x2c, "z", PRESSED},
 	{0x2d, "x", PRESSED},
 	{0x2e, "c", PRESSED},
@@ -136,6 +73,41 @@ struct scan_code codes[] = {
 	{0x30, "b", PRESSED},
 	{0x31, "n", PRESSED},
 	{0x32, "m", PRESSED},
+	{0x33, ",", PRESSED},
+	{0x34, ".", PRESSED},
+	{0x35, "/", PRESSED},
+	{0x36, "right shift"},
+	{0x37, "(keypad) *"},
+	{0x38, "left alt", PRESSED,},
+	{0x39, "space", PRESSED},
+	{0x3a, "CapsLock", PRESSED},
+	{0x3b, "F1", PRESSED},
+	{0x3c, "F2", PRESSED},
+	{0x3d, "F3", PRESSED},
+	{0x3e, "F4", PRESSED},
+	{0x3f, "F5", PRESSED},
+	{0x40, "F6", PRESSED},
+	{0x41, "F7", PRESSED},
+	{0x42, "F8", PRESSED},
+	{0x43, "F9", PRESSED},
+	{0x44, "F10", PRESSED},
+	{0x45, "NumberLock", PRESSED},
+	{0x46, "ScrollLock", PRESSED},
+	{0x47, "(keypad) 7", PRESSED},
+	{0x48, "(keypad) 8", PRESSED},
+	{0x49, "(keypad) 9", PRESSED},
+	{0x4a, "(keypad) -", PRESSED},
+	{0x4b, "(keypad) 4", PRESSED},
+	{0x4c, "(keypad) 5", PRESSED},
+	{0x4d, "(keypad) 6", PRESSED},
+	{0x4e, "(keypad) +", PRESSED},
+	{0x4f, "(keypad) 1", PRESSED},
+	{0x50, "(keypad) 2", PRESSED},
+	{0x51, "(keypad) 3", PRESSED},
+	{0x52, "(keypad) 0", PRESSED},
+	{0x53, "(keypad) .", PRESSED},
+	{0x57, "F11", PRESSED},
+	{0x58, "F12", PRESSED},
 };
 
 // misc ops
@@ -144,26 +116,18 @@ static ssize_t misc_read(struct file *file, char __user *buf, size_t count, loff
 	return 0;
 }
 
-static ssize_t misc_write(struct file *file, const char __user *buf, size_t count, loff_t *off)
-{
-	return 0;
-}
-
 static int misc_open(struct inode *inode, struct file *file)
 {
-	mutex_lock(&keyboard_mutex);
 	return 0;
 }
 
 static int misc_release(struct inode *inode, struct file *file)
 {
-	mutex_unlock(&keyboard_mutex);
 	return 0;
 }
 
 static struct file_operations fops = {
 	.read		= misc_read,
-	.write		= misc_write,
 	.open		= misc_open,
 	.release	= misc_release
 };
@@ -175,21 +139,37 @@ static struct miscdevice keyboard_device = {
 };
 
 // irq section
+static int get_code_index(u8 scancode)
+{
+	for (int i = 0; i < 82; i++) {
+		if (codes[i].scancode == scancode)
+			return i;
+	}
+	return -1;
+}
 
 static irqreturn_t keyboard_handler(int irq, void *dev_id)
 {
-	u8 scancode = inb(KEYBOARD_PORT);
-	int pressed = is_key_pressed(scancode);
-	unsigned long flags;
+	u8		scancode = inb(KEYBOARD_PORT);
+	u8		dummy_code;
+	int		pressed = is_key_pressed(scancode);
+	unsigned long	flags;
+	int		index = 0;
+
 	spin_lock_irqsave(&keyboard_spinlock, flags);
-	char key = get_ascii(scancode);
-	keys[++windex].ascii = key;
-	//keys[windex].
-	//pr_info("scancode = 0x%X (%u) %s ch=%c\n", scancode, scancode, pressed == 1 ? "pressed" : "released", key);
-	pr_info("scancode %c\n", key);
+	dummy_code = pressed ? scancode : scancode - 0x80;
+	index = get_code_index(dummy_code);
+	if (index == -1)
+		goto err;
+	struct scan_code code = codes[index];
+	pr_info("scancode = 0x%X (%u) %s name: %s\n", scancode, scancode, pressed == 1 ? "pressed" : "released", code.name);
 	spin_unlock_irqrestore(&keyboard_spinlock, flags);
 
 	return IRQ_HANDLED;
+err:
+	pr_info("Key is out of range\n");
+	spin_unlock_irqrestore(&keyboard_spinlock, flags);
+	return IRQ_NONE;
 }
 
 static int driver_irq_reg(void)

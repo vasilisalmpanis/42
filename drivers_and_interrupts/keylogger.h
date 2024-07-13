@@ -9,7 +9,9 @@
 # include <linux/list.h>
 # include <linux/interrupt.h>
 # include <linux/timekeeping.h>
+# include <linux/workqueue.h>
 # include <asm/io.h>
+
 
 # define PL2_IRQ 1
 
@@ -21,14 +23,17 @@
 # define RELEASED 0
 # define VOID -1
 
-#define CB_SIZE 10000
+# define CB_SIZE 10000
+
+# define MISC_SIZE 20
 
 struct key_press {
 	char			*name;
 	u8			scancode;
 	int			status;
 	char			ascii;
-	struct timespec64	*time;
+	struct tm		tm;
+	struct list_head	list;
 };
 
 struct scan_code {
@@ -36,9 +41,5 @@ struct scan_code {
 	char	*name;
 	int	status;
 };
-
-
-int CAPS_LOCK	= 0;
-int SHIFT	= 0;
 
 #endif // !KEYLOGGER_H

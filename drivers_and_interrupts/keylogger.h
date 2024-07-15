@@ -39,7 +39,6 @@ struct key_press {
 struct scan_code {
 	u8	scancode;
 	char	*name;
-	int	status;
 };
 
 #endif // !KEYLOGGER_H

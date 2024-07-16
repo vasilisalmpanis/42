@@ -5,3 +5,6 @@
 [submodule "cub3D"]
 	path = cub3D
 	url = https://github.com/memaar92/cub3D
+[submodule "swifty-companions"]
+	path = swifty-companions
+	url = git@github.com:vasilisalmpanis/swifty-companions.git

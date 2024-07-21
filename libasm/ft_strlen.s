@@ -3,6 +3,8 @@
 ft_strlen:
 	xor rax, rax
 next:
+	cmp rdi, 0
+	je close
 	cmp [rdi], byte 0
 	je close
 	inc rax

@@ -14,6 +14,8 @@ static int windex = -1;
 static int rindex = -1;
 static size_t list_size = 0;
 
+static bool caps = false;
+
 // helpers
 static int is_key_pressed(unsigned int scancode)
 {
@@ -23,18 +25,18 @@ static int is_key_pressed(unsigned int scancode)
 static const struct scan_code codes[] = {
 	{0x0, "NULL"},
 	{0x1, "Escape"},
-	{0x2, "1"},
-	{0x3, "2"},
-	{0x4, "3"},
-	{0x5, "4"},
-	{0x6, "5"},
-	{0x7, "6"},
-	{0x8, "7"},
-	{0x9, "8"},
-	{0xa, "9"},
-	{0xb, "0 Zero"},
-	{0xc, "-"},
-	{0xd, "="},
+	{0x2, "1/!"},
+	{0x3, "2/@"},
+	{0x4, "3/#"},
+	{0x5, "4/$"},
+	{0x6, "5/%"},
+	{0x7, "6/^"},
+	{0x8, "7/&"},
+	{0x9, "8/*"},
+	{0xa, "9/("},
+	{0xb, "0/)"},
+	{0xc, "-/_"},
+	{0xd, "=/+"},
 	{0xe, "Backspace"},
 	{0xf, "Tab"},
 	{0x10, "q"},
@@ -47,6 +49,10 @@ static const struct scan_code codes[] = {
 	{0x17, "i"},
 	{0x18, "o"},
 	{0x19, "p"},
+	{0x1a, "[/{"},
+	{0x1b, "]/}"},
+	{0x1c, "Enter"},
+	{0x1c, "LCtrl"},
 	{0x1e, "a"},
 	{0x1f, "s"},
 	{0x20, "d"},
@@ -56,9 +62,9 @@ static const struct scan_code codes[] = {
 	{0x24, "j"},
 	{0x25, "k"},
 	{0x26, "l"},
-	{0x27, ";"},
-	{0x28, "' (Single quote)"},
-	{0x29, "` (Back tick)"},
+	{0x27, ";/:"},
+	{0x28, "'/ (Single quote) or \" (double quote)"},
+	{0x29, "` (Back tick) or ~ (tidle)"},
 	{0x2a, "Left shift"},
 	{0x2b, "\\"},
 	{0x2c, "z"},
@@ -68,9 +74,9 @@ static const struct scan_code codes[] = {
 	{0x30, "b"},
 	{0x31, "n"},
 	{0x32, "m"},
-	{0x33, ","},
-	{0x34, "."},
-	{0x35, "/"},
+	{0x33, ",/<"},
+	{0x34, "./>"},
+	{0x35, "/ or ?"},
 	{0x36, "Right shift"},
 	{0x37, "(Keypad) *"},
 	{0x38, "Left alt"},
@@ -103,7 +109,6 @@ static const struct scan_code codes[] = {
 	{0x53, "(Keypad) ."},
 	{0x57, "F11"},
 	{0x58, "F12"},
-	{0x1c, "Enter"},
 };
 
 // misc ops
@@ -195,7 +200,7 @@ static struct miscdevice keyboard_device = {
 
 static int get_code_index(u8 scancode)
 {
-	for (int i = 0; i < 83; i++) {
+	for (int i = 0; i < 86; i++) {
 		if (codes[i].scancode == scancode)
 			return i;
 	}
@@ -231,6 +236,16 @@ static int add_keypress_to_list(int index, int status, struct tm tm)
 	return 0;
 }
 
+static void print_ascii_for_letter(struct scan_code code)
+{
+	char tmp;
+	if (code.name[0] >= 'a' && code.name[0] <= 'z')
+	{
+		tmp = caps ? code.name[0] - 32 : code.name[0];
+		pr_cont(" ascci: %c", tmp); 
+	}
+}
+
 static void perform_task(struct tasklet_struct *task)
 {
 	u8		scancode;
@@ -245,6 +260,10 @@ static void perform_task(struct tasklet_struct *task)
 		rindex = 0;
 	scancode = scancodes[++rindex];
 	pressed	= is_key_pressed(scancode);
+	if (scancode == 0x3a && pressed)
+		caps = !caps;
+	else if (scancode == 0x36 || scancode == 0x2a)
+		caps = !caps;
 	temp_sc = pressed ? scancode : (scancode - 0x80);
 	index = get_code_index(temp_sc);
 	if (index == -1)
@@ -253,7 +272,7 @@ static void perform_task(struct tasklet_struct *task)
 	tm = get_current_time();
 	if (add_keypress_to_list(index, pressed, tm))
 		goto out;
-	pr_info("[%02d:%02d:%02d] (0x%02X) %s %s\n",
+	pr_info("[%02d:%02d:%02d] (0x%02X) %s %s",
 			tm.tm_hour,
 			tm.tm_min,
 			tm.tm_sec,
@@ -261,6 +280,8 @@ static void perform_task(struct tasklet_struct *task)
 			pressed == 1 ? "pressed " : "released",
 			code.name
 			);
+	print_ascii_for_letter(code);
+	pr_cont("\n");
 
 out:
 	spin_unlock_irqrestore(&keyboard_spinlock, flags);
@@ -292,7 +313,6 @@ static int driver_irq_reg(void)
 		pr_err("Failed to register interrupt request handler\n");
 		return ret;
 	}
-	pr_info("Return value %d\n", ret);
 	return 0;
 }
 

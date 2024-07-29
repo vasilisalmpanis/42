@@ -3,10 +3,12 @@
 	extern ft_strlen
 ft_strcpy:
 	mov rax, rdi
+	cmp rsi, 0
+	je close
 next:
-	mov r9, [rsi]
-	mov [rdi], r9
-	cmp r9, 0
+	mov r9b, [rsi]
+	mov [rdi], r9b
+	cmp r9b, 0
 	je close
 	inc rsi
 	inc rdi

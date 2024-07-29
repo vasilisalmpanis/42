@@ -33,8 +33,12 @@ int main(void)
 //		printf("%s\n", new_buff);
 //	else
 //		printf("error allocating\n");
-	int a = ft_strlen(NULL);
-	printf("%d\n", a);
-	a = ft_atoi_base("1", "1");
-	printf("%d\n", a);
+//	int a = ft_strlen(NULL);
+//	printf("%d\n", a);
+//	a = ft_atoi_base("1", "1");
+//	printf("%d\n", a);
+//	int ret = write(1, NULL, 12);
+//	perror("write");
+//	int ret2 = ft_write(1, NULL, 12);
+//	perror("ft_write");
 }

@@ -21,3 +21,15 @@ drivers_and_interrupts/keylogger.ko
 drivers_and_interrupts/keylogger.mod
 drivers_and_interrupts/keylogger.mod.c
 drivers_and_interrupts/modules.order
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+CMakeUserPresets.json

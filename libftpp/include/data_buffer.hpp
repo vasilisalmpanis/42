@@ -1,6 +1,5 @@
 #pragma once
 #include "includes.hpp"
-#include <new>
 
 class DataBuffer {
 	public:
@@ -16,25 +15,6 @@ class DataBuffer {
 	private:
 		std::vector<uint8_t> buffer;
 };
-
-DataBuffer ::DataBuffer() {
-}
-
-DataBuffer ::~DataBuffer() {
-}
-
-DataBuffer ::DataBuffer(const DataBuffer &other)
-{
-	*this = other;
-}
-
-DataBuffer &DataBuffer::operator= (const DataBuffer &other)
-{
-	if (this != &other) {
-		buffer = other.buffer;
-	}
-	return *this;
-}
 
 template<typename T>
 DataBuffer &DataBuffer::operator<<(const T &data) {

@@ -1,0 +1,56 @@
+1. Understanding ICMP and Ping
+MDN Web Docs: ICMP Explained
+
+Search for "ICMP MDN Web Docs" to find the Mozilla Developer Network explanation of ICMP.
+RFC 792 - Internet Control Message Protocol
+
+Look for "RFC 792 ICMP specification" or go to the Internet Engineering Task Force (IETF) website to access the official ICMP protocol document.
+Cloudflare: How Ping Works
+
+Search for "How Ping Works Cloudflare" to find their detailed explanation of the ping mechanism.
+2. Raw Sockets Programming
+Beej’s Guide to Network Programming
+
+This is a well-known free guide. Just search "Beej's Guide to Network Programming" and you’ll find a comprehensive tutorial on socket programming.
+GeeksforGeeks: Linux Raw Sockets
+
+Search for "Linux Raw Sockets GeeksforGeeks" to access an article that covers how to work with raw sockets in C.
+BinaryTides: Raw Socket Programming in C
+
+Search for "Raw Socket Programming in C BinaryTides" to find this in-depth tutorial on working with raw sockets and sending ICMP packets.
+3. Working with ICMP and Raw Sockets in C
+LinuxHint: How to Write a Ping Program in C
+
+Search "How to Write a Ping Program in C LinuxHint" for a step-by-step guide on implementing a ping program in C.
+IncludeHelp: ICMP Ping Program in C
+
+Look for "ICMP Ping Program in C IncludeHelp" to find another example of writing a simple ping utility using raw sockets in C.
+4. Advanced Ping Implementation and Features
+Medium: Ping Implementation in Python
+
+Search for "Ping with Python using ICMP Medium" for a Python-based example, which could be useful for understanding advanced ping features like packet timing.
+RFC 4443 - ICMPv6 for IPv6
+
+You can search for "RFC 4443 ICMPv6" to find the specification for ICMPv6, which is necessary if you want to extend your ping program to support IPv6.
+5. Books on Network Programming
+TCP/IP Sockets in C: Practical Guide for Programmers by Michael Donahoo & Kenneth Calvert
+
+You can find this book on Amazon or by searching for "TCP/IP Sockets in C Michael Donahoo". It’s a great guide to network programming.
+UNIX Network Programming: The Sockets Networking API by W. Richard Stevens
+
+Search for "UNIX Network Programming W. Richard Stevens" to find this highly recommended book for learning sockets in UNIX/Linux environments.
+6. Linux Capabilities and Privileges
+man7.org: Linux Capabilities Man Page
+
+Look for "Linux Capabilities man page" or "man7.org capabilities" for the official documentation on Linux capabilities.
+RedHat Blog: How to Use Linux Capabilities
+
+Search for "How to Use Linux Capabilities RedHat" to find a tutorial explaining how to manage Linux capabilities.
+7. ICMP Packet Structure
+Firewall.cx: ICMP Packet Structure
+
+Search for "ICMP Packet Structure Firewall.cx" to find a detailed explanation of ICMP packet structure.
+Wikipedia: Internet Control Message Protocol
+
+Simply search "Internet Control Message Protocol Wikipedia" for an overview and the format of ICMP packets.
+By searching for these titles, you'll find the necessary resources to understand ICMP, raw sockets, and the ping command implementation in C.

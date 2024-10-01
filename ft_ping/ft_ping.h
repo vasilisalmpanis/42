@@ -11,15 +11,23 @@
 # include <netinet/in.h> 
 # include <sys/socket.h>
 # include <sys/types.h>
+# include <netinet/ip_icmp.h>
 # include <arpa/inet.h>
 # include <unistd.h>
 # endif
+
+#define PACKET_SIZE 64
 
 typedef struct options {
         char short_version[15];
         char long_version[15];
 	void (* handler)(void);
 } options;
+
+struct packet {
+	struct icmphdr icmp_header;
+	char data[PACKET_SIZE - sizeof(struct icmphdr)];
+};
 
 struct environ {
 	char *target;

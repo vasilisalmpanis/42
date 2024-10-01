@@ -32,5 +32,6 @@ void help_handler(void);
 void version_handler(void);
 void dns_lookup(char *addr_host, struct sockaddr_in *addr_con, char *ip);
 void reverse_dns_lookup(char *ip, char *reverse_ip);
+unsigned short icmp_checksum(void *packet, size_t length);
 
 # endif /* FT_PING */

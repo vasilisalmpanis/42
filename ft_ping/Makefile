@@ -2,7 +2,8 @@ NAME	=	ft_ping
 SRC	=	main.c \
 		error.c \
 		handlers.c \
-		dns.c
+		dns.c \
+		checksum.c
 
 OBJ	=	$(SRC:.c=.o)
 RM	=	rm -rf

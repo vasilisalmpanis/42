@@ -16,30 +16,51 @@
 # include <unistd.h>
 # endif
 
-#define PACKET_SIZE 64
+#define PACKET_SIZE 64 /* subject to change */
 
 typedef struct options {
-        char short_version[15];
-        char long_version[15];
-	void (* handler)(void);
+        char	short_version[15];
+        char	long_version[15];
+	void	(* handler)(void); /* handler function for each option */
 } options;
 
 struct packet {
 	struct icmphdr icmp_header;
-	char data[PACKET_SIZE - sizeof(struct icmphdr)];
+	char	data[PACKET_SIZE - sizeof(struct icmphdr)];
 };
 
 struct environ {
-	char *target;
+	char	*target;
+	char	*hostname;
+	int	ident;		/* process id to identify packets */
+	long	npackets;	/* max packets to trasmit */
+	long	nreceived;	/* nummber of received packets */
+	long	nrepeats;	/* number of duplicates */
+	long	ntransmitted;	/* sequence # for outbound packets = #sent */
+	long	nchecksum;	/* replies with bad checksum */
+	long	nerrors;	/* icmp errors */
+
+	int	interval;	/* interval between packets (msec) */
+	int	preload;
+	int	deadline;
+
+	struct timespec start_time, cur_time;
+
+	struct sockaddr_in source;
+	struct sockaddr_in whereto;
 };
 
 int error(char *str);
 
+/* checksum helpers */
+uint16_t icmp_checksum(void *packet, size_t length);
+
 /* Handlers */
 void help_handler(void);
 void version_handler(void);
+
+/* DNS helpers */
 void dns_lookup(char *addr_host, struct sockaddr_in *addr_con, char *ip);
 void reverse_dns_lookup(char *ip, char *reverse_ip);
-unsigned short icmp_checksum(void *packet, size_t length);
 
 # endif /* FT_PING */

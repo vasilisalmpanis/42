@@ -3,6 +3,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -71,51 +72,67 @@ int check_options(int argc, char **argv)
 /*	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00*/
 /*};*/
 
+void setup_packet(struct packet *ping_packet, uint8_t *sequence)
+{
+
+	bzero(ping_packet, sizeof(struct packet));
+	ping_packet->icmp_header.type = ICMP_ECHO;
+	ping_packet->icmp_header.code = 0;
+	ping_packet->icmp_header.un.echo.sequence = ++(*sequence);
+	ping_packet->icmp_header.un.echo.id = getpid();
+	ping_packet->icmp_header.checksum = icmp_checksum(ping_packet, sizeof(struct packet));
+	bzero(&ping_packet->data, sizeof(ping_packet->data));
+}
+
 void ping(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 {
-	struct sockaddr_in raddress;
-	struct packet ping_packet;
-	size_t sequence = 0;
-	int ttl = 60; /* max = 255 */
-	uint8_t receive_packet[PACKET_SIZE * 2];
-	setsockopt(fd, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
-	bzero(&ping_packet, sizeof(ping_packet));
-	ping_packet.icmp_header.type = ICMP_ECHO;
-	ping_packet.icmp_header.code = 0;
-	ping_packet.icmp_header.un.echo.sequence = ++sequence;
-	ping_packet.icmp_header.un.echo.id = getpid();
-	ping_packet.icmp_header.checksum = icmp_checksum(&ping_packet, sizeof(ping_packet));
-	bzero(&ping_packet.data, sizeof(ping_packet.data));
-	sendto(fd, &ping_packet, sizeof(ping_packet), 0, (struct sockaddr *)addr_con, sizeof(*addr_con));
-	(void)ip;
-	(void)reverse_ip;
-	socklen_t length = sizeof(raddress);
-	size_t result =	recvfrom(fd, receive_packet, PACKET_SIZE * 2, 0, (struct sockaddr *) &raddress, &length);
-	if (result < 0) {
-		error("Not able to receive\n");
-		return ;
-	}
+	struct sockaddr_in	raddress;
+	struct packet		ping_packet;
+	struct icmphdr		*icmp_header;
+	struct iphdr		*ip_header;
+	socklen_t 		length = sizeof(raddress);
+	uint16_t		provided_checksum, calculated_checksum;
+	uint8_t 		sequence = 0;
+	uint8_t 		receive_packet[PACKET_SIZE * 2];
+	size_t			result, ip_header_len;
+	int			ttl = 60; /* max = 255 */
+
+	while (1) {
+		setsockopt(fd, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
+		setup_packet(&ping_packet, &sequence);
+		result = sendto(fd, &ping_packet, sizeof(ping_packet), 0, (struct sockaddr *)addr_con, sizeof(*addr_con));
+		if (result <= 0) {
+			error("Not able to receive\n");
+			return ;
+		}
+		printf("%lu\n", result);
+
+		result = recvfrom(fd, receive_packet, PACKET_SIZE * 2, 0, (struct sockaddr *) &raddress, &length);
+		if (result < 0) {
+			error("Not able to receive\n");
+			return ;
+		}
 #if 0
 
-	printf("%lu\n", result);
-	for (size_t i = 0; i < result; i++)
-		printf("%x ", receive_packet[i]);
-	printf("\n");
+		printf("%lu\n", result);
+		for (size_t i = 0; i < result; i++)
+			printf("%x ", receive_packet[i]);
+		printf("\n");
 #endif /* ifdef 0 */
-	struct iphdr *ip_header = (struct iphdr *)receive_packet;
-	size_t ip_header_len = ip_header->ihl * 4;
-	printf("%d\n", ip_header->ihl);
+		ip_header = (struct iphdr *)receive_packet;
+		ip_header_len = ip_header->ihl * 4;
 
-	// Pointer to the ICMP header (skip the IP header)
-	struct icmphdr *icmp_header = (struct icmphdr *)(receive_packet + ip_header_len);
-	uint16_t provided_checksum = htons(icmp_header->checksum);
-	icmp_header->checksum = 0;
-	uint16_t calculated_checksum = htons(icmp_checksum(icmp_header, sizeof(*icmp_header)));
-	if (calculated_checksum != provided_checksum) {
-		error("Wrong checksum we dont count it\n");
-		return ;
+		// Pointer to the ICMP header (skip the IP header)
+		icmp_header = (struct icmphdr *)(receive_packet + ip_header_len);
+		provided_checksum = htons(icmp_header->checksum);
+		icmp_header->checksum = 0;
+		calculated_checksum = htons(icmp_checksum(icmp_header, sizeof(*icmp_header)));
+		if (calculated_checksum != provided_checksum) {
+			error("Wrong checksum we dont count it\n");
+			return ;
+		}
+		printf("%lu bytes from %s (%s): icmp_seq=%d ttl=%d time=notyet\n", result - ip_header_len, reverse_ip, ip, icmp_header->un.echo.sequence, ttl);
 	}
-	printf("%lu bytes from %s (%s): icmp_seq=%d ttl=%d time=notyet\n", result, reverse_ip, ip, icmp_header->un.echo.sequence, ttl);
 }
 /* PING youtube.com (172.217.18.14) 56(84) bytes of data.
  * 64 bytes from fra15s28-in-f14.1e100.net (172.217.18.14): icmp_seq=1 ttl=116 time=26.0 ms
@@ -123,7 +140,6 @@ void ping(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 int main(int argc, char *argv[])
 {
 	struct sockaddr_in addr_con;
-	/* int addrlen = sizeof(addr_con); */
 	char ip[NI_MAXHOST * sizeof(char)] =  {0};
 	char reverse_ip[NI_MAXHOST * sizeof(char)] =  {0};
 
@@ -134,11 +150,6 @@ int main(int argc, char *argv[])
 		return 1;
 	dns_lookup(env.target, &addr_con, ip);
 	reverse_dns_lookup(ip, reverse_ip);
-	/* setup environment */
-	/* setup socket */
-	/* configure packet */
-	/* send icmp packet */
-	/* loop till received */
 	int fd = socket (AF_INET, SOCK_RAW, IPPROTO_ICMP); 
 	if (fd < 0) {
 		error("Problem opening socket\n");
@@ -146,9 +157,6 @@ int main(int argc, char *argv[])
 	}
 	printf("PING %s (%s) %lu bytes of data\n", env.target, ip, sizeof(struct packet));
 	ping (&addr_con, fd, ip, reverse_ip);
-	// send packet
-	/* use sendto and recvfrom*/
 	close(fd);
-	/* continue */
         return 0;
 }

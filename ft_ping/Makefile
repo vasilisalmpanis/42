@@ -8,7 +8,7 @@ SRC	=	main.c \
 OBJ	=	$(SRC:.c=.o)
 RM	=	rm -rf
 CC	=	clang
-CFLAGS	=	-Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror -g
 
 all: $(NAME)
 

@@ -18,6 +18,9 @@
 
 #define PACKET_SIZE 64 /* subject to change */
 
+#define true 1
+#define false 0
+
 typedef struct options {
         char	short_version[15];
         char	long_version[15];

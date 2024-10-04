@@ -25,6 +25,8 @@ static const options ping_options[10] = {
         [9] = { .short_version = "-l", .long_version = "--preload", NULL},
 };
 
+static const char format_string[] = "%lu bytes from %s (%s): icmp_seq=%d ttl=%d time=notyet\n";
+
 static struct environ env;
 
 int check_options(int argc, char **argv)
@@ -97,7 +99,7 @@ void ping(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 	size_t			result, ip_header_len;
 	int			ttl = 60; /* max = 255 */
 
-	while (1) {
+	while (true) {
 		setsockopt(fd, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
 		setup_packet(&ping_packet, &sequence);
 		result = sendto(fd, &ping_packet, sizeof(ping_packet), 0, (struct sockaddr *)addr_con, sizeof(*addr_con));
@@ -105,8 +107,6 @@ void ping(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 			error("Not able to receive\n");
 			return ;
 		}
-		printf("%lu\n", result);
-
 		result = recvfrom(fd, receive_packet, PACKET_SIZE * 2, 0, (struct sockaddr *) &raddress, &length);
 		if (result < 0) {
 			error("Not able to receive\n");
@@ -131,7 +131,7 @@ void ping(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 			error("Wrong checksum we dont count it\n");
 			return ;
 		}
-		printf("%lu bytes from %s (%s): icmp_seq=%d ttl=%d time=notyet\n", result - ip_header_len, reverse_ip, ip, icmp_header->un.echo.sequence, ttl);
+		printf(format_string, result - ip_header_len, reverse_ip, ip, icmp_header->un.echo.sequence, ttl);
 	}
 }
 /* PING youtube.com (172.217.18.14) 56(84) bytes of data.

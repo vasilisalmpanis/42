@@ -12,10 +12,10 @@
 #include <time.h>
 #include <unistd.h>
 
-static const options ping_options[10] = {
+static const options ping_options[11] = {
         [0] = { .short_version = "-h", .long_version = "--help", help_handler},
         [1] = { .short_version = "-V", .long_version = "--version", version_handler},
-        [2] = { .short_version = "-v", .long_version = "--verbose", NULL},
+        [2] = { .short_version = "-v", .long_version = "--verbose", verbose_handler},
         [3] = { .short_version = "-f", .long_version = "--flood", NULL},
         [4] = { .short_version = "-n", .long_version = "--no-dns", NULL},
         [5] = { .short_version = "-s", .long_version = "--size", NULL},
@@ -23,11 +23,12 @@ static const options ping_options[10] = {
         [7] = { .short_version = "-w", .long_version = "--deadline", NULL},
         [8] = { .short_version = "-W", .long_version = "--timeout", NULL},
         [9] = { .short_version = "-l", .long_version = "--preload", NULL},
+        [10] = { .short_version = "-c", .long_version = "--count", count_handler},
 };
 
 static const char format_string[] = "%lu bytes from %s (%s): icmp_seq=%d ttl=%d time=notyet\n";
 
-static struct environ env;
+struct environ settings;
 
 int check_options(int argc, char **argv)
 {
@@ -42,21 +43,21 @@ int check_options(int argc, char **argv)
 					 !strcmp(argv[i], ping_options[j].short_version)))
                                 {
 					if (ping_options[j].handler)
-						ping_options[j].handler();
+						ping_options[j].handler(NULL);
 					found = 1;
                                 }
                        }
 		       if (!found) {
-			       if (env.target) {
+			       if (settings.target) {
 				       error("ft_ping: invalid argument '");
 				       error(argv[i]);
 				       error("'\n");
 				       return -1;
 			       }
-			       env.target = argv[i];
+			       settings.target = argv[i];
 		       }
         }
-	if (!env.target)
+	if (!settings.target)
 		return -1;
 	return 0;
 }
@@ -104,7 +105,7 @@ void ping(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 		setup_packet(&ping_packet, &sequence);
 		result = sendto(fd, &ping_packet, sizeof(ping_packet), 0, (struct sockaddr *)addr_con, sizeof(*addr_con));
 		if (result <= 0) {
-			error("Not able to receive\n");
+			error("Not able to send\n");
 			return ;
 		}
 		result = recvfrom(fd, receive_packet, PACKET_SIZE * 2, 0, (struct sockaddr *) &raddress, &length);
@@ -145,18 +146,23 @@ int main(int argc, char *argv[])
 
         if (argc == 1)
                 error(ERROR_STR);
-	env.target = NULL;
+	settings.target = NULL;
+	settings.sock.socktype = SOCK_RAW;
         if (check_options(argc, argv) == -1)
 		return 1;
-	dns_lookup(env.target, &addr_con, ip);
-	reverse_dns_lookup(ip, reverse_ip);
-	int fd = socket (AF_INET, SOCK_RAW, IPPROTO_ICMP); 
-	if (fd < 0) {
+	settings.sock.fd = socket (AF_INET, settings.sock.socktype, IPPROTO_ICMP); 
+	if (settings.sock.fd < 0) {
 		error("Problem opening socket\n");
 		return (1);
 	}
-	printf("PING %s (%s) %lu bytes of data\n", env.target, ip, sizeof(struct packet));
-	ping (&addr_con, fd, ip, reverse_ip);
-	close(fd);
+	dns_lookup(settings.target, &addr_con, ip);
+	if (!ip[0]) {
+		printf("ping: %s: Name or service not known\n", settings.target);
+		return 1;
+	}
+	reverse_dns_lookup(ip, reverse_ip);
+	printf("PING %s (%s) %lu bytes of data\n", settings.target, ip, sizeof(struct packet));
+	ping (&addr_con, settings.sock.fd, ip, reverse_ip);
+	close(settings.sock.fd);
         return 0;
 }

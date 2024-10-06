@@ -14,6 +14,7 @@
 # include <netinet/ip_icmp.h>
 # include <arpa/inet.h>
 # include <unistd.h>
+# include <stdlib.h>
 # endif
 
 #define PACKET_SIZE 64 /* subject to change */
@@ -24,8 +25,13 @@
 typedef struct options {
         char	short_version[15];
         char	long_version[15];
-	void	(* handler)(void); /* handler function for each option */
+	void	(* handler)(void *arg); /* handler function for each option */
 } options;
+
+typedef struct socket_st {
+	int fd;
+	int socktype;
+} socket_st;
 
 struct packet {
 	struct icmphdr icmp_header;
@@ -44,8 +50,12 @@ struct environ {
 	long	nerrors;	/* icmp errors */
 
 	int	interval;	/* interval between packets (msec) */
-	int	preload;
+	int	preload;	/* amount of packets to send before receiving */
 	int	deadline;
+
+	int	verbose;	/* verbose mode */
+
+	socket_st sock;
 
 	struct timespec start_time, cur_time;
 
@@ -53,14 +63,18 @@ struct environ {
 	struct sockaddr_in whereto;
 };
 
+extern struct environ settings;
+
 int error(char *str);
 
 /* checksum helpers */
 uint16_t icmp_checksum(void *packet, size_t length);
 
 /* Handlers */
-void help_handler(void);
-void version_handler(void);
+void help_handler(void *arg);
+void version_handler(void *arg);
+void verbose_handler(void *arg);
+void count_handler(void *arg);
 
 /* DNS helpers */
 void dns_lookup(char *addr_host, struct sockaddr_in *addr_con, char *ip);

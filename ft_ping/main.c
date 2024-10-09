@@ -100,6 +100,7 @@ void ping(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 	size_t			result, ip_header_len;
 	int			ttl = 60; /* max = 255 */
 
+	printf("PING %s (%s) %lu bytes of data\n", settings.target, ip, sizeof(struct packet));
 	while (true) {
 		setsockopt(fd, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));
 		setup_packet(&ping_packet, &sequence);
@@ -141,28 +142,50 @@ void ping(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 int main(int argc, char *argv[])
 {
 	struct sockaddr_in addr_con;
+	struct addrinfo *ai, *result;
+	struct addrinfo hints = {
+		.ai_family = AF_UNSPEC,
+		.ai_protocol = IPPROTO_UDP,
+		.ai_flags = AI_CANONNAME,
+		.ai_socktype = SOCK_DGRAM
+	};
 	char ip[NI_MAXHOST * sizeof(char)] =  {0};
 	char reverse_ip[NI_MAXHOST * sizeof(char)] =  {0};
+	int ret_val;
 
         if (argc == 1)
                 error(ERROR_STR);
 	settings.target = NULL;
-	settings.sock.socktype = SOCK_RAW;
+	settings.sock.socktype = SOCK_DGRAM;
         if (check_options(argc, argv) == -1)
 		return 1;
-	settings.sock.fd = socket (AF_INET, settings.sock.socktype, IPPROTO_ICMP); 
-	if (settings.sock.fd < 0) {
-		error("Problem opening socket\n");
-		return (1);
-	}
 	dns_lookup(settings.target, &addr_con, ip);
 	if (!ip[0]) {
 		printf("ping: %s: Name or service not known\n", settings.target);
 		return 1;
 	}
 	reverse_dns_lookup(ip, reverse_ip);
-	printf("PING %s (%s) %lu bytes of data\n", settings.target, ip, sizeof(struct packet));
-	ping (&addr_con, settings.sock.fd, ip, reverse_ip);
-	close(settings.sock.fd);
+	ret_val = getaddrinfo(settings.target, NULL, &hints, &result);
+	if (ret_val)
+		printf("%s: %s", settings.target, gai_strerror(ret_val));
+	(void)ai;
+	for (ai = result; ai; ai = ai->ai_next)
+	{
+		settings.sock.fd = socket (AF_INET, settings.sock.socktype, IPPROTO_ICMP); 
+		if (settings.sock.fd < 0) {
+			error("Problem opening socket\n");
+			return (1);
+		}
+		if (settings.verbose)
+			printf("ping: sock4.fd: %d (socktype: %s), sock6.fd: -1 (socktype: 0), hints.ai_family: AF_INET\n\n",settings.sock.fd, settings.sock.socktype == SOCK_DGRAM ? "SOCK_DGRAM" : "SOCK_RAW"); 
+		if (settings.verbose) {
+			printf("ai->ai_family: %s, ai->ai_canonname: '%s'\n",
+				  ai->ai_family == AF_INET ? "AF_INET" : "AF_INET6",
+				  ai->ai_canonname ? ai->ai_canonname : "");
+			printf("ai->ai_family: %s, ai->ai_canonname: ''\n", "AF_INET");
+		}
+		ping (&addr_con, settings.sock.fd, ip, reverse_ip);
+		close(settings.sock.fd);
+	}
         return 0;
 }

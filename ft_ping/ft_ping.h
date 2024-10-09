@@ -1,21 +1,18 @@
 #ifndef FT_PING
 # define FT_PING
 
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include "defines.h"
-
-# if defined(__linux__)
+# include <arpa/inet.h>
+# include "defines.h"
 # include <netdb.h>
 # include <netinet/in.h> 
+# include <netinet/ip_icmp.h>
+# include <netdb.h>
+# include <string.h>
+# include <stdio.h>
 # include <sys/socket.h>
 # include <sys/types.h>
-# include <netinet/ip_icmp.h>
-# include <arpa/inet.h>
-# include <unistd.h>
 # include <stdlib.h>
-# endif
+# include <unistd.h>
 
 #define PACKET_SIZE 64 /* subject to change */
 

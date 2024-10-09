@@ -55,6 +55,11 @@ struct environ {
 	socket_st sock;
 
 	struct timespec start_time, cur_time;
+	
+	// min
+	// avg
+	// max
+	// mdev
 
 	struct sockaddr_in source;
 	struct sockaddr_in whereto;

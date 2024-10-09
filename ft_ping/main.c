@@ -187,5 +187,6 @@ int main(int argc, char *argv[])
 		ping (&addr_con, settings.sock.fd, ip, reverse_ip);
 		close(settings.sock.fd);
 	}
+	freeaddrinfo(result);
         return 0;
 }

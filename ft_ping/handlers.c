@@ -12,6 +12,7 @@ void version_handler(void *arg)
 {
 	arg = (char *) arg;
 	error(VERSION);
+	exit(0);
 }
 
 void verbose_handler(void *arg)

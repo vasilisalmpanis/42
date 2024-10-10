@@ -3,7 +3,8 @@ SRC	=	main.c \
 		error.c \
 		handlers.c \
 		dns.c \
-		checksum.c
+		checksum.c \
+		utils.c
 
 OBJ	=	$(SRC:.c=.o)
 RM	=	rm -rf

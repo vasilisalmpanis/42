@@ -74,3 +74,29 @@ num ^= mask /* again creates 0b0000'0101
   uint8_t blue = 0x6a
   int color = (alpha << 24) | (red << 16) | (green << 8) | blue
   /* result will be 0x01ff7c6a */
+
+
+ - Multiplication of x by y using bitwise operations:
+/*
+ * lets suppose that both numbers are positive
+ * for every bit significant bit of y while y is > 0 we shift x to the left multiplying it by 2
+ */
+ int result;
+ while (y) {
+ 	if ((y & 1) != 0)
+		result += x;
+	x = x << 1;
+	y = y >> 1;
+ }
+ 
+ - Reversing the bits in a 8bit int;
+ uint8_t temp;
+ uint8_t num = 0b10110101;
+ for (int i=0; i < 8; i++) {
+ 	temp = (temp << 1) | (y & 1) /* shift the bit to the left and save the most significant bit */
+ 	num = num >> 1;	
+ }
+
+ - Swapping a 8bit int
+ uint8_t num = 0b10110101; /* equivalent to 0xb5
+ num = (num >> 4) | (num << 4) /* equivalent to 0x5b

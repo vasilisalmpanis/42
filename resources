@@ -1,0 +1,76 @@
+ - Bitwise:
+Lets assume int a = 0x00FF00FF
+<< x : shifts the bit by x to the left. Essentially multiplies the number by 2^x
+>> x : shifts the bit by x to the right. Essentially divides the number by 2^x
+
+When we want to shift a byte to the left or to the right is use x=8
+ uint16_t num = 0x00FF;
+ num = num << 8; /* num now will be 0xFF00; the reverse applies for the >> operator
+
+
+ - masks:
+uint8_t mask0 = 0b0000'0001 /* or 1 << 0 */
+uint8_t mask1 = 0b0000'0010 /* or 1 << 1 */
+uint8_t mask2 = 0b0000'0100 /* or 1 << 2 */
+uint8_t mask3 = 0b0000'1000 /* or 1 << 3 */
+uint8_t mask4 = 0b0001'0000 /* or 1 << 4 */
+uint8_t mask5 = 0b0010'0000 /* or 1 << 5 */
+uint8_t mask6 = 0b0100'0000 /* or 1 << 6 */
+uint8_t mask7 = 0b1000'0000 /* or 1 << 7 */
+
+
+ - Testing a bit
+uint8_t num	= 0b1111'0101
+uint8_t mask	= 0b0000'0100;
+if (num & mask)
+	/* bit is set. AND will produce
+	 * 0b0000'0100 which is true because it is not 0 so the mask is applied
+	 */
+
+ - Setting a bit
+
+uint8_t num	= 0b0000'0101
+uint8_t mask	= 0b0001'0000
+
+num |= mask // will produce 0b0001'0101 which is the same as the previous one with the mask bit set
+
+ - Resetting a bit
+
+uint8_t num	= 0b0000'0101
+uint8_t mask	= 0b0000'0100
+
+num &= ~mask // will produce 0b0001'0101 which is the same as the previous one with the mask bit set
+	/* NOT will create the inverse of the mask -> 0b1111'1011
+	 * AND sets to 1 only if both have the bit 1 but the mask set the bit to its opposite
+	 * so if it is set it will be reset but if it is not set it will not be as the ~mask will set
+	 * bit to 0 and the AND doesn't set to 1 if both are 0.
+	 */
+
+	 /* We can reset multiple bits at once by OR ing the masks together */
+num &= (mask0 | mask2 | mask3 )
+
+ - Toggling a bit on and off
+/* we use the bitwise XOR */
+/* XOR sets the respective bit to 1 if and only if the inputs differ (one is true, one is false) */
+uint8_t num	= 0b0000'0101
+uint8_t mask	= 0b0000'0100
+
+num ^= mask /* creates 0b0000'0001
+num ^= mask /* again creates 0b0000'0101 
+
+ - creating a custom RGB int
+
+ /* ints have 4 bytes. This is how we normally symbolize colours for our screens
+  *  ---------------------------------
+  * | Alpha  |  Red   | Green | Blue  |
+  *  ---------------------------------
+  * | 8 bits | 8 bits | 8bits | 8bits |
+  *  ---------------------------------
+  * we can create an in by shifting the values by the respective bits and OR ing them.
+  */
+  uint8_t alpha = 0x01
+  uint8_t red = 0xFF
+  uint8_t green = 0x7c
+  uint8_t blue = 0x6a
+  int color = (alpha << 24) | (red << 16) | (green << 8) | blue
+  /* result will be 0x01ff7c6a */

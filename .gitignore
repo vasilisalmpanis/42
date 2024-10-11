@@ -9,6 +9,7 @@ main_files
 .vscode/
 **/checker_Mac
 **/anna
+ft_ping
 
 drivers_and_interrupts/.Module.symvers.cmd
 drivers_and_interrupts/.keylogger.ko.cmd

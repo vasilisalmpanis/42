@@ -22,4 +22,8 @@
 #define VERSION "ft_ping from 42 v0.1.0\n"
 
 #define SHORT_LENGTH 2
+
+#define VERBOSE_STR "ping: sock4.fd: %d (socktype: %s), sock6.fd: -1 (socktype: 0), hints.ai_family: AF_INET\n\n"
+
+#define PING_STR "PING %s (%s) %d\n" 
 #endif // !DEFINES_H

@@ -29,7 +29,7 @@
 typedef struct options {
         char	short_version[15];
         char	long_version[15];
-	void	(* handler)(void *arg); /* handler function for each option */
+	void	(* handler)(); /* handler function for each option */
 } options;
 
 typedef struct socket_st {
@@ -70,6 +70,12 @@ struct environ {
 	// max
 	// mdev
 
+	int	option;
+	char	*opt_name;
+
+	int argc;
+	char **argv;
+
 	struct sockaddr_in source;
 	struct sockaddr_in whereto;
 };
@@ -82,10 +88,11 @@ int error(char *str);
 uint16_t icmp_checksum(void *packet, size_t length);
 
 /* Handlers */
-void help_handler(void *arg);
-void version_handler(void *arg);
-void verbose_handler(void *arg);
-void count_handler(void *arg);
+void help_handler();
+void version_handler();
+void verbose_handler();
+void count_handler();
+void ttl_handler();
 
 /* DNS helpers */
 void dns_lookup(char *addr_host, struct sockaddr_in *addr_con, char *ip);

@@ -1,4 +1,6 @@
 #include "ft_ping.h"
+#include <netinet/in.h>
+#include <string.h>
 
 void dns_lookup(char *addr_host, struct sockaddr_in *addr_con, char *ip)
 {
@@ -15,10 +17,12 @@ void dns_lookup(char *addr_host, struct sockaddr_in *addr_con, char *ip)
 
 void reverse_dns_lookup(char *ip, char *reverse_ip)
 {
+	char temp[INET_ADDRSTRLEN] = {0};
 	struct sockaddr_in addr_in;
 	socklen_t len = sizeof(addr_in);
-	addr_in.sin_addr.s_addr = inet_addr(ip);
+	memcpy(temp, ip, strlen(ip));
+	addr_in.sin_addr.s_addr = inet_addr(temp);
 	addr_in.sin_family = AF_INET;
 
-	getnameinfo((struct sockaddr *)&addr_in, len, reverse_ip, NI_MAXHOST * sizeof(char), NULL, 0, NI_NAMEREQD);
+	getnameinfo((struct sockaddr *)&addr_in, len, reverse_ip, NI_MAXHOST, NULL, 0, NI_NAMEREQD);
 }

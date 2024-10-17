@@ -1,12 +1,7 @@
-#include "defines.h"
 #include "ft_ping.h"
-#include <arpa/inet.h>
 #include <bits/types/struct_timeval.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <netinet/ip_icmp.h>
 #include <stdint.h>
-#include <stdio.h>
+#include <sys/time.h>
 
 static const options ping_options[11] = {
         [0] = { .short_version = "-h", .long_version = "--help", help_handler},
@@ -22,10 +17,17 @@ static const options ping_options[11] = {
         [10] = { .short_version = "-c", .long_version = "--count", count_handler},
 };
 
-static const char success_format_string[] = "%lu bytes from %s (%s): icmp_seq=%d ttl=%d time=notyet\n";
+static const char success_format_string[] = "%lu bytes from %s (%s): icmp_seq=%d ttl=%d time=%.1f ms\n";
 static const char failure_format_string[] = "From %s (%s) icmp_seq=%d %s\n";
 
 struct environ settings;
+
+double convert_to_milli()
+{
+	long seconds = settings.tv_now.tv_sec - settings.prev_time->tv_sec;
+	long microseconds = settings.tv_now.tv_usec - settings.prev_time->tv_usec;
+	return (double)(seconds * 1000.0 + microseconds / 1000.0);
+}
 
 int check_options()
 {
@@ -90,7 +92,6 @@ int ping(struct sockaddr_in * addr_con)
 
 	gettimeofday(&tv_now, NULL);
 	memcpy(packet.data, &tv_now, sizeof(tv_now));
-	/*print_packet_hex((uint8_t *)packet.data, sizeof(tv_now));*/
 
 	packet.icmp_header.checksum = icmp_checksum(&packet,cc); 
 	i = sendto(settings.sock.fd, &packet, sizeof(packet), 0, 
@@ -103,7 +104,7 @@ void advance_ntransmitted()
 	settings.ntransmitted++;
 }
 
-int parse_reply(int cc, uint8_t *packet, char *ip, char *reverse_ip) 
+int parse_reply(int cc, uint8_t *packet) 
 {
 	struct iphdr *iph;
 	struct icmphdr *icp;
@@ -158,8 +159,15 @@ int parse_reply(int cc, uint8_t *packet, char *ip, char *reverse_ip)
 				return 1;
 			}
 		}
+		settings.prev_time = (struct timeval *)((uint8_t *)icp + 8);
 		uint16_t sequence = ntohs(icp->un.echo.sequence);
-		printf(success_format_string, cc - sizeof(struct iphdr), reverse_ip, ip, sequence, reply_ttl);
+		double duration = convert_to_milli();
+		printf(success_format_string, cc - sizeof(struct iphdr),
+					settings.reverse_ip, 
+					settings.ip,
+					sequence,
+					reply_ttl,
+					duration);
 	}
 	else {
 		switch (icp->type) {
@@ -180,6 +188,7 @@ int parse_reply(int cc, uint8_t *packet, char *ip, char *reverse_ip)
 						exit(1);
 					}
 				}
+				settings.prev_time = (struct timeval *)((uint8_t *)icp + 8);
 				inet_ntop(AF_INET, &(settings.whereto.sin_addr), error_ip, INET_ADDRSTRLEN);
 				reverse_dns_lookup(error_ip, error_reverse_ip);
 				uint16_t error_sequence = ntohs(icp->un.echo.sequence);
@@ -229,11 +238,12 @@ void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 			memset(&settings.whereto, 0, sizeof(struct sockaddr_in));
 			cc = recvfrom(settings.sock.fd, receive_packet,
 					PACKET_SIZE * 2, 0, (struct sockaddr *)&settings.whereto, &addrlen);
+			gettimeofday(&settings.tv_now, NULL);
 			if (cc < 0) {
 				error("Error receiving packet\n");
 				return ;
 			}
-			not_ours = parse_reply(cc, receive_packet, ip, reverse_ip);
+			not_ours = parse_reply(cc, receive_packet);
 			(void)not_ours;
 			break;
 		}
@@ -243,7 +253,7 @@ void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
  * 64 bytes from fra15s28-in-f14.1e100.net (172.217.18.14): icmp_seq=1 ttl=116 time=26.0 ms
 */
 
-void init_settings(int argc, char **argv)
+void init_settings(int argc, char **argv, char *ip, char *reverse_ip)
 {
 	settings.target = NULL;
 	settings.sock.socktype = SOCK_RAW;
@@ -251,6 +261,8 @@ void init_settings(int argc, char **argv)
 	settings.ttl = 60;
 	settings.argc = argc;
 	settings.argv = argv;
+	settings.ip = ip;
+	settings.reverse_ip = reverse_ip;
 }
 
 int main(int argc, char *argv[])
@@ -268,7 +280,7 @@ int main(int argc, char *argv[])
 
         if (argc == 1)
                 error(ERROR_STR);
-	init_settings(argc, argv);
+	init_settings(argc, argv, ip, reverse_ip);
         if (check_options() == -1)
 		return 1;
 	dns_lookup(settings.target, &settings.source, ip);

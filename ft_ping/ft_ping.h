@@ -63,7 +63,8 @@ struct environ {
 
 	socket_st sock;
 
-	struct timespec start_time, cur_time;
+	struct 	timeval tv_now;
+	struct 	timeval *prev_time;
 	
 	// min
 	// avg
@@ -73,8 +74,11 @@ struct environ {
 	int	option;
 	char	*opt_name;
 
-	int argc;
-	char **argv;
+	int 	argc;
+	char 	**argv;
+
+	char 	*ip;
+	char 	*reverse_ip;
 
 	struct sockaddr_in source;
 	struct sockaddr_in whereto;

@@ -100,3 +100,32 @@ num ^= mask /* again creates 0b0000'0101
  - Swapping a 8bit int
  uint8_t num = 0b10110101; /* equivalent to 0xb5
  num = (num >> 4) | (num << 4) /* equivalent to 0x5b
+
+
+ - Addition in binary
+ /* since we are little endian we go from left to right and use the following board for the carry bit
+  *  ---------------
+  * | x | y | x + y |
+  *  ---------------
+  * | 0 | 0 |   0   |
+  * | 1 | 0 |   1   |
+  * | 0 | 1 |   1   |
+  * | 1 | 1 |   0   | // Carry over
+  *  ---------------  // 1 + 1 with a carry is 1 and the carry remains.
+
+ ex 0 0 0 1 0 0 0 1
+    0 1 0 1 0 1 1 1
+
+ - Sign extension 
+ Need  to  represent a value  given in certain bits by using  a larger amount of bits
+ /*  if the sign of  the  number is 0(positive) then we fill the extra bits with  0 */
+ uint8_t num =  0x04
+ num =  (num <<  24) >> 24 // makes it a 32 bit  number looking like this 0x00 00 00 04
+
+ /* Negative  case
+  * number  4 in  binary is  0b0100
+  * to convert to negative we get 2's compliment
+  * NOT original value and then add one to it
+  * 0b1011 + 0001 -> 0b1100
+
+ 

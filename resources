@@ -112,9 +112,25 @@ num ^= mask /* again creates 0b0000'0101
   * | 0 | 1 |   1   |
   * | 1 | 1 |   0   | // Carry over
   *  ---------------  // 1 + 1 with a carry is 1 and the carry remains.
+  		      // 1 + 0 with carry is 0 and the carry remains
 
  ex 0 0 0 1 0 0 0 1
-    0 1 0 1 0 1 1 1
+  + 0 1 0 1 0 1 1 1
+    ---------------
+    0 1 1 0 1 1 1 0
+
+ - Subtraction in binary
+ /* can be represented as Addition of the negative number
+  * we can calculate the negative equivalent using with two's compliment
+
+ - One's Compliment
+ /* flipping the zeros to ones and vice versa(NOT)
+  * comes because adding the two numbers will always give 
+  * a perfect all ones
+
+ - Twos's Compliment
+ /* flipping the zeros to ones and vice versa(NOT)
+  * adding 1 and ignoring all overflows.
 
  - Sign extension 
  Need  to  represent a value  given in certain bits by using  a larger amount of bits
@@ -126,6 +142,9 @@ num ^= mask /* again creates 0b0000'0101
   * number  4 in  binary is  0b0100
   * to convert to negative we get 2's compliment
   * NOT original value and then add one to it
-  * 0b1011 + 0001 -> 0b1100
+  * 0b1011 
+   +0b0001
+   --------
+    0b1100
 
  

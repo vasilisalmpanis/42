@@ -21,16 +21,61 @@ static const char failure_format_string2[] = "From %s icmp_seq=%d %s\n";
 
 struct environ settings;
 
+void sigexit(int signal __attribute((__unused__)))
+{
+
+}
+
+void sigstatus(int signal __attribute((__unused__)))
+{
+
+}
+
 void print_statistics()
 {
 	printf("\n--- %s ping statistics ---\n", settings.target);
+	int packet_loss = (1 - (settings.nreceived/settings.ntransmitted)) * 100;
+	printf("%ld packets transmitted, ", settings.ntransmitted);
+	printf("%ld received, ", settings.nreceived);
+	if (settings.nchecksum)
+		printf(", +%ld corrupted", settings.nchecksum);
+	if (settings.nerrors)
+		printf(", +%ld errors", settings.nerrors);
+	printf("%d%% packet loss, ", packet_loss);
+	printf("time=2000ms\n");
+
+	if (settings.nreceived) {
+		double tmdev;
+		long total = settings.nreceived;
+		long tmavg = settings.tsum / total;
+		long long tmvar;
+		if (settings.tsum < INT_MAX)
+			tmvar = (settings.tsum2 - ((settings.tsum * settings.tsum) / total)) / total;
+		else 
+			tmvar = (settings.tsum2 / total) - (tmavg * tmavg);
+		tmdev = llsqrt(tmvar);
+		printf("rtt min/avg/max/mdev = %ld.%03ld/%lu.%03ld/%ld.%03ld/%ld.%03ld ms\n",
+		       (long)settings.tmin / 1000, (long)settings.tmin % 1000,
+		       (unsigned long)(tmavg / 1000), (long)(tmavg % 1000),
+		       (long)settings.tmax / 1000, (long)settings.tmax % 1000,
+		       (long)tmdev / 1000, (long)tmdev % 1000);
+	}
 }
 
 double convert_to_milli()
 {
 	long seconds = settings.tv_now.tv_sec - settings.prev_time->tv_sec;
 	long microseconds = settings.tv_now.tv_usec - settings.prev_time->tv_usec;
-	return (double)(seconds * 1000.0 + microseconds / 1000.0);
+	double duration = (double)(seconds * 1000.0 + microseconds / 1000.0);
+	if (duration > settings.max)
+		settings.max = duration;
+	else if (duration < settings.min)
+		settings.min = duration;
+	if (settings.ntransmitted == 1)
+		settings.avg = duration;
+	else
+		settings.avg = (((settings.ntransmitted - 1) * settings.avg) + duration) / settings.ntransmitted;
+	return duration;
 }
 
 int check_options()
@@ -41,7 +86,8 @@ int check_options()
         for (int i = 1; i < argc; i++) {
                        int arg_length = strlen(argv[i]);
 		       int found = 0;
-                       for (j = 0; j < 11; j++) {
+		       j = 0;
+                       for (; j < 11; j++) {
                                 int option_length = strlen(ping_options[j].long_version);
                                 if ((arg_length == option_length &&
 					!strcmp(argv[i], ping_options[j].long_version)) ||
@@ -125,17 +171,36 @@ int ping(struct sockaddr_in * addr_con)
 	return i == cc ? 0 : i;
 }
 
+int gather_statistics(double duration, int csfailed)
+{
+	++settings.nreceived;
+	if (!csfailed) {
+		settings.tsum += duration; 
+		settings.tsum2 = (double)((long long)duration * (long long)duration);
+		if ((long)duration > settings.tmax)
+			settings.tmax = (long)duration;
+		if ((long)duration < settings.tmin)
+			settings.tmin = (long)duration;
+		if (!settings.rtt)
+			settings.rtt = (long)duration * 8;
+		else
+			settings.rtt += (long)duration - settings.rtt / 8;
+	}
+	if (csfailed) {
+		--settings.nreceived;
+		++settings.nchecksum;
+		printf(" (BAD CHECKSUM!)");
+	}
+	return 0;
+}
+
 int parse_reply(int cc, uint8_t *packet) 
 {
 	struct iphdr *iph;
 	struct icmphdr *icp;
-	/*struct packet *pkt;*/
-	char error_ip[100] = {0};	
-	char error_reverse_ip[100] = {0};	
 	int hlen;
-	/*int csfailed;*/
+	int csfailed = 0;
 	int reply_ttl;
-	/*int wrong_source = 0;*/
 
 	iph = (struct iphdr *)packet;
 	reply_ttl = 0;
@@ -176,15 +241,16 @@ int parse_reply(int cc, uint8_t *packet)
 			}
 		}
 		if (temp_cksum != ntohs(cksum)) {
+			csfailed = 1;
 			if (settings.verbose) {
-				printf("Wrong checksum\n");
+				printf(" (BAD CHECKSUM!)");
 				return 1;
 			}
 		}
 		settings.prev_time = (struct timeval *)((uint8_t *)icp + 8);
-		uint16_t sequence = ntohs(icp->un.echo.sequence);
 		double duration = convert_to_milli();
-		settings.nreceived++;
+		gather_statistics(duration, csfailed);
+		uint16_t sequence = ntohs(icp->un.echo.sequence);
 		if (!settings.is_ip)
 			printf(success_format_string, cc - sizeof(struct iphdr),
 						settings.reverse_ip, 
@@ -220,14 +286,16 @@ int parse_reply(int cc, uint8_t *packet)
 					}
 				}
 				settings.prev_time = (struct timeval *)((uint8_t *)icp + 8);
-				inet_ntop(AF_INET, &(settings.whereto.sin_addr), error_ip, INET_ADDRSTRLEN);
-				reverse_dns_lookup(error_ip, error_reverse_ip);
+				if (!settings.error_ip[0]) {
+					inet_ntop(AF_INET, &(settings.whereto.sin_addr), settings.error_ip, INET_ADDRSTRLEN);
+					reverse_dns_lookup(settings.error_ip, settings.error_reverse_ip);
+				}
 				uint16_t error_sequence = ntohs(icp->un.echo.sequence);
 				if (!settings.is_ip)
-					printf(failure_format_string, error_reverse_ip, error_ip, 
+					printf(failure_format_string, settings.error_reverse_ip, settings.error_ip, 
 							error_sequence, "Time to live exceeded");
 				else
-					printf(failure_format_string2, error_ip, 
+					printf(failure_format_string2, settings.error_ip, 
 							error_sequence, "Time to live exceeded");
 				break;
 			default:
@@ -326,8 +394,9 @@ int main(int argc, char *argv[])
         if (argc == 1)
                 error(ERROR_STR);
 	init_settings(argc, argv, ip, reverse_ip);
-        if (check_options() == -1)
+        if (check_options() == -1) {
 		return 1;
+	}
 	dns_lookup(settings.target, &settings.source, ip);
 	if (!ip[0]) {
 		printf("ping: %s: Name or service not known\n", settings.target);
@@ -353,6 +422,9 @@ int main(int argc, char *argv[])
 				  ai->ai_canonname ? ai->ai_canonname : "");
 		}
 	}
+	set_signal(SIGINT, sigexit);
+	set_signal(SIGALRM, sigexit);
+	set_signal(SIGQUIT, sigstatus);
 	printf(PING_STR, settings.target, ip, 124);
 	main_loop(&settings.source, settings.sock.fd, ip, reverse_ip);
 	close(settings.sock.fd);

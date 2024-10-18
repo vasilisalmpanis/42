@@ -4,6 +4,7 @@
 # include <arpa/inet.h>
 # include <ctype.h>
 # include "defines.h"
+# include <limits.h>
 # include <netdb.h>
 # include <netinet/in.h> 
 # include <netinet/ip_icmp.h>
@@ -12,6 +13,7 @@
 # include <string.h>
 # include <stdio.h>
 # include <sys/socket.h>
+# include <sys/signal.h>
 # include <sys/types.h>
 # include <sys/time.h>
 # include <stdbool.h>
@@ -71,6 +73,11 @@ struct environ {
 
 	struct 	timeval tv_now;
 	struct 	timeval *prev_time;
+
+	long min;
+	long avg;
+	long max;
+	long mdev;
 	
 	// min
 	// avg
@@ -83,11 +90,20 @@ struct environ {
 	int 	argc;
 	char 	**argv;
 
+	char error_ip[100];
+	char error_reverse_ip[100];
+
 	char 	*ip;
 	char 	*reverse_ip;
 
 	struct sockaddr_in source;
 	struct sockaddr_in whereto;
+
+	double tsum;
+	double tsum2;
+	long tmin;
+	long tmax;
+	int rtt;
 };
 
 extern struct environ settings;
@@ -109,7 +125,19 @@ void dns_lookup(char *addr_host, struct sockaddr_in *addr_con, char *ip);
 void reverse_dns_lookup(char *ip, char *reverse_ip);
 
 /* Utils */
+long llsqrt(long long a);
 bool isValidIpAddress(char *ipAddress);
 void print_packet_hex(uint8_t *packet, int length);
+
+static inline void set_signal(int signo, void (*handler)(int))
+{
+	struct sigaction sa;
+
+	memset(&sa, 0, sizeof(sa));
+
+	sa.sa_handler = (void (*)(int))handler;
+	sa.sa_flags = SA_RESTART;
+	sigaction(signo, &sa, NULL);
+}
 
 # endif /* FT_PING */

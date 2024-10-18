@@ -1,5 +1,20 @@
 #include "ft_ping.h"
 
+long llsqrt(long long a)
+{
+	long long prev = LLONG_MAX;
+	long long x = a;
+
+	if (x > 0) {
+		while (x < prev) {
+			prev = x;
+			x = (x + (a / x)) / 2;
+		}
+	}
+
+	return (long)x;
+}
+
 bool isValidIpAddress(char *ipAddress)
 {
     struct sockaddr_in sa;

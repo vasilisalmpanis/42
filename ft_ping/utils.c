@@ -1,5 +1,12 @@
 #include "ft_ping.h"
 
+bool isValidIpAddress(char *ipAddress)
+{
+    struct sockaddr_in sa;
+    int result = inet_pton(AF_INET, ipAddress, &(sa.sin_addr));
+    return result != 0;
+}
+
 void print_packet_hex(uint8_t *packet, int length) {
     for (int i = 0; i < length; i++) {
         printf("%02x ", packet[i]);

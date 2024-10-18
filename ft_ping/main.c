@@ -15,7 +15,9 @@ static const options ping_options[11] = {
 };
 
 static const char success_format_string[] = "%lu bytes from %s (%s): icmp_seq=%d ttl=%d time=%.1f ms\n";
+static const char success_format_string2[] = "%lu bytes from %s: icmp_seq=%d ttl=%d time=%.1f ms\n";
 static const char failure_format_string[] = "From %s (%s) icmp_seq=%d %s\n";
+static const char failure_format_string2[] = "From %s icmp_seq=%d %s\n";
 
 struct environ settings;
 
@@ -46,7 +48,7 @@ int check_options()
 					(arg_length == 2 &&
 					 !strcmp(argv[i], ping_options[j].short_version)))
                                 {
-					settings.option = i + 1;
+					settings.option = i;
 					settings.opt_name = argv[settings.option];
 					if (ping_options[j].handler)
 						found = ping_options[j].handler();
@@ -59,8 +61,11 @@ int check_options()
 		       }
 		       if (found)
 			       i += found - 1;
-		       if (!found && !settings.target)
+		       if (!found && !settings.target) {
 			       settings.target = argv[i];
+			       settings.is_ip = isValidIpAddress(argv[i]);
+
+		       }
 	}
 	if (!settings.target)
 		return -1;
@@ -180,12 +185,19 @@ int parse_reply(int cc, uint8_t *packet)
 		uint16_t sequence = ntohs(icp->un.echo.sequence);
 		double duration = convert_to_milli();
 		settings.nreceived++;
-		printf(success_format_string, cc - sizeof(struct iphdr),
-					settings.reverse_ip, 
-					settings.ip,
-					sequence,
-					reply_ttl,
-					duration);
+		if (!settings.is_ip)
+			printf(success_format_string, cc - sizeof(struct iphdr),
+						settings.reverse_ip, 
+						settings.ip,
+						sequence,
+						reply_ttl,
+						duration);
+		else
+			printf(success_format_string2, cc - sizeof(struct iphdr),
+						settings.ip,
+						sequence,
+						reply_ttl,
+						duration);
 	}
 	else {
 		switch (icp->type) {
@@ -211,8 +223,12 @@ int parse_reply(int cc, uint8_t *packet)
 				inet_ntop(AF_INET, &(settings.whereto.sin_addr), error_ip, INET_ADDRSTRLEN);
 				reverse_dns_lookup(error_ip, error_reverse_ip);
 				uint16_t error_sequence = ntohs(icp->un.echo.sequence);
-				printf(failure_format_string, error_reverse_ip, error_ip, 
-						error_sequence, "Time to live exceeded");
+				if (!settings.is_ip)
+					printf(failure_format_string, error_reverse_ip, error_ip, 
+							error_sequence, "Time to live exceeded");
+				else
+					printf(failure_format_string2, error_ip, 
+							error_sequence, "Time to live exceeded");
 				break;
 			default:
 				/* MUST NOT */
@@ -227,7 +243,9 @@ void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 	uint8_t		receive_packet[200];
 	socklen_t	addrlen= sizeof(settings.whereto);
 	int		ping_ret ,cc; /*ttl_opt = 1*/
-
+	struct timeval tv_out;
+	tv_out.tv_sec = 1;
+	tv_out.tv_usec = 0;
 	/*if (setsockopt(settings.sock.fd, IPPROTO_IP, IP_RECVTTL, &ttl_opt, sizeof(ttl_opt)) < 0) {*/
 	/*	perror("setsockopt IP_RECVTTL failed");*/
 	/*	exit(1);*/
@@ -236,13 +254,15 @@ void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 	/*	perror("setsockopt SO_TIMESTAMP failed");*/
 	/*	exit(1);*/
 	/*}*/
+	setsockopt(fd, IPPROTO_IP, IP_TTL, &settings.ttl, sizeof(settings.ttl));
+	/*setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv_out, sizeof tv_out);*/
 	while (true) {
 #if 0
 		printf("npackets :%ld nreceived %ld nerrors %ld\n", settings.npackets, settings.nreceived, settings.nerrors);
 #endif
 		if (settings.npackets && settings.nerrors + settings.nreceived >= settings.npackets)
 			break;
-		setsockopt(fd, IPPROTO_IP, IP_TTL, &settings.ttl, sizeof(settings.ttl));
+		usleep(PING_SLEEP_RATE);
 		ping_ret = ping(addr_con);
 		if (ping_ret == 0) {
 			advance_ntransmitted();
@@ -287,6 +307,7 @@ void init_settings(int argc, char **argv, char *ip, char *reverse_ip)
 	settings.argv = argv;
 	settings.ip = ip;
 	settings.reverse_ip = reverse_ip;
+	settings.is_ip = false;
 }
 
 int main(int argc, char *argv[])

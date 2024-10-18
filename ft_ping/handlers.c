@@ -48,8 +48,9 @@ int ttl_handler()
 {
 	if (settings.option == settings.argc - 1) {
 		error("Invalid Option\n");
+		exit(1);
 	}
-	int ttl = atoi(settings.opt_name);
+	int ttl = atoi(settings.argv[settings.option + 1]);
 	settings.ttl = ttl;
 	return 2;
 }

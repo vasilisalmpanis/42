@@ -14,6 +14,7 @@
 # include <sys/socket.h>
 # include <sys/types.h>
 # include <sys/time.h>
+# include <stdbool.h>
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -22,6 +23,7 @@
 #define	MAXIPLEN	60
 #define	MAXICMPLEN	76
 #define	DEFDATALEN	(PACKET_SIZE - 8)	/* default data length */
+#define PING_SLEEP_RATE 1000000
 
 #define true 1
 #define false 0
@@ -60,6 +62,8 @@ struct environ {
 	int	deadline;
 
 	int	verbose;	/* verbose mode */
+
+	bool	is_ip;
 
 	size_t	ttl;
 
@@ -105,6 +109,7 @@ void dns_lookup(char *addr_host, struct sockaddr_in *addr_con, char *ip);
 void reverse_dns_lookup(char *ip, char *reverse_ip);
 
 /* Utils */
+bool isValidIpAddress(char *ipAddress);
 void print_packet_hex(uint8_t *packet, int length);
 
 # endif /* FT_PING */

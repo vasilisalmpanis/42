@@ -2,20 +2,23 @@
 #include "ft_ping.h"
 
 
-void help_handler()
+int help_handler()
 {
 	error(HELP_STR);
+	return 1;
 }
 
-void version_handler()
+int version_handler()
 {
 	error(VERSION);
 	exit(0);
+	return 1;
 }
 
-void verbose_handler()
+int verbose_handler()
 {
 	settings.verbose = true;
+	return 1;
 }
 
 int is_num(char *arg)
@@ -27,7 +30,7 @@ int is_num(char *arg)
 	return 0;
 }
 
-void count_handler()
+int count_handler()
 {
 	if (settings.option == settings.argc - 1) {
 		error("Invalid Option\n");
@@ -38,13 +41,15 @@ void count_handler()
 	}
 	long packet_num = strtol(settings.opt_name, NULL, 10);
 	settings.npackets = packet_num;
+	return 2;
 }
 
-void ttl_handler()
+int ttl_handler()
 {
 	if (settings.option == settings.argc - 1) {
 		error("Invalid Option\n");
 	}
 	int ttl = atoi(settings.opt_name);
 	settings.ttl = ttl;
+	return 2;
 }

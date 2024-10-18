@@ -1,7 +1,4 @@
 #include "ft_ping.h"
-#include <bits/types/struct_timeval.h>
-#include <stdint.h>
-#include <sys/time.h>
 
 static const options ping_options[11] = {
         [0] = { .short_version = "-h", .long_version = "--help", help_handler},
@@ -22,6 +19,11 @@ static const char failure_format_string[] = "From %s (%s) icmp_seq=%d %s\n";
 
 struct environ settings;
 
+void print_statistics()
+{
+	printf("\n--- %s ping statistics ---\n", settings.target);
+}
+
 double convert_to_milli()
 {
 	long seconds = settings.tv_now.tv_sec - settings.prev_time->tv_sec;
@@ -33,10 +35,11 @@ int check_options()
 {
 	int argc = settings.argc;
 	char **argv = settings.argv;
+	int j;
         for (int i = 1; i < argc; i++) {
                        int arg_length = strlen(argv[i]);
 		       int found = 0;
-                       for (int j = 0; j < 10; j++) {
+                       for (j = 0; j < 11; j++) {
                                 int option_length = strlen(ping_options[j].long_version);
                                 if ((arg_length == option_length &&
 					!strcmp(argv[i], ping_options[j].long_version)) ||
@@ -46,14 +49,18 @@ int check_options()
 					settings.option = i + 1;
 					settings.opt_name = argv[settings.option];
 					if (ping_options[j].handler)
-						ping_options[j].handler();
-					found = 1;
+						found = ping_options[j].handler();
+					break;
                                 }
                        }
-		       if (!found) {
-			       if (!settings.target)
-				       settings.target = argv[i];
+		       if (j == 11 && settings.target) {
+			       error("Invalid Option\n");
+			       exit(1);
 		       }
+		       if (found)
+			       i += found - 1;
+		       if (!found && !settings.target)
+			       settings.target = argv[i];
 	}
 	if (!settings.target)
 		return -1;
@@ -74,34 +81,43 @@ int check_options()
 /*};*/
 
 
+void advance_ntransmitted()
+{
+	settings.ntransmitted++;
+}
+
 int ping(struct sockaddr_in * addr_con)
 {
 	struct packet packet;
 	struct timeval tv_now;
+	int preload = settings.preload;
 
 	int cc;
 	int i;
 
-	cc = sizeof(struct packet);
-	memset(&packet, 0, cc);
-	packet.icmp_header.type = ICMP_ECHO;
-	packet.icmp_header.code = 0;
-	packet.icmp_header.checksum = 0;
-	packet.icmp_header.un.echo.sequence = htons(settings.ntransmitted + 1);
-	packet.icmp_header.un.echo.id = settings.ident;
+	while (true)
+	{
+		cc = sizeof(struct packet);
+		memset(&packet, 0, cc);
+		packet.icmp_header.type = ICMP_ECHO;
+		packet.icmp_header.code = 0;
+		packet.icmp_header.checksum = 0;
+		packet.icmp_header.un.echo.sequence = htons(settings.ntransmitted + 1);
+		packet.icmp_header.un.echo.id = settings.ident;
+		if (preload)
+			advance_ntransmitted();
 
-	gettimeofday(&tv_now, NULL);
-	memcpy(packet.data, &tv_now, sizeof(tv_now));
+		gettimeofday(&tv_now, NULL);
+		memcpy(packet.data, &tv_now, sizeof(tv_now));
 
-	packet.icmp_header.checksum = icmp_checksum(&packet,cc); 
-	i = sendto(settings.sock.fd, &packet, sizeof(packet), 0, 
-                           (struct sockaddr*)addr_con, sizeof(*addr_con));
+		packet.icmp_header.checksum = icmp_checksum(&packet,cc); 
+		i = sendto(settings.sock.fd, &packet, sizeof(packet), 0, 
+				(struct sockaddr*)addr_con, sizeof(*addr_con));
+		preload--;
+		if (preload <= 0)
+			break;
+	}
 	return i == cc ? 0 : i;
-}
-
-void advance_ntransmitted()
-{
-	settings.ntransmitted++;
 }
 
 int parse_reply(int cc, uint8_t *packet) 
@@ -147,8 +163,9 @@ int parse_reply(int cc, uint8_t *packet)
 	icp->checksum = 0;
 	uint16_t temp_cksum = icmp_checksum((uint8_t *)icp, cc - hlen);
 	if (icp->type == ICMP_ECHOREPLY) {
-		if (icp->un.echo.id != settings.ident) {
+		if (icp->un.echo.id != (uint16_t)settings.ident) {
 			if (settings.verbose) {
+				printf("%d %d\n", icp->un.echo.id, (uint16_t)settings.ident);
 				printf("Wrong packet id\n");
 				exit(1);
 			}
@@ -162,6 +179,7 @@ int parse_reply(int cc, uint8_t *packet)
 		settings.prev_time = (struct timeval *)((uint8_t *)icp + 8);
 		uint16_t sequence = ntohs(icp->un.echo.sequence);
 		double duration = convert_to_milli();
+		settings.nreceived++;
 		printf(success_format_string, cc - sizeof(struct iphdr),
 					settings.reverse_ip, 
 					settings.ip,
@@ -179,10 +197,11 @@ int parse_reply(int cc, uint8_t *packet)
 			case ICMP_DEST_UNREACH:
 			case ICMP_TIME_EXCEEDED:
 			case ICMP_PARAMETERPROB:
+				settings.nerrors++;
 				iph = (struct iphdr *) (&icp[1]);	
 				int temp = iph->ihl * 4;
 				icp = (struct icmphdr *) ((unsigned char *)iph + temp);
-				if (icp->un.echo.id != settings.ident) {
+				if (icp->un.echo.id != (uint16_t)settings.ident) {
 					if (settings.verbose) {
 						printf("Wrong packet id\n");
 						exit(1);
@@ -218,6 +237,11 @@ void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 	/*	exit(1);*/
 	/*}*/
 	while (true) {
+#if 0
+		printf("npackets :%ld nreceived %ld nerrors %ld\n", settings.npackets, settings.nreceived, settings.nerrors);
+#endif
+		if (settings.npackets && settings.nerrors + settings.nreceived >= settings.npackets)
+			break;
 		setsockopt(fd, IPPROTO_IP, IP_TTL, &settings.ttl, sizeof(settings.ttl));
 		ping_ret = ping(addr_con);
 		if (ping_ret == 0) {
@@ -292,26 +316,26 @@ int main(int argc, char *argv[])
 	ret_val = getaddrinfo(settings.target, NULL, &hints, &result);
 	if (ret_val)
 		printf("%s: %s", settings.target, gai_strerror(ret_val));
+	settings.sock.fd = socket (AF_INET, settings.sock.socktype, IPPROTO_ICMP); 
+	if (settings.sock.fd < 0) {
+		error("Problem opening socket\n");
+		return (1);
+	}
+	if (settings.verbose)
+		printf(VERBOSE_STR,settings.sock.fd,
+				settings.sock.socktype == SOCK_DGRAM ? "SOCK_DGRAM" : "SOCK_RAW");
 	for (ai = result; ai; ai = ai->ai_next)
 	{
-		settings.sock.fd = socket (AF_INET, settings.sock.socktype, IPPROTO_ICMP); 
-		if (settings.sock.fd < 0) {
-			error("Problem opening socket\n");
-			return (1);
-		}
-		if (settings.verbose)
-			printf(VERBOSE_STR,settings.sock.fd,
-					settings.sock.socktype == SOCK_DGRAM ? "SOCK_DGRAM" : "SOCK_RAW");
 		if (settings.verbose) {
 			printf("ai->ai_family: %s, ai->ai_canonname: '%s'\n",
 				  ai->ai_family == AF_INET ? "AF_INET" : "AF_INET6",
 				  ai->ai_canonname ? ai->ai_canonname : "");
-			printf("ai->ai_family: %s, ai->ai_canonname: ''\n", "AF_INET");
 		}
-		printf(PING_STR, settings.target, ip, 124);
-		main_loop(&settings.source, settings.sock.fd, ip, reverse_ip);
-		close(settings.sock.fd);
 	}
+	printf(PING_STR, settings.target, ip, 124);
+	main_loop(&settings.source, settings.sock.fd, ip, reverse_ip);
+	close(settings.sock.fd);
+	print_statistics();
 	freeaddrinfo(result);
         return 0;
 }

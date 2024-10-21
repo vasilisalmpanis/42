@@ -142,9 +142,9 @@ num ^= mask /* again creates 0b0000'0101
   * number  4 in  binary is  0b0100
   * to convert to negative we get 2's compliment
   * NOT original value and then add one to it
-  * 0b1011 
-   +0b0001
-   --------
-    0b1100
+  *  0b1011 
+   + 0b0001
+   ---------
+     0b1100
 
  

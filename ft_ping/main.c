@@ -14,11 +14,6 @@ static const options ping_options[11] = {
         [10] = { .short_version = "-c", .long_version = "--count", count_handler},
 };
 
-static const char success_format_string[] = "%lu bytes from %s (%s): icmp_seq=%d ttl=%d time=%.1f ms\n";
-static const char success_format_string2[] = "%lu bytes from %s: icmp_seq=%d ttl=%d time=%.1f ms\n";
-static const char failure_format_string[] = "From %s (%s) icmp_seq=%d %s\n";
-static const char failure_format_string2[] = "From %s icmp_seq=%d %s\n";
-
 struct environ settings;
 
 void sigexit(int signal __attribute((__unused__)))

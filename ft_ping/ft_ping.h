@@ -75,16 +75,8 @@ struct environ {
 	struct 	timeval tv_now;
 	struct 	timeval *prev_time;
 
-	long min;
-	long avg;
-	long max;
 	long mdev;
 	
-	// min
-	// avg
-	// max
-	// mdev
-
 	int	option;
 	char	*opt_name;
 
@@ -140,6 +132,15 @@ static inline void set_signal(int signo, void (*handler)(int))
 	sa.sa_handler = (void (*)(int))handler;
 	sa.sa_flags = SA_RESTART;
 	sigaction(signo, &sa, NULL);
+}
+
+static inline void tvsub(struct timeval *out, struct timeval *in)
+{
+	if ((out->tv_usec -= in->tv_usec) < 0) {
+		--out->tv_sec;
+		out->tv_usec += 1000000;
+	}
+	out->tv_sec -= in->tv_sec;
 }
 
 # endif /* FT_PING */

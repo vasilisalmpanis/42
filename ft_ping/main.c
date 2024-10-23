@@ -1,4 +1,5 @@
 #include "ft_ping.h"
+#include <stdio.h>
 
 static const options ping_options[11] = {
         [0] = { .short_version = "-h", .long_version = "--help", help_handler},
@@ -33,15 +34,17 @@ void print_statistics()
 		double tmdev;
 		long total = settings.nreceived;
 		long long tmvar;
+		long tavg;
+		tavg = settings.tsum / total;
 		if (settings.tsum < INT_MAX)
 			tmvar = (settings.tsum2 - ((settings.tsum * settings.tsum) / total)) / total;
 		else 
-			tmvar = (settings.tsum2 / total) - (settings.avg * settings.avg);
+			tmvar = (settings.tsum2 / total) - (tavg);
 		tmdev = llsqrt(tmvar);
 		printf(RTT_STR,
-		       (long)settings.tmin / 1000, (long)settings.tmin % 1000,
-		       (unsigned long)(settings.avg / 1000), (long)(settings.avg % 1000),
-		       (long)settings.tmax / 1000, (long)settings.tmax % 1000,
+		       settings.tmin / 1000, settings.tmin % 1000,
+		       (unsigned long)(tavg / 1000), (long)(tavg % 1000),
+		       settings.tmax / 1000, settings.tmax % 1000,
 		       (long)tmdev / 1000, (long)tmdev % 1000);
 	}
 }
@@ -63,14 +66,6 @@ double convert_to_milli()
 	long seconds = settings.tv_now.tv_sec - settings.prev_time->tv_sec;
 	long microseconds = settings.tv_now.tv_usec - settings.prev_time->tv_usec;
 	double duration = (double)(seconds * 1000.0 + microseconds / 1000.0);
-	if (duration > settings.max)
-		settings.max = duration;
-	else if (duration < settings.min)
-		settings.min = duration;
-	if (settings.ntransmitted == 1)
-		settings.avg = duration;
-	else
-		settings.avg = (((settings.ntransmitted - 1) * settings.avg) + duration) / settings.ntransmitted;
 	return duration;
 }
 
@@ -169,18 +164,26 @@ int ping(struct sockaddr_in * addr_con)
 
 int gather_statistics(double duration, int csfailed)
 {
+	long triptime = 0;
+	(void) duration;
+
 	++settings.nreceived;
 	if (!csfailed) {
-		settings.tsum += duration; 
-		settings.tsum2 = (double)((long long)duration * (long long)duration);
-		if ((long)duration > settings.tmax)
-			settings.tmax = (long)duration;
-		if ((long)duration < settings.tmin)
-			settings.tmin = (long)duration;
+		tvsub(&settings.tv_now, settings.prev_time);
+		triptime = settings.tv_now.tv_sec * 1000000 + settings.tv_now.tv_usec;
+		if (triptime < 0) 
+			printf("Warning: time of day goes back (%ldus), taking countermeasures", triptime);
+
+		settings.tsum += triptime; 
+		settings.tsum2 += (double)((long long)triptime * (long long)triptime);
+		if (triptime > settings.tmax)
+			settings.tmax = triptime;
+		if (triptime < settings.tmin)
+			settings.tmin = triptime;
 		if (!settings.rtt)
-			settings.rtt = (long)duration * 8;
+			settings.rtt = triptime * 8;
 		else
-			settings.rtt += (long)duration - settings.rtt / 8;
+			settings.rtt += triptime - settings.rtt / 8;
 	}
 	if (csfailed) {
 		--settings.nreceived;
@@ -372,6 +375,10 @@ void init_settings(int argc, char **argv, char *ip, char *reverse_ip)
 	settings.ip = ip;
 	settings.reverse_ip = reverse_ip;
 	settings.is_ip = false;
+	settings.tmax = 0;
+	settings.tmin = LONG_MAX;
+	settings.tsum = 0;
+	settings.tsum2 = 0;
 }
 
 int main(int argc, char *argv[])

@@ -329,7 +329,6 @@ void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 #endif
 		if (settings.npackets && settings.nerrors + settings.nreceived >= settings.npackets)
 			break;
-		usleep(PING_SLEEP_RATE);
 		ping_ret = ping(addr_con);
 		if (ping_ret == 0) {
 			advance_ntransmitted();
@@ -358,6 +357,7 @@ void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 			(void)not_ours;
 			break;
 		}
+		usleep(PING_SLEEP_RATE);
 	}
 }
 /* PING youtube.com (172.217.18.14) 56(84) bytes of data.

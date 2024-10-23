@@ -63,7 +63,8 @@ struct environ {
 	int	preload;	/* amount of packets to send before receiving */
 	int	deadline;
 
-	int	verbose;	/* verbose mode */
+	bool	verbose;	/* verbose mode */
+	bool	no_dns;
 
 	bool	is_ip;
 
@@ -114,6 +115,7 @@ int error(char *str);
 uint16_t icmp_checksum(void *packet, size_t length);
 
 /* Handlers */
+int no_dns_handler();
 int help_handler();
 int version_handler();
 int verbose_handler();

@@ -31,5 +31,6 @@
 #define success_format_string2  "%lu bytes from %s: icmp_seq=%d ttl=%d time=%.1f ms\n"
 #define failure_format_string  "From %s (%s) icmp_seq=%d %s\n"
 #define failure_format_string2  "From %s icmp_seq=%d %s\n"
+#define RTT_STR "rtt min/avg/max/mdev = %ld.%03ld/%lu.%03ld/%ld.%03ld/%ld.%03ld ms\n"
 
 #endif // !DEFINES_H

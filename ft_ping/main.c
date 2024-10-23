@@ -5,7 +5,7 @@ static const options ping_options[11] = {
         [1] = { .short_version = "-V", .long_version = "--version", version_handler},
         [2] = { .short_version = "-v", .long_version = "--verbose", verbose_handler},
         [3] = { .short_version = "-f", .long_version = "--flood", NULL},
-        [4] = { .short_version = "-n", .long_version = "--no-dns", NULL},
+        [4] = { .short_version = "-n", .long_version = "--no-dns", no_dns_handler},
         [5] = { .short_version = "-s", .long_version = "--size", NULL},
         [6] = { .short_version = "-t", .long_version = "--ttl", ttl_handler},
         [7] = { .short_version = "-w", .long_version = "--deadline", NULL},
@@ -15,16 +15,6 @@ static const options ping_options[11] = {
 };
 
 struct environ settings;
-
-void sigexit(int signal __attribute((__unused__)))
-{
-
-}
-
-void sigstatus(int signal __attribute((__unused__)))
-{
-
-}
 
 void print_statistics()
 {
@@ -42,19 +32,30 @@ void print_statistics()
 	if (settings.nreceived) {
 		double tmdev;
 		long total = settings.nreceived;
-		long tmavg = settings.tsum / total;
 		long long tmvar;
 		if (settings.tsum < INT_MAX)
 			tmvar = (settings.tsum2 - ((settings.tsum * settings.tsum) / total)) / total;
 		else 
-			tmvar = (settings.tsum2 / total) - (tmavg * tmavg);
+			tmvar = (settings.tsum2 / total) - (settings.avg * settings.avg);
 		tmdev = llsqrt(tmvar);
-		printf("rtt min/avg/max/mdev = %ld.%03ld/%lu.%03ld/%ld.%03ld/%ld.%03ld ms\n",
+		printf(RTT_STR,
 		       (long)settings.tmin / 1000, (long)settings.tmin % 1000,
-		       (unsigned long)(tmavg / 1000), (long)(tmavg % 1000),
+		       (unsigned long)(settings.avg / 1000), (long)(settings.avg % 1000),
 		       (long)settings.tmax / 1000, (long)settings.tmax % 1000,
 		       (long)tmdev / 1000, (long)tmdev % 1000);
 	}
+}
+
+void sigexit(int signal __attribute((__unused__)))
+{
+	print_statistics();
+	exit(1);
+}
+
+void sigstatus(int signal __attribute((__unused__)))
+{
+	print_statistics();
+	exit(1);
 }
 
 double convert_to_milli()
@@ -246,7 +247,7 @@ int parse_reply(int cc, uint8_t *packet)
 		double duration = convert_to_milli();
 		gather_statistics(duration, csfailed);
 		uint16_t sequence = ntohs(icp->un.echo.sequence);
-		if (!settings.is_ip)
+		if (!settings.is_ip && !settings.no_dns)
 			printf(success_format_string, cc - sizeof(struct iphdr),
 						settings.reverse_ip, 
 						settings.ip,
@@ -286,7 +287,7 @@ int parse_reply(int cc, uint8_t *packet)
 					reverse_dns_lookup(settings.error_ip, settings.error_reverse_ip);
 				}
 				uint16_t error_sequence = ntohs(icp->un.echo.sequence);
-				if (!settings.is_ip)
+				if (!settings.is_ip && !settings.no_dns)
 					printf(failure_format_string, settings.error_reverse_ip, settings.error_ip, 
 							error_sequence, "Time to live exceeded");
 				else
@@ -397,7 +398,8 @@ int main(int argc, char *argv[])
 		printf("ping: %s: Name or service not known\n", settings.target);
 		return 1;
 	}
-	reverse_dns_lookup(ip, reverse_ip);
+	if (!settings.no_dns)
+		reverse_dns_lookup(ip, reverse_ip);
 	ret_val = getaddrinfo(settings.target, NULL, &hints, &result);
 	if (ret_val)
 		printf("%s: %s", settings.target, gai_strerror(ret_val));

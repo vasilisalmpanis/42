@@ -1,6 +1,11 @@
 #include "defines.h"
 #include "ft_ping.h"
 
+int no_dns_handler()
+{
+	settings.no_dns = true;
+	return 1;
+}
 
 int help_handler()
 {

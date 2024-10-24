@@ -1,9 +1,32 @@
 #include "defines.h"
 #include "ft_ping.h"
 
-int no_dns_handler()
+int is_num(char *arg)
 {
-	settings.no_dns = true;
+	for (int i = 0; arg[i]; i++) {
+		if (arg[i] < '0' || arg[i] > '9')
+			exit(1);
+	}
+	return 0;
+}
+
+int preload_handler()
+{
+	if (settings.option == settings.argc - 1) {
+		error("Invalid Option\n");
+		exit(1);
+	}
+	if (is_num(settings.argv[settings.option + 1])) {
+		printf("ping: please provide a valid number for reps\n");
+		exit(1);
+	}
+	settings.preload = atoi(settings.argv[settings.option + 1]);
+	return 2;
+}
+
+int dns_handler()
+{
+	settings.no_dns = false;
 	return 1;
 }
 
@@ -24,15 +47,6 @@ int verbose_handler()
 {
 	settings.verbose = true;
 	return 1;
-}
-
-int is_num(char *arg)
-{
-	for (int i = 0; arg[i]; i++) {
-		if (arg[i] < '0' || arg[i] > '9')
-			exit(1);
-	}
-	return 0;
 }
 
 int count_handler()

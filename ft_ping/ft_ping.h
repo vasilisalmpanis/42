@@ -107,7 +107,8 @@ int error(char *str);
 uint16_t icmp_checksum(void *packet, size_t length);
 
 /* Handlers */
-int no_dns_handler();
+int preload_handler();
+int dns_handler();
 int help_handler();
 int version_handler();
 int verbose_handler();

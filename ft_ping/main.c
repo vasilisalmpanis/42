@@ -6,12 +6,12 @@ static const options ping_options[11] = {
 	[1] = { .short_version = "-V", .long_version = "--version", version_handler},
 	[2] = { .short_version = "-v", .long_version = "--verbose", verbose_handler},
 	[3] = { .short_version = "-f", .long_version = "--flood", NULL},
-	[4] = { .short_version = "-n", .long_version = "--no-dns", no_dns_handler},
+	[4] = { .short_version = "-H", .long_version = "--force-dns", dns_handler},
 	[5] = { .short_version = "-s", .long_version = "--size", NULL},
 	[6] = { .short_version = "-t", .long_version = "--ttl", ttl_handler},
 	[7] = { .short_version = "-w", .long_version = "--deadline", NULL},
 	[8] = { .short_version = "-W", .long_version = "--timeout", NULL},
-	[9] = { .short_version = "-l", .long_version = "--preload", NULL},
+	[9] = { .short_version = "-l", .long_version = "--preload", preload_handler},
 	[10] = { .short_version = "-c", .long_version = "--count", count_handler},
 };
 
@@ -19,7 +19,7 @@ struct environ settings;
 
 void print_statistics()
 {
-	printf("\n--- %s ping statistics ---\n", settings.target);
+	printf("--- %s ping statistics ---\n", settings.target);
 	int packet_loss = (1 - (settings.nreceived/settings.ntransmitted)) * 100;
 	printf("%ld packets transmitted, ", settings.ntransmitted);
 	printf("%ld received, ", settings.nreceived);
@@ -132,33 +132,26 @@ int ping(struct sockaddr_in * addr_con)
 {
 	struct packet packet;
 	struct timeval tv_now;
-	int preload = settings.preload;
 
 	int cc;
 	int i;
 
-	while (true)
-	{
-		cc = sizeof(struct packet);
-		memset(&packet, 0, cc);
-		packet.icmp_header.type = ICMP_ECHO;
-		packet.icmp_header.code = 0;
-		packet.icmp_header.checksum = 0;
-		packet.icmp_header.un.echo.sequence = htons(settings.ntransmitted + 1);
-		packet.icmp_header.un.echo.id = settings.ident;
-		if (preload)
-			advance_ntransmitted();
+	cc = sizeof(struct packet);
+	memset(&packet, 0, cc);
+	packet.icmp_header.type = ICMP_ECHO;
+	packet.icmp_header.code = 0;
+	packet.icmp_header.checksum = 0;
+	packet.icmp_header.un.echo.sequence = htons(settings.ntransmitted + 1);
+	packet.icmp_header.un.echo.id = settings.ident;
 
-		gettimeofday(&tv_now, NULL);
-		memcpy(packet.data, &tv_now, sizeof(tv_now));
+	gettimeofday(&tv_now, NULL);
+	memcpy(packet.data, &tv_now, sizeof(tv_now));
 
-		packet.icmp_header.checksum = icmp_checksum(&packet,cc); 
-		i = sendto(settings.sock.fd, &packet, sizeof(packet), 0, 
-				(struct sockaddr*)addr_con, sizeof(*addr_con));
-		preload--;
-		if (preload <= 0)
-			break;
-	}
+	packet.icmp_header.checksum = icmp_checksum(&packet,cc); 
+	i = sendto(settings.sock.fd, &packet, sizeof(packet), 0, 
+			(struct sockaddr*)addr_con, sizeof(*addr_con));
+	/*if (settings.preload > 0)*/
+	/*	settings.preload--;*/
 	return i == cc ? 0 : i;
 }
 
@@ -305,7 +298,7 @@ int parse_reply(int cc, uint8_t *packet)
 	return 0;
 }
 
-void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
+int main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 {
 	uint8_t		receive_packet[200];
 	socklen_t	addrlen= sizeof(settings.whereto);
@@ -313,16 +306,7 @@ void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 	struct timeval tv_out;
 	tv_out.tv_sec = 1;
 	tv_out.tv_usec = 0;
-	/*if (setsockopt(settings.sock.fd, IPPROTO_IP, IP_RECVTTL, &ttl_opt, sizeof(ttl_opt)) < 0) {*/
-	/*	perror("setsockopt IP_RECVTTL failed");*/
-	/*	exit(1);*/
-	/*}*/
-	/*if (setsockopt(settings.sock.fd, SOL_SOCKET, SO_TIMESTAMP, &ttl_opt, sizeof(ttl_opt)) < 0) {*/
-	/*	perror("setsockopt SO_TIMESTAMP failed");*/
-	/*	exit(1);*/
-	/*}*/
 	setsockopt(fd, IPPROTO_IP, IP_TTL, &settings.ttl, sizeof(settings.ttl));
-	/*setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv_out, sizeof tv_out);*/
 	while (true) {
 #if 0
 		printf("npackets :%ld nreceived %ld nerrors %ld\n", settings.npackets, settings.nreceived, settings.nerrors);
@@ -338,27 +322,24 @@ void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 		if (ping_ret > 0) {
 			// fatal bug
 			printf("%s %sfatal bag\n", ip, reverse_ip);
-			exit(1);
+			return 1;
 		}
-		for (;;) {
-			/*struct timeval *recv_timep = NULL;*/
-			/*struct timeval recv_time;*/
-			int not_ours = 0;
-			memset(receive_packet, 0, PACKET_SIZE * 2);
-			memset(&settings.whereto, 0, sizeof(struct sockaddr_in));
-			cc = recvfrom(settings.sock.fd, receive_packet,
-					PACKET_SIZE * 2, 0, (struct sockaddr *)&settings.whereto, &addrlen);
-			gettimeofday(&settings.tv_now, NULL);
-			if (cc < 0) {
-				error("Error receiving packet\n");
-				return ;
-			}
-			not_ours = parse_reply(cc, receive_packet);
-			(void)not_ours;
-			break;
+		memset(receive_packet, 0, PACKET_SIZE * 2);
+		memset(&settings.whereto, 0, sizeof(struct sockaddr_in));
+		cc = recvfrom(settings.sock.fd, receive_packet,
+				PACKET_SIZE * 2, 0, (struct sockaddr *)&settings.whereto, &addrlen);
+		gettimeofday(&settings.tv_now, NULL);
+		if (cc < 0) {
+			error("Error receiving packet\n");
+			return 1;
 		}
-		usleep(PING_SLEEP_RATE);
+		parse_reply(cc, receive_packet);
+		if (settings.preload > 0)
+			settings.preload--;
+		if (!settings.preload)
+			usleep(PING_SLEEP_RATE);
 	}
+	return 0;
 }
 /* PING youtube.com (172.217.18.14) 56(84) bytes of data.
  * 64 bytes from fra15s28-in-f14.1e100.net (172.217.18.14): icmp_seq=1 ttl=116 time=26.0 ms
@@ -374,6 +355,7 @@ void init_settings(int argc, char **argv, char *ip, char *reverse_ip)
 	settings.argv = argv;
 	settings.ip = ip;
 	settings.reverse_ip = reverse_ip;
+	settings.no_dns = true;
 	settings.is_ip = false;
 	settings.tmax = 0;
 	settings.tmin = LONG_MAX;
@@ -429,8 +411,9 @@ int main(int argc, char *argv[])
 	set_signal(SIGINT, sigexit);
 	set_signal(SIGALRM, sigexit);
 	set_signal(SIGQUIT, sigstatus);
-	printf(PING_STR, settings.target, ip, 124);
-	main_loop(&settings.source, settings.sock.fd, ip, reverse_ip);
+	printf(PING_STR, settings.target, ip);
+	if (main_loop(&settings.source, settings.sock.fd, ip, reverse_ip))
+		exit(1);
 	close(settings.sock.fd);
 	print_statistics();
 	freeaddrinfo(result);

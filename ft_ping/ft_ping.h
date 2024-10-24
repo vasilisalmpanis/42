@@ -31,8 +31,8 @@
 #define false 0
 
 typedef struct options {
-        char	short_version[15];
-        char	long_version[15];
+	char	short_version[15];
+	char	long_version[15];
 	int	(* handler)(); /* handler function for each option */
 } options;
 
@@ -42,8 +42,8 @@ typedef struct socket_st {
 } socket_st;
 
 struct packet {
-       struct icmphdr icmp_header;
-       char    data[PACKET_SIZE - sizeof(struct icmphdr)];
+	struct icmphdr icmp_header;
+	char    data[PACKET_SIZE - sizeof(struct icmphdr)];
 } __attribute__((packed));
 
 struct environ {
@@ -76,7 +76,7 @@ struct environ {
 	struct 	timeval *prev_time;
 
 	long mdev;
-	
+
 	int	option;
 	char	*opt_name;
 

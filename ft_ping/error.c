@@ -2,6 +2,6 @@
 
 int error(char *str)
 {
-        write(2, str, strlen(str));
-        return 1;
+	write(2, str, strlen(str));
+	return 1;
 }

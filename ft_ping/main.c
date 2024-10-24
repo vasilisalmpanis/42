@@ -2,17 +2,17 @@
 #include <stdio.h>
 
 static const options ping_options[11] = {
-        [0] = { .short_version = "-h", .long_version = "--help", help_handler},
-        [1] = { .short_version = "-V", .long_version = "--version", version_handler},
-        [2] = { .short_version = "-v", .long_version = "--verbose", verbose_handler},
-        [3] = { .short_version = "-f", .long_version = "--flood", NULL},
-        [4] = { .short_version = "-n", .long_version = "--no-dns", no_dns_handler},
-        [5] = { .short_version = "-s", .long_version = "--size", NULL},
-        [6] = { .short_version = "-t", .long_version = "--ttl", ttl_handler},
-        [7] = { .short_version = "-w", .long_version = "--deadline", NULL},
-        [8] = { .short_version = "-W", .long_version = "--timeout", NULL},
-        [9] = { .short_version = "-l", .long_version = "--preload", NULL},
-        [10] = { .short_version = "-c", .long_version = "--count", count_handler},
+	[0] = { .short_version = "-h", .long_version = "--help", help_handler},
+	[1] = { .short_version = "-V", .long_version = "--version", version_handler},
+	[2] = { .short_version = "-v", .long_version = "--verbose", verbose_handler},
+	[3] = { .short_version = "-f", .long_version = "--flood", NULL},
+	[4] = { .short_version = "-n", .long_version = "--no-dns", no_dns_handler},
+	[5] = { .short_version = "-s", .long_version = "--size", NULL},
+	[6] = { .short_version = "-t", .long_version = "--ttl", ttl_handler},
+	[7] = { .short_version = "-w", .long_version = "--deadline", NULL},
+	[8] = { .short_version = "-W", .long_version = "--timeout", NULL},
+	[9] = { .short_version = "-l", .long_version = "--preload", NULL},
+	[10] = { .short_version = "-c", .long_version = "--count", count_handler},
 };
 
 struct environ settings;
@@ -42,10 +42,10 @@ void print_statistics()
 			tmvar = (settings.tsum2 / total) - (tavg);
 		tmdev = llsqrt(tmvar);
 		printf(RTT_STR,
-		       settings.tmin / 1000, settings.tmin % 1000,
-		       (unsigned long)(tavg / 1000), (long)(tavg % 1000),
-		       settings.tmax / 1000, settings.tmax % 1000,
-		       (long)tmdev / 1000, (long)tmdev % 1000);
+				settings.tmin / 1000, settings.tmin % 1000,
+				(unsigned long)(tavg / 1000), (long)(tavg % 1000),
+				settings.tmax / 1000, settings.tmax % 1000,
+				(long)tmdev / 1000, (long)tmdev % 1000);
 	}
 }
 
@@ -74,35 +74,35 @@ int check_options()
 	int argc = settings.argc;
 	char **argv = settings.argv;
 	int j;
-        for (int i = 1; i < argc; i++) {
-                       int arg_length = strlen(argv[i]);
-		       int found = 0;
-		       j = 0;
-                       for (; j < 11; j++) {
-                                int option_length = strlen(ping_options[j].long_version);
-                                if ((arg_length == option_length &&
-					!strcmp(argv[i], ping_options[j].long_version)) ||
+	for (int i = 1; i < argc; i++) {
+		int arg_length = strlen(argv[i]);
+		int found = 0;
+		j = 0;
+		for (; j < 11; j++) {
+			int option_length = strlen(ping_options[j].long_version);
+			if ((arg_length == option_length &&
+						!strcmp(argv[i], ping_options[j].long_version)) ||
 					(arg_length == 2 &&
 					 !strcmp(argv[i], ping_options[j].short_version)))
-                                {
-					settings.option = i;
-					settings.opt_name = argv[settings.option];
-					if (ping_options[j].handler)
-						found = ping_options[j].handler();
-					break;
-                                }
-                       }
-		       if (j == 11 && settings.target) {
-			       error("Invalid Option\n");
-			       exit(1);
-		       }
-		       if (found)
-			       i += found - 1;
-		       if (!found && !settings.target) {
-			       settings.target = argv[i];
-			       settings.is_ip = isValidIpAddress(argv[i]);
+			{
+				settings.option = i;
+				settings.opt_name = argv[settings.option];
+				if (ping_options[j].handler)
+					found = ping_options[j].handler();
+				break;
+			}
+		}
+		if (j == 11 && settings.target) {
+			error("Invalid Option\n");
+			exit(1);
+		}
+		if (found)
+			i += found - 1;
+		if (!found && !settings.target) {
+			settings.target = argv[i];
+			settings.is_ip = isValidIpAddress(argv[i]);
 
-		       }
+		}
 	}
 	if (!settings.target)
 		return -1;
@@ -252,17 +252,17 @@ int parse_reply(int cc, uint8_t *packet)
 		uint16_t sequence = ntohs(icp->un.echo.sequence);
 		if (!settings.is_ip && !settings.no_dns)
 			printf(success_format_string, cc - sizeof(struct iphdr),
-						settings.reverse_ip, 
-						settings.ip,
-						sequence,
-						reply_ttl,
-						duration);
+					settings.reverse_ip, 
+					settings.ip,
+					sequence,
+					reply_ttl,
+					duration);
 		else
 			printf(success_format_string2, cc - sizeof(struct iphdr),
-						settings.ip,
-						sequence,
-						reply_ttl,
-						duration);
+					settings.ip,
+					sequence,
+					reply_ttl,
+					duration);
 	}
 	else {
 		switch (icp->type) {
@@ -334,7 +334,7 @@ void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 			advance_ntransmitted();
 			//handle
 		}
-		
+
 		if (ping_ret > 0) {
 			// fatal bug
 			printf("%s %sfatal bag\n", ip, reverse_ip);
@@ -362,7 +362,7 @@ void main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 }
 /* PING youtube.com (172.217.18.14) 56(84) bytes of data.
  * 64 bytes from fra15s28-in-f14.1e100.net (172.217.18.14): icmp_seq=1 ttl=116 time=26.0 ms
-*/
+ */
 
 void init_settings(int argc, char **argv, char *ip, char *reverse_ip)
 {
@@ -394,10 +394,10 @@ int main(int argc, char *argv[])
 	char reverse_ip[NI_MAXHOST * sizeof(char)] =  {0};
 	int ret_val;
 
-        if (argc == 1)
-                error(ERROR_STR);
+	if (argc == 1)
+		error(ERROR_STR);
 	init_settings(argc, argv, ip, reverse_ip);
-        if (check_options() == -1) {
+	if (check_options() == -1) {
 		return 1;
 	}
 	dns_lookup(settings.target, &settings.source, ip);
@@ -422,8 +422,8 @@ int main(int argc, char *argv[])
 	{
 		if (settings.verbose) {
 			printf("ai->ai_family: %s, ai->ai_canonname: '%s'\n",
-				  ai->ai_family == AF_INET ? "AF_INET" : "AF_INET6",
-				  ai->ai_canonname ? ai->ai_canonname : "");
+					ai->ai_family == AF_INET ? "AF_INET" : "AF_INET6",
+					ai->ai_canonname ? ai->ai_canonname : "");
 		}
 	}
 	set_signal(SIGINT, sigexit);
@@ -434,5 +434,5 @@ int main(int argc, char *argv[])
 	close(settings.sock.fd);
 	print_statistics();
 	freeaddrinfo(result);
-        return 0;
+	return 0;
 }

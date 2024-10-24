@@ -142,7 +142,7 @@ int ping(struct sockaddr_in * addr_con)
 	packet.icmp_header.type = ICMP_ECHO;
 	packet.icmp_header.code = 0;
 	packet.icmp_header.checksum = 0;
-	packet.icmp_header.un.echo.sequence = htons(settings.ntransmitted + 1);
+	packet.icmp_header.un.echo.sequence = htons(settings.ntransmitted);
 	packet.icmp_header.un.echo.id = settings.ident;
 
 	gettimeofday(&tv_now, NULL);

@@ -1,7 +1,7 @@
 #include "ft_ping.h"
 #include <stdio.h>
 
-static const options ping_options[11] = {
+static const options ping_options[12] = {
 	[0] = { .short_version = "-h", .long_version = "--help", help_handler},
 	[1] = { .short_version = "-V", .long_version = "--version", version_handler},
 	[2] = { .short_version = "-v", .long_version = "--verbose", verbose_handler},
@@ -13,6 +13,7 @@ static const options ping_options[11] = {
 	[8] = { .short_version = "-W", .long_version = "--timeout", NULL},
 	[9] = { .short_version = "-l", .long_version = "--preload", preload_handler},
 	[10] = { .short_version = "-c", .long_version = "--count", count_handler},
+	[11] = { .short_version = "-i", .long_version = "--interval", interval_handler},
 };
 
 struct environ settings;
@@ -78,7 +79,7 @@ int check_options()
 		int arg_length = strlen(argv[i]);
 		int found = 0;
 		j = 0;
-		for (; j < 11; j++) {
+		for (; j < 12; j++) {
 			int option_length = strlen(ping_options[j].long_version);
 			if ((arg_length == option_length &&
 						!strcmp(argv[i], ping_options[j].long_version)) ||
@@ -92,7 +93,7 @@ int check_options()
 				break;
 			}
 		}
-		if (j == 11 && settings.target) {
+		if (j == 12 && settings.target) {
 			error("Invalid Option\n");
 			exit(1);
 		}
@@ -337,7 +338,7 @@ int main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
 		if (settings.preload > 0)
 			settings.preload--;
 		if (!settings.preload)
-			usleep(PING_SLEEP_RATE);
+			usleep(settings.interval);
 	}
 	return 0;
 }
@@ -361,6 +362,7 @@ void init_settings(int argc, char **argv, char *ip, char *reverse_ip)
 	settings.tmin = LONG_MAX;
 	settings.tsum = 0;
 	settings.tsum2 = 0;
+	settings.interval = 1000000;
 }
 
 int main(int argc, char *argv[])

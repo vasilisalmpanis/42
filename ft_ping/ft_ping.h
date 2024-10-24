@@ -25,7 +25,7 @@
 #define	MAXIPLEN	60
 #define	MAXICMPLEN	76
 #define	DEFDATALEN	(PACKET_SIZE - 8)	/* default data length */
-#define PING_SLEEP_RATE 1000000
+
 
 #define true 1
 #define false 0
@@ -108,6 +108,7 @@ uint16_t icmp_checksum(void *packet, size_t length);
 
 /* Handlers */
 int preload_handler();
+int interval_handler();
 int dns_handler();
 int help_handler();
 int version_handler();

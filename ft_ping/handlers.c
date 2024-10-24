@@ -10,6 +10,25 @@ int is_num(char *arg)
 	return 0;
 }
 
+int interval_handler()
+{
+	if (settings.option == settings.argc - 1) {
+		error("Invalid Option\n");
+		exit(1);
+	}
+	if (is_num(settings.argv[settings.option + 1])) {
+		printf("ping: please provide a valid interval\n");
+		exit(1);
+	}
+	int interval = atoi(settings.argv[settings.option + 1]);
+	settings.interval *= interval;
+	if (interval > 2147483) {
+		printf("ping: bad timing interval: %d\n", settings.interval);
+		exit(1);
+	}
+	return 2;
+}
+
 int preload_handler()
 {
 	if (settings.option == settings.argc - 1) {
@@ -21,6 +40,10 @@ int preload_handler()
 		exit(1);
 	}
 	settings.preload = atoi(settings.argv[settings.option + 1]);
+	if (settings.preload > 2147483) {
+		printf("ping: bad timing interval: %d\n", settings.preload);
+		exit(1);
+	}
 	return 2;
 }
 

@@ -17,21 +17,26 @@ static const options ping_options[12] = {
 
 struct environ settings;
 
+/**
+ * @brief Prints the final statistics of the
+ * program. Calculates mdev and prints the rount-trip
+ * time
+ */
 void print_statistics()
 {
     printf("--- %s ping statistics ---\n", settings.target);
     int packet_loss = (1 - (settings.nreceived / settings.ntransmitted)) * 100;
-    printf("%ld packets transmitted, ", settings.ntransmitted);
-    printf("%ld received, ", settings.nreceived);
+    printf("%ld packets transmitted", settings.ntransmitted);
+    printf(", %ld received", settings.nreceived);
     if (settings.nchecksum)
         printf(", +%ld corrupted", settings.nchecksum);
+#ifdef IPUTILS
     if (settings.nerrors)
         printf(", +%ld errors", settings.nerrors);
-    printf("%d%% packet loss, ", packet_loss);
-    printf("time=2000ms\n");
+#endif
+    printf(", %d%% packet loss", packet_loss);
 
-    if (settings.nreceived)
-    {
+    if (settings.nreceived) {
         double tmdev;
         long total = settings.nreceived;
         long long tmvar;
@@ -46,20 +51,36 @@ void print_statistics()
                (long)(tavg % 1000), settings.tmax / 1000, settings.tmax % 1000, (long)tmdev / 1000,
                (long)tmdev % 1000);
     }
+    printf("\n");
 }
 
+/**
+ * @brief Signgal Handler, We print statistics and quit
+ *
+ * @param signal
+ */
 void sigexit(int signal __attribute((__unused__)))
 {
     print_statistics();
     exit(1);
 }
 
+/**
+ * @brief Signgal Handler, We print statistics and quit
+ *
+ * @param signal
+ */
 void sigstatus(int signal __attribute((__unused__)))
 {
     print_statistics();
     exit(1);
 }
 
+/**
+ * @brief Calculates the duration of packet response
+ *
+ * @return duration as double
+ */
 double convert_to_milli()
 {
     long seconds      = settings.tv_now.tv_sec - settings.prev_time->tv_sec;
@@ -68,22 +89,25 @@ double convert_to_milli()
     return duration;
 }
 
+/**
+ * @brief My options parsing function, Should be
+ * replaced with argp from stdlib
+ *
+ * @return
+ */
 int check_options()
 {
     int argc    = settings.argc;
     char **argv = settings.argv;
     int j;
-    for (int i = 1; i < argc; i++)
-    {
+    for (int i = 1; i < argc; i++) {
         int arg_length = strlen(argv[i]);
         int found      = 0;
         j              = 0;
-        for (; j < 12; j++)
-        {
+        for (; j < 12; j++) {
             int option_length = strlen(ping_options[j].long_version);
             if ((arg_length == option_length && !strcmp(argv[i], ping_options[j].long_version)) ||
-                (arg_length == 2 && !strcmp(argv[i], ping_options[j].short_version)))
-            {
+                (arg_length == 2 && !strcmp(argv[i], ping_options[j].short_version))) {
                 settings.option   = i;
                 settings.opt_name = argv[settings.option];
                 if (ping_options[j].handler)
@@ -91,15 +115,13 @@ int check_options()
                 break;
             }
         }
-        if (j == 12 && settings.target)
-        {
+        if (j == 12 && settings.target) {
             error("Invalid Option\n");
             exit(1);
         }
         if (found)
             i += found - 1;
-        if (!found && !settings.target)
-        {
+        if (!found && !settings.target) {
             settings.target = argv[i];
             settings.is_ip  = isValidIpAddress(argv[i]);
         }
@@ -109,21 +131,39 @@ int check_options()
     return 0;
 }
 
-// for test
-/*uint8_t icmp_packet[] = {*/
-/*	0x0b, 0x00, 0xda, 0xd9, 0x00, 0x00, 0x00, 0x00,  // ICMP Header*/
-/*	0x45, 0x00, 0x00, 0x44, 0x89, 0x1f, 0x00, 0x00,  // Original IP Header*/
-/*	0x01, 0x11, 0x4a, 0xf2, 0x0a, 0x00, 0x00, 0xb0,*/
-/*	0x8e, 0xfa, 0x4b, 0xee, 0xf8, 0xdf, 0x82, 0x9a,  // Start of Original UDP Datagram*/
-/*	0x00, 0x30, 0x9e, 0x7b, 0x00, 0x00, 0x00, 0x00,*/
-/*	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,*/
-/*	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,*/
-/*	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,*/
-/*	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00*/
-/*};*/
-
 void advance_ntransmitted() { settings.ntransmitted++; }
 
+/**
+ * @brief Initializes the packet with ICMP_ECHO (no custom types)
+ * and all the reset of respective fields and sends the packet
+ *
+ *  ICMP Packet Structure (Echo Request)
+ *
+ *      0  1           2                  4                  6
+ *     +----+----------+------------------+------------------+
+ *     | 8  |   0      |   Checksum       |   Identifier     |
+ *     |Type|  Code    |   (16 bits)      |   (16 bits)      |
+ *     +----+----------+------------------+------------------+
+ *     |               Sequence Number                  |
+ *     |               (16 bits)                        |
+ *     +------------------------------------------------+
+ *     |                                               |
+ *     |               Data / Payload                  |
+ *     |              (Variable length)                |
+ *     |                                               |
+ *     +------------------------------------------------+
+ *
+ *  Field Descriptions:
+ *    - Type (8 bits): Identifies the ICMP message type (8 for Echo Request, 0 for Echo Reply)
+ *    - Code (8 bits): Provides additional context for the ICMP type (usually 0 for Echo)
+ *    - Checksum (16 bits): Error-detection field for packet integrity
+ *    - Identifier (16 bits): Used to match requests with replies
+ *    - Sequence Number (16 bits): Helps track packet order
+ *    - Data / Payload: Optional data field containing the message
+ *
+ * @param addr_con the destination address
+ * @return 0 on send success and > 0 when not all bytes were sent
+ */
 int ping(struct sockaddr_in *addr_con)
 {
     struct packet packet;
@@ -146,23 +186,28 @@ int ping(struct sockaddr_in *addr_con)
     packet.icmp_header.checksum = icmp_checksum(&packet, cc);
     i = sendto(settings.sock.fd, &packet, sizeof(packet), 0, (struct sockaddr *)addr_con,
                sizeof(*addr_con));
-    /*if (settings.preload > 0)*/
-    /*	settings.preload--;*/
     return i == cc ? 0 : i;
 }
 
-int gather_statistics(double duration, int csfailed)
+/**
+ * @brief calculates, max and min intervals,
+ * adds to interval sum and sum square (for mdev)
+ *
+ * @param duration duration between sending and receiving the response
+ * @param csfailed if the checksum was incorrect
+ * @return 0
+ */
+void gather_statistics(double duration, int csfailed)
 {
     long triptime = 0;
     (void)duration;
 
     ++settings.nreceived;
-    if (!csfailed)
-    {
+    if (!csfailed) {
         tvsub(&settings.tv_now, settings.prev_time);
         triptime = settings.tv_now.tv_sec * 1000000 + settings.tv_now.tv_usec;
         if (triptime < 0)
-            printf("Warning: time of day goes back (%ldus), taking countermeasures", triptime);
+            printf("Warning: time of day goes back (%ldus)", triptime);
 
         settings.tsum += triptime;
         settings.tsum2 += (double)((long long)triptime * (long long)triptime);
@@ -175,15 +220,22 @@ int gather_statistics(double duration, int csfailed)
         else
             settings.rtt += triptime - settings.rtt / 8;
     }
-    if (csfailed)
-    {
+    if (csfailed) {
         --settings.nreceived;
         ++settings.nchecksum;
         printf(" (BAD CHECKSUM!)");
     }
-    return 0;
 }
 
+/**
+ * @brief Parses the received packet, checks if it
+ * originates from us, if the checksum is correct
+ * and the sequence of the packet and gives back feedback
+ *
+ * @param cc bytes read from recvfrom
+ * @param packet the raw packet in the form of bytes
+ * @return OURS, NOT_OURS, FAULT
+ */
 int parse_reply(int cc, uint8_t *packet)
 {
     struct iphdr *iph;
@@ -194,56 +246,31 @@ int parse_reply(int cc, uint8_t *packet)
 
     iph       = (struct iphdr *)packet;
     reply_ttl = 0;
-    if (settings.sock.socktype == SOCK_RAW)
-    {
+
+    if (settings.sock.socktype == SOCK_RAW) {
         hlen = iph->ihl * 4;
-        if (cc < hlen + 8 || iph->ihl < 5)
-        {
+        if (cc < hlen + 8 || iph->ihl < 5) {
             error("Packet is too small\n");
-            return 1;
+            return FAULT;
         }
         reply_ttl = iph->ttl;
-        /*opts = packet + sizeof(struct iphdr);*/
-        /*olen = hlen - sizeof(struct iphdr);*/
-    }
-    else
-    {
+    } else {
         error("SOCK_DGRAM not implemented\n");
         return 1;
     }
-    icp = (struct icmphdr *)(packet + hlen);
-#if DEBUG
-    print_packet_hex((uint8_t *)icp, cc - hlen);
-    printf("Debug: ICMP type = %d\n", icp->type);
-    printf("Debug: ICMP code = %d\n", icp->code);
-    printf("Debug: ICMP checksum = %x\n", icp->checksum);
-    printf("Debug: ICMP id (raw) = %x\n", icp->un.echo.id);
-    printf("Debug: ICMP id (converted) = %x\n", ntohs(icp->un.echo.id));
-    printf("Debug: ICMP sequence (raw) = %x\n", icp->un.echo.sequence);
-    printf("Debug: ICMP sequence (converted) = %x\n", ntohs(icp->un.echo.sequence));
-#endif
+
+    icp                 = (struct icmphdr *)(packet + hlen);
     uint16_t cksum      = ntohs(icp->checksum);
     icp->checksum       = 0;
     uint16_t temp_cksum = icmp_checksum((uint8_t *)icp, cc - hlen);
-    if (icp->type == ICMP_ECHOREPLY)
-    {
+
+    if (icp->type == ICMP_ECHOREPLY) {
         if (icp->un.echo.id != (uint16_t)settings.ident)
-        {
-            if (settings.verbose)
-            {
-                printf("%d %d\n", icp->un.echo.id, (uint16_t)settings.ident);
-                printf("Wrong packet id\n");
-                exit(1);
-            }
-        }
-        if (temp_cksum != ntohs(cksum))
-        {
+            return NOT_OURS;
+
+        if (temp_cksum != ntohs(cksum)) {
             csfailed = 1;
-            if (settings.verbose)
-            {
-                printf(" (BAD CHECKSUM!)");
-                return 1;
-            }
+            return FAULT;
         }
         settings.prev_time = (struct timeval *)((uint8_t *)icp + 8);
         double duration    = convert_to_milli();
@@ -255,11 +282,8 @@ int parse_reply(int cc, uint8_t *packet)
         else
             printf(success_format_string2, cc - sizeof(struct iphdr), settings.ip, sequence,
                    reply_ttl, duration);
-    }
-    else
-    {
-        switch (icp->type)
-        {
+    } else {
+        switch (icp->type) {
             case ICMP_ECHO:
                 /* MUST NOT */
                 return 1;
@@ -273,20 +297,16 @@ int parse_reply(int cc, uint8_t *packet)
                 int temp = iph->ihl * 4;
                 icp      = (struct icmphdr *)((unsigned char *)iph + temp);
                 if (icp->un.echo.id != (uint16_t)settings.ident)
-                {
-                    if (settings.verbose)
-                    {
-                        printf("Wrong packet id\n");
-                        exit(1);
-                    }
-                }
+                    return NOT_OURS;
                 settings.prev_time = (struct timeval *)((uint8_t *)icp + 8);
-                if (!settings.error_ip[0])
-                {
+                if (!settings.error_ip[0]) {
                     inet_ntop(AF_INET, &(settings.whereto.sin_addr), settings.error_ip,
                               INET_ADDRSTRLEN);
                     reverse_dns_lookup(settings.error_ip, settings.error_reverse_ip);
                 }
+#ifdef IPUTILS
+                /* resembling inetutils ping is actually a downgrade */
+
                 uint16_t error_sequence = ntohs(icp->un.echo.sequence);
                 if (!settings.is_ip && !settings.no_dns)
                     printf(failure_format_string, settings.error_reverse_ip, settings.error_ip,
@@ -294,6 +314,7 @@ int parse_reply(int cc, uint8_t *packet)
                 else
                     printf(failure_format_string2, settings.error_ip, error_sequence,
                            "Time to live exceeded");
+#endif
                 break;
             default:
                 /* MUST NOT */
@@ -303,50 +324,67 @@ int parse_reply(int cc, uint8_t *packet)
     return 0;
 }
 
-int main_loop(struct sockaddr_in *addr_con, int fd, char *ip, char *reverse_ip)
+/**
+ * @brief The main ping loop, that sends packets,
+ * receives them and sleeps for the predefined time
+ * if 1 second or whatver the user inputs with the
+ * -i flag
+ *
+ * @param addr_con address destination
+ * @param fd file descriptor of raw socket
+ * @param ip address in string format
+ * @param reverse_ip adress after reverse_dns
+ * @return 0 on success 1 on failure
+ */
+int main_loop(struct sockaddr_in *addr_con, int fd)
 {
     uint8_t receive_packet[200];
     socklen_t addrlen = sizeof(settings.whereto);
     int ping_ret, cc; /*ttl_opt = 1*/
+    int ret_val = OURS;
     struct timeval tv_out;
     tv_out.tv_sec  = 1;
     tv_out.tv_usec = 0;
     setsockopt(fd, IPPROTO_IP, IP_TTL, &settings.ttl, sizeof(settings.ttl));
-    while (true)
-    {
+    while (true) {
 #if 0
 		printf("npackets :%ld nreceived %ld nerrors %ld\n", settings.npackets, settings.nreceived, settings.nerrors);
 #endif
         if (settings.npackets && settings.nerrors + settings.nreceived >= settings.npackets)
             break;
-        ping_ret = ping(addr_con);
-        if (ping_ret == 0)
-        {
-            advance_ntransmitted();
-            // handle
-        }
+        if (ret_val == OURS) {
+            ping_ret = ping(addr_con);
+            if (ping_ret == 0)
+                advance_ntransmitted();
 
-        if (ping_ret > 0)
-        {
-            // fatal bug
-            printf("%s %sfatal bag\n", ip, reverse_ip);
-            return 1;
+            if (ping_ret > 0)
+                continue;
         }
         memset(receive_packet, 0, PACKET_SIZE * 2);
         memset(&settings.whereto, 0, sizeof(struct sockaddr_in));
         cc = recvfrom(settings.sock.fd, receive_packet, PACKET_SIZE * 2, 0,
                       (struct sockaddr *)&settings.whereto, &addrlen);
         gettimeofday(&settings.tv_now, NULL);
-        if (cc < 0)
-        {
+        if (cc < 0) {
             error("Error receiving packet\n");
             return 1;
         }
-        parse_reply(cc, receive_packet);
-        if (settings.preload > 0)
-            settings.preload--;
-        if (!settings.preload)
-            usleep(settings.interval);
+        ret_val = parse_reply(cc, receive_packet);
+        switch (ret_val) {
+            case OURS:
+                if (settings.preload > 0)
+                    settings.preload--;
+                if (!settings.preload)
+                    usleep(settings.interval);
+                break;
+            case NOT_OURS:
+                break;
+            case FAULT:
+                return 1;
+            default:
+                /* MUST NOT */
+                break;
+        }
     }
     return 0;
 }
@@ -358,7 +396,7 @@ void init_settings(int argc, char **argv, char *ip, char *reverse_ip)
 {
     settings.target        = NULL;
     settings.sock.socktype = SOCK_RAW;
-    settings.ident         = getpid();
+    settings.ident         = getpid() & 0xFFFF;
     settings.ttl           = 60;
     settings.argc          = argc;
     settings.argv          = argv;
@@ -373,9 +411,21 @@ void init_settings(int argc, char **argv, char *ip, char *reverse_ip)
     settings.interval      = 1000000;
 }
 
+/**
+ * @brief Main functions of the program
+ * It setups up all necessary components and runs
+ * the main loop
+ *
+ * @param argc
+ * @param argv
+ * @return
+ */
 int main(int argc, char *argv[])
 {
-    struct addrinfo *ai, *result;
+#ifdef IPUTILS
+    struct addrinfo *ai;
+#endif
+    struct addrinfo *result;
     struct addrinfo hints                      = {.ai_family   = AF_UNSPEC,
                                                   .ai_protocol = IPPROTO_UDP,
                                                   .ai_flags    = AI_CANONNAME,
@@ -387,13 +437,11 @@ int main(int argc, char *argv[])
     if (argc == 1)
         error(ERROR_STR);
     init_settings(argc, argv, ip, reverse_ip);
-    if (check_options() == -1)
-    {
+    if (check_options() == -1) {
         return 1;
     }
     dns_lookup(settings.target, &settings.source, ip);
-    if (!ip[0])
-    {
+    if (!ip[0]) {
         printf("ping: %s: Name or service not known\n", settings.target);
         return 1;
     }
@@ -403,28 +451,30 @@ int main(int argc, char *argv[])
     if (ret_val)
         printf("%s: %s", settings.target, gai_strerror(ret_val));
     settings.sock.fd = socket(AF_INET, settings.sock.socktype, IPPROTO_ICMP);
-    if (settings.sock.fd < 0)
-    {
+    if (settings.sock.fd < 0) {
         error("Problem opening socket\n");
         return (1);
     }
+#ifdef IPUTILS
     if (settings.verbose)
         printf(VERBOSE_STR, settings.sock.fd,
                settings.sock.socktype == SOCK_DGRAM ? "SOCK_DGRAM" : "SOCK_RAW");
-    for (ai = result; ai; ai = ai->ai_next)
-    {
-        if (settings.verbose)
-        {
+    for (ai = result; ai; ai = ai->ai_next) {
+        if (settings.verbose) {
             printf("ai->ai_family: %s, ai->ai_canonname: '%s'\n",
                    ai->ai_family == AF_INET ? "AF_INET" : "AF_INET6",
                    ai->ai_canonname ? ai->ai_canonname : "");
         }
     }
+#endif
     set_signal(SIGINT, sigexit);
     set_signal(SIGALRM, sigexit);
     set_signal(SIGQUIT, sigstatus);
     printf(PING_STR, settings.target, ip);
-    if (main_loop(&settings.source, settings.sock.fd, ip, reverse_ip))
+    if (settings.verbose)
+        printf(", id 0x%04x = %u", settings.ident, settings.ident);
+    printf("\n");
+    if (main_loop(&settings.source, settings.sock.fd))
         exit(1);
     close(settings.sock.fd);
     print_statistics();

@@ -1,5 +1,11 @@
 #include "ft_ping.h"
 
+/**
+ * @brief The square root of long long
+ *
+ * @param a the number
+ * @return the square root of a casted to long
+ */
 long llsqrt(long long a)
 {
     long long prev = LLONG_MAX;
@@ -17,6 +23,12 @@ long llsqrt(long long a)
     return (long)x;
 }
 
+/**
+ * @brief Checks if the address is valid
+ *
+ * @param ipAddress  the address to check
+ * @return true if is valid else false
+ */
 bool isValidIpAddress(char *ipAddress)
 {
     struct sockaddr_in sa;
@@ -24,6 +36,13 @@ bool isValidIpAddress(char *ipAddress)
     return result != 0;
 }
 
+/**
+ * @brief Debugging function to print hex content of
+ * a packet like hexdump 
+ *
+ * @param packet the raw packet in bytes
+ * @param length the length of the packet to print
+ */
 void print_packet_hex(uint8_t *packet, int length)
 {
     for (int i = 0; i < length; i++)

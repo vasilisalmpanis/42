@@ -20,36 +20,38 @@
 
 #include "defines.h"
 
+/* for iputils style output */
+/*#define IPUTILS*/
+
 #define PACKET_SIZE 64
 #define MAXPACKET 65535
 #define MAXIPLEN 60
 #define MAXICMPLEN 76
 #define DEFDATALEN (PACKET_SIZE - 8) /* default data length */
+#define OURS 0
+#define NOT_OURS 1
+#define FAULT 2
 
 #define true 1
 #define false 0
 
-typedef struct options
-{
+typedef struct options {
     char short_version[15];
     char long_version[15];
     int (*handler)(); /* handler function for each option */
 } options;
 
-typedef struct socket_st
-{
+typedef struct socket_st {
     int fd;
     int socktype;
 } socket_st;
 
-struct packet
-{
+struct packet {
     struct icmphdr icmp_header;
     char data[PACKET_SIZE - sizeof(struct icmphdr)];
 } __attribute__((packed));
 
-struct environ
-{
+struct environ {
     char *target;
     char *hostname;
 
@@ -141,8 +143,7 @@ static inline void set_signal(int signo, void (*handler)(int))
 
 static inline void tvsub(struct timeval *out, struct timeval *in)
 {
-    if ((out->tv_usec -= in->tv_usec) < 0)
-    {
+    if ((out->tv_usec -= in->tv_usec) < 0) {
         --out->tv_sec;
         out->tv_usec += 1000000;
     }

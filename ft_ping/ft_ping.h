@@ -1,6 +1,7 @@
 #ifndef FT_PING
 #define FT_PING
 
+#include <argp.h>
 #include <arpa/inet.h>
 #include <ctype.h>
 #include <limits.h>

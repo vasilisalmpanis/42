@@ -1,4 +1,3 @@
-#include "defines.h"
 #include "ft_ping.h"
 
 /**
@@ -18,129 +17,75 @@ int is_num(char *arg)
 }
 
 /**
- * @brief Sets the interval between each consecutive sendto
+ * @brief Option parsing function
  *
- * @return how many args we should advance
- */
-int interval_handler()
-{
-    if (settings.option == settings.argc - 1) {
-        error("Invalid Option\n");
-        exit(1);
-    }
-    if (is_num(settings.argv[settings.option + 1])) {
-        printf("ping: please provide a valid interval\n");
-        exit(1);
-    }
-    int interval = atoi(settings.argv[settings.option + 1]);
-    settings.interval *= interval;
-    if (interval > 2147483) {
-        printf("ping: bad timing interval: %d\n", settings.interval);
-        exit(1);
-    }
-    return 2;
-}
-
-/**
- * @brief Sets the preload parameter
- *
- * @return how many args we should advance
- */
-int preload_handler()
-{
-    if (settings.option == settings.argc - 1) {
-        error("Invalid Option\n");
-        exit(1);
-    }
-    if (is_num(settings.argv[settings.option + 1])) {
-        printf("ping: please provide a valid number for reps\n");
-        exit(1);
-    }
-    settings.preload = atoi(settings.argv[settings.option + 1]);
-    if (settings.preload > 2147483) {
-        printf("ping: bad timing interval: %d\n", settings.preload);
-        exit(1);
-    }
-    return 2;
-}
-
-/**
- * @brief Sets the no_dns opt to false so
- * we perform reverse_dns on the ip address
- *
- * @return the amount of args to advance
- */
-int dns_handler()
-{
-    settings.no_dns = false;
-    return 1;
-}
-
-/**
- * @brief Prints the help str
- *
+ * @param key
+ * @param arg
+ * @param state
  * @return
  */
-int help_handler()
+int parse_opt(int key, char *arg, struct argp_state *state)
 {
-    error(HELP_STR);
-    return 1;
-}
-
-/**
- * @brief Prints version and exits
- *
- * @return
- */
-int version_handler()
-{
-    error(VERSION);
-    exit(0);
-    return 1;
-}
-
-/**
- * @brief Sets verbose level to true
- *
- * @return
- */
-int verbose_handler()
-{
-    settings.verbose = true;
-    return 1;
-}
-
-/**
- * @brief Sets the total amount of ping packets to send
- *
- * @return the amount of argcs to advance
- */
-int count_handler()
-{
-    if (settings.option == settings.argc - 1) {
-        error("Invalid Option\n");
+    (void)arg;
+    (void)state;
+    switch (key) {
+        case 'v':
+            settings.verbose = true;
+            break;
+        case 'V':
+            error(VERSION);
+            exit(0);
+        case 'H':
+            settings.no_dns = false;
+            break;
+        case 's':
+            // TODO
+            break;
+        case 't':
+            is_num(arg);
+            settings.ttl = atoi(arg);
+            if (settings.ttl == 0) {
+                printf("ft_ping: option value too small: 0");
+                exit(1);
+            } else if (settings.ttl > 255) {
+                printf("ft_ping: option value too big: 0");
+                exit(1);
+            }
+        case 'w':
+            // TODO
+            break;
+        case 'W':
+            // TODO
+            break;
+        case 'l':
+            is_num(arg);
+            settings.preload = atoi(arg);
+            break;
+        case 'c':
+            is_num(arg);
+            settings.npackets = atoi(arg);
+            break;
+        case 'i':
+            is_num(arg);
+            settings.interval *= atoi(arg);
+            if (settings.interval > 2147483) {
+                printf("ping: bad timing interval: %d\n", settings.interval);
+                exit(1);
+            }
+        case ARGP_KEY_ARG:
+            if (settings.target)
+                return ARGP_ERR_UNKNOWN;
+            settings.target = arg;
+            settings.is_ip  = isValidIpAddress(arg);
+            return 0;  // Handle positional arguments here if needed
+        case ARGP_KEY_END:
+            if (!settings.target) {
+		error(ERROR_STR);
+                exit(1);
+            }
+            return 0;
+        default:
+            return ARGP_ERR_UNKNOWN;
     }
-    if (is_num(settings.argv[settings.option + 1])) {
-        printf("ping: please provide a valid number for reps\n");
-        exit(1);
-    }
-    long packet_num   = strtol(settings.argv[settings.option + 1], NULL, 10);
-    settings.npackets = packet_num;
-    return 2;
-}
-
-/**
- * @brief Sets the ttl parameter for the number of allowed 'hops'
- *
- * @return the amount of argcs to advance
- */
-int ttl_handler()
-{
-    if (settings.option == settings.argc - 1) {
-        error("Invalid Option\n");
-        exit(1);
-    }
-    int ttl      = atoi(settings.argv[settings.option + 1]);
-    settings.ttl = ttl;
-    return 2;
+    return 0;
 }

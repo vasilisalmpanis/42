@@ -1,18 +1,18 @@
+#include <stdio.h>
+#include "defines.h"
 #include "ft_ping.h"
 
-static const options ping_options[12] = {
-    [0]  = {.short_version = "-h", .long_version = "--help", help_handler},
-    [1]  = {.short_version = "-V", .long_version = "--version", version_handler},
-    [2]  = {.short_version = "-v", .long_version = "--verbose", verbose_handler},
-    [3]  = {.short_version = "-f", .long_version = "--flood", NULL},
-    [4]  = {.short_version = "-H", .long_version = "--force-dns", dns_handler},
-    [5]  = {.short_version = "-s", .long_version = "--size", NULL},
-    [6]  = {.short_version = "-t", .long_version = "--ttl", ttl_handler},
-    [7]  = {.short_version = "-w", .long_version = "--deadline", NULL},
-    [8]  = {.short_version = "-W", .long_version = "--timeout", NULL},
-    [9]  = {.short_version = "-l", .long_version = "--preload", preload_handler},
-    [10] = {.short_version = "-c", .long_version = "--count", count_handler},
-    [11] = {.short_version = "-i", .long_version = "--interval", interval_handler},
+struct argp_option opts[] = {
+	{"verbose", 'v', 0, 0, "Produce verbose output", 0},
+	{"version", 'V', 0, 0, "Print version and exit", 0},
+	{"force-dns", 'H', 0, 0, "Force reverse dns resolution", 0},
+	{"size", 's', 0, 0, "use <size> as number of data bytes to be sent", 0},
+	{"ttl", 't', "NUM", 0, "define time to live", 0},
+	{"deadline", 'w', "NUM", 0, "reply wait deadline in seconds", 0},
+	{"preload", 'l', "NUM", 0, "send <preload> number of packages while waiting for replies", 0},
+	{"count", 'c', "NUM", 0, "stop after <count> replies", 0},
+	{"interval", 'i', "NUM", 0, "seconds between sending each packet", 0},
+	{0}
 };
 
 struct environ settings;
@@ -87,48 +87,6 @@ double convert_to_milli()
     long microseconds = settings.tv_now.tv_usec - settings.prev_time->tv_usec;
     double duration   = (double)(seconds * 1000.0 + microseconds / 1000.0);
     return duration;
-}
-
-/**
- * @brief My options parsing function, Should be
- * replaced with argp from stdlib
- *
- * @return
- */
-int check_options()
-{
-    int argc    = settings.argc;
-    char **argv = settings.argv;
-    int j;
-    for (int i = 1; i < argc; i++) {
-        int arg_length = strlen(argv[i]);
-        int found      = 0;
-        j              = 0;
-        for (; j < 12; j++) {
-            int option_length = strlen(ping_options[j].long_version);
-            if ((arg_length == option_length && !strcmp(argv[i], ping_options[j].long_version)) ||
-                (arg_length == 2 && !strcmp(argv[i], ping_options[j].short_version))) {
-                settings.option   = i;
-                settings.opt_name = argv[settings.option];
-                if (ping_options[j].handler)
-                    found = ping_options[j].handler();
-                break;
-            }
-        }
-        if (j == 12 && settings.target) {
-            error("Invalid Option\n");
-            exit(1);
-        }
-        if (found)
-            i += found - 1;
-        if (!found && !settings.target) {
-            settings.target = argv[i];
-            settings.is_ip  = isValidIpAddress(argv[i]);
-        }
-    }
-    if (!settings.target)
-        return -1;
-    return 0;
 }
 
 void advance_ntransmitted() { settings.ntransmitted++; }
@@ -432,14 +390,13 @@ int main(int argc, char *argv[])
                                                   .ai_socktype = SOCK_RAW};
     char ip[NI_MAXHOST * sizeof(char)]         = {0};
     char reverse_ip[NI_MAXHOST * sizeof(char)] = {0};
+    struct argp argp             = {opts, parse_opt, ARGS_DOC, DOC, NULL, NULL, NULL};
     int ret_val;
 
-    if (argc == 1)
-        error(ERROR_STR);
+    /*if (argc == 1)*/
+    /*    error(ERROR_STR);*/
     init_settings(argc, argv, ip, reverse_ip);
-    if (check_options() == -1) {
-        return 1;
-    }
+    argp_parse(&argp, argc, argv, 0, 0, 0);
     dns_lookup(settings.target, &settings.source, ip);
     if (!ip[0]) {
         printf("ping: %s: Name or service not known\n", settings.target);

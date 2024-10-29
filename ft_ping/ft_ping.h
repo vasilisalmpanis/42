@@ -113,14 +113,7 @@ int error(char *str);
 uint16_t icmp_checksum(void *packet, size_t length);
 
 /* Handlers */
-int preload_handler();
-int interval_handler();
-int dns_handler();
-int help_handler();
-int version_handler();
-int verbose_handler();
-int count_handler();
-int ttl_handler();
+int parse_opt(int key, char *arg, struct argp_state *state);
 
 /* DNS helpers */
 void dns_lookup(char *addr_host, struct sockaddr_in *addr_con, char *ip);

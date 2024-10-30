@@ -1,8 +1,11 @@
 #ifndef FT_TRACEROUTE
 #define FT_TRACEROUTE
 
-# include <unistd.h>
-# include <stdio.h>
-# include <argp.h>
+#include <argp.h>
+#include <stdio.h>
+#include <unistd.h>
 
-#endif // !FT_TRACEROUTE
+#include "defines.h"
+#include "libft/libft.h"
+
+#endif  // !FT_TRACEROUTE

@@ -11,6 +11,8 @@ main_files
 **/anna
 ft_ping/ft_ping
 ft_traceroute/ft_traceroute
+ft_traceroute/libft
+*.a
 
 drivers_and_interrupts/.Module.symvers.cmd
 drivers_and_interrupts/.keylogger.ko.cmd

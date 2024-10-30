@@ -22,15 +22,8 @@ all : ${NAME}
 ${NAME}:	${OBJS}
 	${LIBC}	${NAME}	${OBJS}
 
-${OBJS} : ${SRC}
-	${CXX} ${CXXFLAGS} -c ${SRC} -I ${INCS}
-
-${BOBJS} : ${BSRC}
-	${CXX} ${CXXFLAGS} -c ${BSRC} -I ${INCS}
-
-
-bonus: ${BOBJS} ${OBJS}
-	${LIBC}	${NAME}	${BOBJS}
+%.o: %.c 
+	$(CC) $(CFLAGS) -c $< -o $@
 
 fclean : clean
 	${RM} ${NAME}

@@ -1,0 +1,16 @@
+---
+# Basic .clang-format configuration with 4 spaces for indentation
+BasedOnStyle: Google  # Uses Google as the base style; you can also use LLVM, WebKit, or Mozilla
+IndentWidth: 4        # Sets the number of spaces for each indentation level
+TabWidth: 4           # Sets the tab width to match indentation width
+UseTab: Never         # Always use spaces instead of tabs
+
+# Additional common options
+AlignConsecutiveAssignments: true  # Align assignments vertically
+AlignTrailingComments: true        # Align comments on the same column
+ColumnLimit: 100                   # Sets a max column width for wrapping lines
+AllowShortIfStatementsOnASingleLine: false  # Forces multi-line if statements
+BreakBeforeBraces: Linux          # Places braces on a new line
+SpacesInAngles: false              # Avoid spaces within angle brackets of templates
+Cpp11BracedListStyle: true         # Use C++11 brace-initializer style
+

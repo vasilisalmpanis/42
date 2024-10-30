@@ -10,6 +10,7 @@ main_files
 **/checker_Mac
 **/anna
 ft_ping
+ft_traceroute
 
 drivers_and_interrupts/.Module.symvers.cmd
 drivers_and_interrupts/.keylogger.ko.cmd

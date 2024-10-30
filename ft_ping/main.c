@@ -1,12 +1,9 @@
-#include <stdio.h>
-#include "defines.h"
 #include "ft_ping.h"
 
 struct argp_option opts[] = {
 	{"verbose", 'v', 0, 0, "Produce verbose output", 0},
 	{"version", 'V', 0, 0, "Print version and exit", 0},
 	{"force-dns", 'H', 0, 0, "Force reverse dns resolution", 0},
-	{"size", 's', 0, 0, "use <size> as number of data bytes to be sent", 0},
 	{"ttl", 't', "NUM", 0, "define time to live", 0},
 	{"deadline", 'w', "NUM", 0, "reply wait deadline in seconds", 0},
 	{"preload", 'l', "NUM", 0, "send <preload> number of packages while waiting for replies", 0},
@@ -304,6 +301,8 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
     tv_out.tv_sec  = 1;
     tv_out.tv_usec = 0;
     setsockopt(fd, IPPROTO_IP, IP_TTL, &settings.ttl, sizeof(settings.ttl));
+    if (settings.deadline.tv_sec)
+	    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (void *)&settings.deadline, sizeof(settings.deadline));
     while (true) {
 #if 0
 		printf("npackets :%ld nreceived %ld nerrors %ld\n", settings.npackets, settings.nreceived, settings.nerrors);
@@ -367,6 +366,7 @@ void init_settings(int argc, char **argv, char *ip, char *reverse_ip)
     settings.tsum          = 0;
     settings.tsum2         = 0;
     settings.interval      = 1000000;
+    memset(&settings.deadline, 0, sizeof(struct timeval));
 }
 
 /**
@@ -391,12 +391,15 @@ int main(int argc, char *argv[])
     char ip[NI_MAXHOST * sizeof(char)]         = {0};
     char reverse_ip[NI_MAXHOST * sizeof(char)] = {0};
     struct argp argp             = {opts, parse_opt, ARGS_DOC, DOC, NULL, NULL, NULL};
-    int ret_val;
 
     /*if (argc == 1)*/
     /*    error(ERROR_STR);*/
     init_settings(argc, argv, ip, reverse_ip);
-    argp_parse(&argp, argc, argv, 0, 0, 0);
+    error_t ret_val = argp_parse(&argp, argc, argv, 0, 0, 0);
+    if (ret_val) {
+	    printf("Try '%s --help' or '%s --usage' for more information\n", settings.argv[0], settings.argv[0]);
+	    return 1;
+    };
     dns_lookup(settings.target, &settings.source, ip);
     if (!ip[0]) {
         printf("ping: %s: Name or service not known\n", settings.target);

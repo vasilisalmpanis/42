@@ -24,14 +24,14 @@
 /* for iputils style output */
 /*#define IPUTILS*/
 
-#define PACKET_SIZE 64
-#define MAXPACKET 65535
-#define MAXIPLEN 60
-#define MAXICMPLEN 76
 #define DEFDATALEN (PACKET_SIZE - 8) /* default data length */
-#define OURS 0
-#define NOT_OURS 1
 #define FAULT 2
+#define MAXICMPLEN 76
+#define MAXIPLEN 60
+#define MAXPACKET 65535
+#define NOT_OURS 1
+#define OURS 0
+#define PACKET_SIZE 64
 
 #define true 1
 #define false 0
@@ -67,7 +67,7 @@ struct environ {
 
     int interval; /* interval between packets (msec) */
     int preload;  /* amount of packets to send before receiving */
-    int deadline;
+    struct timeval deadline;
 
     bool verbose; /* verbose mode */
     bool no_dns;
@@ -130,7 +130,7 @@ static inline void set_signal(int signo, void (*handler)(int))
 
     memset(&sa, 0, sizeof(sa));
 
-    sa.sa_handler = (void (*)(int))handler;
+    sa.sa_handler = handler;
     sa.sa_flags   = SA_RESTART;
     sigaction(signo, &sa, NULL);
 }

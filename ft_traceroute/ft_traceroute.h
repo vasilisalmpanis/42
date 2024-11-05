@@ -17,10 +17,14 @@ struct sock {
 };
 
 struct opts {
+    char *intf;
+    char *host;
+
     int max_ttl;
     int current_ttl;
-    bool verbose;
+
     struct sock socket;
-    char *intf;
+    bool verbose;
+
 };
 #endif  // !FT_TRACEROUTE

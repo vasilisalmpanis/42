@@ -1,5 +1,8 @@
 #include <argp.h>
+#include <netinet/in.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <sys/socket.h>
 
 #include "ft_traceroute.h"
 #include "libft/libft.h"
@@ -56,9 +59,12 @@ int main(int argc, char *argv[])
 {
     struct argp argp = {options, parse_opt, "", "", NULL, NULL, NULL};
     struct ifreq ifr;
+    struct sockaddr_in addr;
+    uint8_t buf[1000];
+    socklen_t len = sizeof(addr);
     set_up_opts();
     argp_parse(&argp, argc, argv, 0, 0, 0);
-    opts.socket.fd = socket(AF_INET, SOCK_RAW, IPPROTO_TCP);
+    opts.socket.fd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (opts.socket.fd == -1)
         printf("opening socket failed\n");
     if (opts.intf) {
@@ -66,6 +72,11 @@ int main(int argc, char *argv[])
         if (setsockopt(opts.socket.fd, SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifr, sizeof(ifr)) < 0) {
             printf("could not bind to interface\n");
         }
+    }
+    while (true) {
+        int ret = recvfrom(opts.socket.fd, buf, 1000, 0, (struct sockaddr *)&addr, &len);
+        ft_print_packet_hex(buf, ret);
+	printf("\n");
     }
     // start sending ICMP packets with ttl starting from 1 and increasing to max. default30
     // do reverse dns resolution and display the route.

@@ -8,7 +8,7 @@ UseTab: Never         # Always use spaces instead of tabs
 # Additional common options
 AlignConsecutiveAssignments: true  # Align assignments vertically
 AlignTrailingComments: true        # Align comments on the same column
-ColumnLimit: 100                   # Sets a max column width for wrapping lines
+ColumnLimit: 120                   # Sets a max column width for wrapping lines
 AllowShortIfStatementsOnASingleLine: false  # Forces multi-line if statements
 BreakBeforeBraces: Linux          # Places braces on a new line
 SpacesInAngles: false              # Avoid spaces within angle brackets of templates

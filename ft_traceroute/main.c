@@ -55,10 +55,23 @@ void set_up_opts()
     opts.socket.type = 0;
     opts.intf        = NULL;
 }
+
+int bind_to_intf()
+{
+    struct ifreq ifr;
+    if (opts.intf) {
+        snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "%s", opts.intf);
+        if (setsockopt(opts.socket.fd, SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifr, sizeof(ifr)) < 0) {
+            printf("could not bind to interface\n");
+	    return 1;
+        }
+    }
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     struct argp argp = {options, parse_opt, "", "", NULL, NULL, NULL};
-    struct ifreq ifr;
     struct sockaddr_in addr;
     uint8_t buf[1000];
     socklen_t len = sizeof(addr);
@@ -67,21 +80,18 @@ int main(int argc, char *argv[])
     opts.socket.fd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (opts.socket.fd == -1)
         printf("opening socket failed\n");
-    if (opts.intf) {
-        snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "%s", opts.intf);
-        if (setsockopt(opts.socket.fd, SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifr, sizeof(ifr)) < 0) {
-            printf("could not bind to interface\n");
-        }
-    }
+    if (bind_to_intf())
+	    goto out;
     while (true) {
         int ret = recvfrom(opts.socket.fd, buf, 1000, 0, (struct sockaddr *)&addr, &len);
         ft_print_packet_hex(buf, ret);
-	printf("\n");
+        printf("\n");
     }
     // start sending ICMP packets with ttl starting from 1 and increasing to max. default30
     // do reverse dns resolution and display the route.
     // exit
     print_opts();
+out:
     close(opts.socket.fd);
     return 0;
 }

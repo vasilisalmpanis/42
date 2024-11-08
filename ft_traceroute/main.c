@@ -1,12 +1,8 @@
-#include <argp.h>
-#include <netinet/in.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <sys/socket.h>
 
 #include "ft_traceroute.h"
 #include "libft/libft.h"
-
+int curr_index = 1;
 struct opts opts;
 static const struct argp_option options[] = {
     {"verbose", 'V', 0, 0, "Print version info and exit", 0},
@@ -14,12 +10,22 @@ static const struct argp_option options[] = {
     {"max-hops", 'm', "NUM", 0, "Set the max number of hops (max TTL to be reached). Default is 30", 0},
     {0}};
 
+int ft_patse_num_str(char *s)
+{
+    for (size_t i = 0; i < ft_strlen(s); i++) {
+        if (!ft_isdigit(s[i]))
+            return 1;
+    }
+    return 0;
+}
+
 void print_opts()
 {
     printf(
         "max ttl: %d\n"
-        "verbose: %d\n",
-        opts.max_ttl, opts.verbose);
+        "verbose: %d\n"
+	"intf: %s\n",
+        opts.max_ttl, opts.verbose, opts.intf);
 }
 
 int parse_opt(int key, char *arg, struct argp_state *state)
@@ -40,9 +46,34 @@ int parse_opt(int key, char *arg, struct argp_state *state)
             }
             opts.intf = arg;
             break;
+
+        case ARGP_KEY_ARG:
+            if (opts.host) {
+                if (opts.packetlen != 28) {
+                    printf("Extra arg `%s' (position 3, argc %d)", arg, curr_index);
+                    exit(1);
+                }
+                if (ft_patse_num_str(arg)) {
+                    printf("Cannot handle \"packetlen\" cmdline arg `%s' on position 2 (argc %d)", arg, curr_index);
+                    exit(1);
+                }
+                int packetlen = ft_atoi(arg);
+                if (packetlen > 28)
+                    opts.packetlen = packetlen;
+                break;
+            }
+            opts.host = arg;
+            break;
+        case ARGP_KEY_END:
+            if (!opts.host) {
+                argp_usage(state);
+                exit(1);
+            }
+            break;
         default:
             return ARGP_ERR_UNKNOWN;
     }
+    curr_index++;
     return 0;
 }
 
@@ -54,6 +85,8 @@ void set_up_opts()
     opts.socket.fd   = 0;
     opts.socket.type = 0;
     opts.intf        = NULL;
+    opts.packetlen   = 28;
+    opts.packet.buf  = NULL;
 }
 
 int bind_to_intf()
@@ -63,30 +96,32 @@ int bind_to_intf()
         snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "%s", opts.intf);
         if (setsockopt(opts.socket.fd, SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifr, sizeof(ifr)) < 0) {
             printf("could not bind to interface\n");
-	    return 1;
+            return 1;
         }
     }
     return 0;
 }
 
+int main_loop()
+{
+	return 0;
+}
+
 int main(int argc, char *argv[])
 {
     struct argp argp = {options, parse_opt, "", "", NULL, NULL, NULL};
-    struct sockaddr_in addr;
-    uint8_t buf[1000];
-    socklen_t len = sizeof(addr);
+    /*struct sockaddr_in addr;*/
+    /*uint8_t buf[1000];*/
+    /*socklen_t len = sizeof(addr);*/
     set_up_opts();
     argp_parse(&argp, argc, argv, 0, 0, 0);
+    printf("host %s packetlen %ld\n", opts.host, opts.packetlen);
     opts.socket.fd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (opts.socket.fd == -1)
         printf("opening socket failed\n");
     if (bind_to_intf())
-	    goto out;
-    while (true) {
-        int ret = recvfrom(opts.socket.fd, buf, 1000, 0, (struct sockaddr *)&addr, &len);
-        ft_print_packet_hex(buf, ret);
-        printf("\n");
-    }
+        goto out;
+    main_loop();
     // start sending ICMP packets with ttl starting from 1 and increasing to max. default30
     // do reverse dns resolution and display the route.
     // exit

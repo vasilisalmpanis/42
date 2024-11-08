@@ -1,5 +1,7 @@
 NAME	=	ft_traceroute
-SRC	=	main.c
+SRC	=	main.c \
+		utils.c \
+
 OBJ	=	$(SRC:.c=.o)
 RM	=	rm -rf
 CC	=	clang

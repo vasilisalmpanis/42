@@ -3,5 +3,4 @@
 # define DOCS ""
 # define ARGP_DOCS ""
 
-
 #endif // !DEFINES_H

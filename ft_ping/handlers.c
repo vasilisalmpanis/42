@@ -32,6 +32,7 @@ int parse_opt(int key, char *arg, struct argp_state *state)
     uint32_t num;
     // Could implement flood but not necessary already have interval which can work like flood
     // but with normal output not dots.
+    argp_parse(const struct argp *restrict argp, int argc, char **restrict argv, unsigned int flags, int *restrict arg_index, void *restrict input)
     switch (key) {
         case 'v':
             settings.verbose = true;

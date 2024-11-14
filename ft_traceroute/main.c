@@ -168,9 +168,9 @@ int parse_reply(uint8_t *packet, int cc, int probe)
     icmp = (struct icmphdr *)(&ip[1]);
     switch (icmp->type) {
         case ICMP_ECHOREPLY:
-		time = (struct timeval *) (icmp++);
-		opts.rtt[probe].tv_sec = time->tv_sec;
-		opts.rtt[probe].tv_usec = time->tv_usec;
+            time                    = (struct timeval *)(icmp++);
+            opts.rtt[probe].tv_sec  = time->tv_sec;
+            opts.rtt[probe].tv_usec = time->tv_usec;
             return 2;
         case ICMP_TIME_EXCEEDED:
             inet_ntop(AF_INET, &(opts.whereto[probe].sin_addr), opts.hop_ip[probe], INET_ADDRSTRLEN);
@@ -180,10 +180,7 @@ int parse_reply(uint8_t *packet, int cc, int probe)
     return 0;
 }
 
-void print_line()
-{
-		
-}
+void print_line() {}
 
 int main_loop()
 {
@@ -215,14 +212,14 @@ int main_loop()
             cc = recvfrom(opts.socket.fd, (void *restrict)receive_buf[probe], 200, 0,
                           (struct sockaddr *)&opts.whereto[probe], &size[probe]);
             cc = parse_reply(receive_buf[probe], cc, probe);
-	    if (cc == 0)
-		    print_line();
+            if (cc == 0)
+                print_line();
             if (cc == 2 && probe == 2) {
                 printf("\n");
                 return 0;
             }
             probe++;
-	    exit(1);
+            exit(1);
         }
         opts.current_ttl++;
         printf("\n");

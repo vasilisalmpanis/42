@@ -1,6 +1,6 @@
 #ifndef DEFINES_H
-# define DEFINES_H
-# define DOCS ""
-# define ARGP_DOCS ""
+#define DEFINES_H
+#define DOCS ""
+#define ARGP_DOCS ""
 
-#endif // !DEFINES_H
+#endif  // !DEFINES_H

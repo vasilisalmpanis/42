@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 
 #include "defines.h"
 #include "ft_traceroute.h"
@@ -166,11 +167,14 @@ int parse_reply(uint8_t *packet, int cc, int probe)
         return 1;
     }
     icmp = (struct icmphdr *)(&ip[1]);
+    struct timeval tv_now;
+    gettimeofday(&tv_now, NULL);
     switch (icmp->type) {
         case ICMP_ECHOREPLY:
-            time                    = (struct timeval *)(icmp++);
-            opts.rtt[probe].tv_sec  = time->tv_sec;
-            opts.rtt[probe].tv_usec = time->tv_usec;
+            time                 = (struct timeval *)(icmp++);
+            long seconds         = tv_now.tv_sec - time->tv_sec;
+            long microseconds    = tv_now.tv_usec - time->tv_usec;
+            opts.duration[probe] = (double)(seconds * 1000.0 + microseconds / 1000.0);
             return 2;
         case ICMP_TIME_EXCEEDED:
             inet_ntop(AF_INET, &(opts.whereto[probe].sin_addr), opts.hop_ip[probe], INET_ADDRSTRLEN);
@@ -180,7 +184,12 @@ int parse_reply(uint8_t *packet, int cc, int probe)
     return 0;
 }
 
-void print_line() {}
+void print_line(int probe)
+{
+    if (probe == 0)
+        printf("%s (%s) ", opts.hop_reverse_ip[0], opts.hop_ip[0]);
+    printf(" %.3f ms", opts.duration[probe]);
+}
 
 int main_loop()
 {
@@ -201,7 +210,7 @@ int main_loop()
         if (opts.current_ttl == opts.max_ttl)
             break;
         printf("%d ", opts.current_ttl);
-        while (probe < 3) {
+        while (probe < PROBES) {
             setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
             setsockopt(opts.socket.fd, SOL_SOCKET, SO_RCVTIMEO, (void *)&timeout, sizeof(timeout));
             ret_val = setup_packet();
@@ -212,14 +221,13 @@ int main_loop()
             cc = recvfrom(opts.socket.fd, (void *restrict)receive_buf[probe], 200, 0,
                           (struct sockaddr *)&opts.whereto[probe], &size[probe]);
             cc = parse_reply(receive_buf[probe], cc, probe);
-            if (cc == 0)
-                print_line();
+            if (cc == 0 || cc == 2)
+                print_line(probe);
             if (cc == 2 && probe == 2) {
                 printf("\n");
                 return 0;
             }
             probe++;
-            exit(1);
         }
         opts.current_ttl++;
         printf("\n");

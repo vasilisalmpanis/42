@@ -48,7 +48,7 @@ struct opts {
 
     struct sockaddr_in source;
     struct sockaddr_in whereto[3];
-    struct timeval rtt[3];
+    double duration[3];
 
     char hop_ip[3][45];
     char hop_reverse_ip[3][HOST_NAME_MAX];

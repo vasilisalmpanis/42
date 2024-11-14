@@ -5,6 +5,10 @@ SRC	=	main.c \
 OBJ	=	$(SRC:.c=.o)
 RM	=	rm -rf
 CC	=	clang
+
+INC	=	ft_traceroute.h \
+		defines.h
+
 CFLAGS	=	-Wall -Wextra -Werror -g
 
 all: libft $(NAME) 
@@ -31,6 +35,9 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
+
+clang-format:
+	clang-format -i $(SRC) $(INC)
 
 re: fclean all
 

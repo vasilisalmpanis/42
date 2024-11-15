@@ -32,8 +32,8 @@ int parse_opt(int key, char *arg, struct argp_state *state)
     uint32_t num;
     // Could implement flood but not necessary already have interval which can work like flood
     // but with normal output not dots.
-    argp_parse(const struct argp *restrict argp, int argc, char **restrict argv, unsigned int flags, int *restrict arg_index, void *restrict input)
-    switch (key) {
+    switch (key)
+    {
         case 'v':
             settings.verbose = true;
             break;
@@ -57,16 +57,16 @@ int parse_opt(int key, char *arg, struct argp_state *state)
                 exit(1);
             }
         case 'w':
-	    if (is_num(arg)) {
+            if (is_num(arg)) {
                 printf("%s: invalid value ('%s' near '%s')\n", settings.argv[0], arg, arg);
                 return 1;
             }
-	    num = atoi(arg);
-	    if (num > 2147483) {
-                printf("ping: bad timing interval: %d\n",num); 
-		return 1;
+            num = atoi(arg);
+            if (num > 2147483) {
+                printf("ping: bad timing interval: %d\n", num);
+                return 1;
             }
-	    settings.deadline.tv_sec = num;
+            settings.deadline.tv_sec = num;
             break;
         case 'l':
             if (is_num(arg)) {
@@ -84,13 +84,13 @@ int parse_opt(int key, char *arg, struct argp_state *state)
             break;
         case 'i':
             is_num(arg);
-	    num = (uint32_t)atoi(arg);
+            num = (uint32_t)atoi(arg);
             settings.interval *= atoi(arg);
             if (num > 2147483) {
-                printf("ping: bad timing interval: %d\n",num); 
+                printf("ping: bad timing interval: %d\n", num);
                 exit(1);
             }
-	    return 0;
+            return 0;
         case ARGP_KEY_ARG:
             if (settings.target)
                 return ARGP_ERR_UNKNOWN;

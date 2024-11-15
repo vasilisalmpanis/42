@@ -25,7 +25,7 @@ unsigned short icmp_checksum(void *packet, size_t length)
         length -= 2;
     }
     if (length == 1)
-        sum = *(uint8_t *)ptr;
+        sum += *(uint8_t *)ptr;
     sum = (sum >> 16) + (sum & 0xffff);
     sum += (sum >> 16);
     answer = ~sum;

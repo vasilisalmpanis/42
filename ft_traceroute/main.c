@@ -1,15 +1,11 @@
+#include <arpa/inet.h>
 #include <bits/posix1_lim.h>
-#include <bits/types/struct_timeval.h>
-#include <netinet/ip.h>
-#include <netinet/ip_icmp.h>
-#include <stdint.h>
+#include <netdb.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <sys/socket.h>
-#include <sys/time.h>
 
-#include "defines.h"
 #include "ft_traceroute.h"
-#include "libft/libft.h"
 
 int curr_index = 1;
 struct opts opts;
@@ -149,9 +145,11 @@ int setup_packet()
     return i == opts.packetlen ? 0 : i;
 }
 
-int parse_reply(uint8_t *packet, int cc, int probe, char *ip_host, char *reverse_ip)
+int parse_reply(uint8_t *packet, int cc, int probe)
 {
     struct iphdr *ip;
+    struct sockaddr *addr;
+    char *reverse_ip;
     struct icmphdr *icmp;
     struct timeval *time;
     if (cc < 0) {
@@ -178,31 +176,29 @@ int parse_reply(uint8_t *packet, int cc, int probe, char *ip_host, char *reverse
             long seconds         = tv_now.tv_sec - time->tv_sec;
             long microseconds    = tv_now.tv_usec - time->tv_usec;
             opts.duration[probe] = (double)(seconds * 1000.0 + microseconds / 1000.0);
-            ft_bzero(opts.hop_ip[probe], HOST_NAME_MAX);
-            ft_bzero(opts.hop_reverse_ip[probe], HOST_NAME_MAX);
-            ft_strlcpy(opts.hop_ip[probe], ip_host, ft_strlen(ip_host));
-            ft_strlcpy(opts.hop_reverse_ip[probe], reverse_ip, ft_strlen(reverse_ip));
-
-            /*printf("receiving time sent %ld.%06ld\n", time->tv_sec, time->tv_usec);*/
             return 2;
         case ICMP_TIME_EXCEEDED:
             ft_bzero(opts.hop_ip[probe], HOST_NAME_MAX);
             ft_bzero(opts.hop_reverse_ip[probe], HOST_NAME_MAX);
             inet_ntop(AF_INET, &(opts.whereto[probe].sin_addr), opts.hop_ip[probe], INET_ADDRSTRLEN);
-            reverse_dns_lookup(opts.hop_ip[probe], opts.hop_reverse_ip[probe]);
+            addr       = (struct sockaddr *)&opts.whereto[probe];
+            reverse_ip = opts.hop_reverse_ip[probe];
+            getnameinfo(addr, sizeof(*addr), reverse_ip, HOST_NAME_MAX, NULL, 0, 0);
             break;
     }
     return 0;
 }
 
-void print_line(int probe)
+void print_line(int probe, int cc)
 {
-    if (probe == 0)
+    if (probe == 0 && cc == 0)
         printf("%s (%s) ", opts.hop_reverse_ip[0][0] ? opts.hop_reverse_ip[0] : opts.hop_ip[0], opts.hop_ip[0]);
+    if (probe == 0 && cc == 2)
+        printf("%s (%s) ", opts.reverse_ip, opts.ip);
     printf(" %.3f ms", opts.duration[probe]);
 }
 
-int main_loop(char *ip, char *reverse_ip)
+int main_loop()
 {
     uint8_t receive_buf[3][200];
     int ret_val, cc;
@@ -231,9 +227,9 @@ int main_loop(char *ip, char *reverse_ip)
             }
             cc = recvfrom(opts.socket.fd, (void *restrict)receive_buf[probe], 200, 0,
                           (struct sockaddr *)&opts.whereto[probe], &size[probe]);
-            cc = parse_reply(receive_buf[probe], cc, probe, ip, reverse_ip);
+            cc = parse_reply(receive_buf[probe], cc, probe);
             if (cc == 0 || cc == 2)
-                print_line(probe);
+                print_line(probe, cc);
             if (cc == 2 && probe == 2) {
                 printf("\n");
                 return 0;
@@ -248,29 +244,52 @@ int main_loop(char *ip, char *reverse_ip)
 
 int main(int argc, char *argv[])
 {
+    struct addrinfo hints, *ai, *res;
     struct argp argp = {options, parse_opt, "", "", NULL, NULL, NULL};
-    char ip[HOST_NAME_MAX];
-    char reverse_ip[HOST_NAME_MAX];
-    /*struct sockaddr_in addr;*/
-    /*uint8_t buf[1000];*/
-    /*socklen_t len = sizeof(addr);*/
+    struct sockaddr_in *addr;
+    int rv;
+
+    res = NULL;
     set_up_opts();
     argp_parse(&argp, argc, argv, 0, 0, 0);
+
+    ft_memset(&hints, 0, sizeof hints);
+    hints.ai_family   = AF_INET;
+    hints.ai_socktype = SOCK_RAW;
+    hints.ai_flags    = AI_CANONNAME;
+    hints.ai_protocol = IPPROTO_ICMP;
+    if ((rv = getaddrinfo(opts.host, 0, &hints, &res)) != 0) {
+        printf("ft_traceroute: %s\n", gai_strerror(rv));
+        exit(1);
+    }
     /*printf("host %s packetlen %ld\n", opts.host, opts.packetlen);*/
-    opts.socket.fd   = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    for (ai = res; ai != NULL; ai = res->ai_next) {
+        if (ai->ai_family == AF_INET) {
+            addr = (struct sockaddr_in *)ai->ai_addr;
+            inet_ntop(ai->ai_family, &addr->sin_addr, opts.ip, INET_ADDRSTRLEN);
+            opts.source = *addr;
+            break;
+        }
+    }
+    if (ai == NULL) {
+        printf("ft_traceroute: failed to host\n");
+        exit(1);
+    }
+    opts.socket.fd   = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
     opts.socket.type = SOCK_RAW;
     if (opts.socket.fd == -1)
         printf("opening socket failed\n");
     if (bind_to_intf())
         goto out;
-    dns_lookup(opts.host, &opts.source, ip);
-    reverse_dns_lookup(ip, reverse_ip);
-    printf("traceroute to %s (%s), %d hops max, %ld byte packets\n", opts.host, ip, opts.max_ttl, opts.packetlen);
-    main_loop(ip, reverse_ip);
+    getnameinfo((struct sockaddr *)addr, sizeof *addr, opts.reverse_ip, HOST_NAME_MAX, NULL, 0, 0);
+    printf("traceroute to %s (%s), %d hops max, %ld byte packets\n", opts.host, opts.ip, opts.max_ttl, opts.packetlen);
+    main_loop();
     // start sending ICMP packets with ttl starting from 1 and increasing to max. default30
     // do reverse dns resolution and display the route.
     // exit
 out:
+    if (res)
+        freeaddrinfo(res);
     close(opts.socket.fd);
     return 0;
 }

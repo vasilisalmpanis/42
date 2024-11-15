@@ -50,8 +50,11 @@ struct opts {
     struct sockaddr_in whereto[3];
     double duration[3];
 
-    char hop_ip[3][45];
+    char hop_ip[3][INET_ADDRSTRLEN];
     char hop_reverse_ip[3][HOST_NAME_MAX];
+
+    char ip[INET_ADDRSTRLEN];
+    char reverse_ip[HOST_NAME_MAX];
 };
 
 unsigned short icmp_checksum(void *packet, size_t length);

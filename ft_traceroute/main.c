@@ -1,10 +1,3 @@
-#include <arpa/inet.h>
-#include <bits/posix1_lim.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <stdio.h>
-#include <sys/socket.h>
-
 #include "ft_traceroute.h"
 
 int curr_index = 1;
@@ -128,24 +121,21 @@ int setup_packet()
     icmp->un.echo.sequence = htons(opts.ntransmitted);
     icmp->un.echo.id       = opts.ident;
 
-    gettimeofday(&tv_now, NULL);
-
-    /*printf("sending time sent %ld.%06ld\n", tv_now.tv_sec, tv_now.tv_usec);*/
-    ft_memcpy(opts.packet + sizeof(struct icmphdr), &tv_now, sizeof(tv_now));
-
-    icmp->checksum = icmp_checksum(opts.packet, opts.packetlen);
-    int remainder  = opts.packetlen - (sizeof(struct timeval) + sizeof(struct icmphdr));
+    int remainder = opts.packetlen - (sizeof(struct timeval) + sizeof(struct icmphdr));
     while (remainder) {
         int index          = opts.packetlen - remainder;
         opts.packet[index] = 1;
         remainder--;
     }
     /*ft_print_packet_hex(opts.packet, opts.packetlen);*/
+    gettimeofday(&tv_now, NULL);
+    ft_memcpy(opts.packet + sizeof(struct icmphdr), &tv_now, sizeof(tv_now));
+    icmp->checksum = icmp_checksum(opts.packet, opts.packetlen);
     i = sendto(opts.socket.fd, opts.packet, opts.packetlen, 0, (struct sockaddr *)&opts.source, sizeof(opts.source));
     return i == opts.packetlen ? 0 : i;
 }
 
-int parse_reply(uint8_t *packet, int cc, int probe)
+int parse_reply(uint8_t *packet, int cc, int *probe, struct timeval tv_now)
 {
     struct iphdr *ip;
     struct sockaddr *addr;
@@ -153,7 +143,7 @@ int parse_reply(uint8_t *packet, int cc, int probe)
     struct icmphdr *icmp;
     struct timeval *time;
     if (cc < 0) {
-        printf("* ");
+        printf("* \n");
         return 1;
     }
     ip = (struct iphdr *)packet;
@@ -168,23 +158,25 @@ int parse_reply(uint8_t *packet, int cc, int probe)
         return 1;
     }
     icmp = (struct icmphdr *)(&ip[1]);
-    struct timeval tv_now;
     gettimeofday(&tv_now, NULL);
     switch (icmp->type) {
         case ICMP_ECHOREPLY:
-            time                 = (struct timeval *)(packet + sizeof(struct iphdr) + sizeof(struct icmphdr));
-            long seconds         = tv_now.tv_sec - time->tv_sec;
-            long microseconds    = tv_now.tv_usec - time->tv_usec;
-            opts.duration[probe] = (double)(seconds * 1000.0 + microseconds / 1000.0);
+            time                  = (struct timeval *)(packet + sizeof(struct iphdr) + sizeof(struct icmphdr));
+            long seconds          = tv_now.tv_sec - time->tv_sec;
+            long microseconds     = tv_now.tv_usec - time->tv_usec;
+            opts.duration[*probe] = (double)(seconds * 1000.0 + microseconds / 1000.0);
             return 2;
         case ICMP_TIME_EXCEEDED:
-            ft_bzero(opts.hop_ip[probe], HOST_NAME_MAX);
-            ft_bzero(opts.hop_reverse_ip[probe], HOST_NAME_MAX);
-            inet_ntop(AF_INET, &(opts.whereto[probe].sin_addr), opts.hop_ip[probe], INET_ADDRSTRLEN);
-            addr       = (struct sockaddr *)&opts.whereto[probe];
-            reverse_ip = opts.hop_reverse_ip[probe];
+            ft_bzero(opts.hop_ip[*probe], HOST_NAME_MAX);
+            ft_bzero(opts.hop_reverse_ip[*probe], HOST_NAME_MAX);
+            inet_ntop(AF_INET, &(opts.whereto[*probe].sin_addr.s_addr), opts.hop_ip[*probe], INET_ADDRSTRLEN);
+            addr       = (struct sockaddr *)&opts.whereto[*probe];
+            reverse_ip = opts.hop_reverse_ip[*probe];
             getnameinfo(addr, sizeof(*addr), reverse_ip, HOST_NAME_MAX, NULL, 0, 0);
             break;
+        case ICMP_ECHO:
+            --(*probe);
+            return 1;
     }
     return 0;
 }
@@ -195,12 +187,16 @@ void print_line(int probe, int cc)
         printf("%s (%s) ", opts.hop_reverse_ip[0][0] ? opts.hop_reverse_ip[0] : opts.hop_ip[0], opts.hop_ip[0]);
     if (probe == 0 && cc == 2)
         printf("%s (%s) ", opts.reverse_ip, opts.ip);
-    printf(" %.3f ms", opts.duration[probe]);
+    if (probe != 2)
+        printf(" %.3f ms ", opts.duration[probe]);
+    else
+        printf(" %.3f ms", opts.duration[probe]);
 }
 
 int main_loop()
 {
     uint8_t receive_buf[3][200];
+    struct timeval tv_now;
     int ret_val, cc;
     socklen_t size[3];
 
@@ -216,7 +212,7 @@ int main_loop()
         int probe = 0;
         if (opts.current_ttl == opts.max_ttl)
             break;
-        printf(" %d ", opts.current_ttl);
+        printf(" %d  ", opts.current_ttl);
         while (probe < PROBES) {
             setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
             setsockopt(opts.socket.fd, SOL_SOCKET, SO_RCVTIMEO, (void *)&timeout, sizeof(timeout));
@@ -227,7 +223,8 @@ int main_loop()
             }
             cc = recvfrom(opts.socket.fd, (void *restrict)receive_buf[probe], 200, 0,
                           (struct sockaddr *)&opts.whereto[probe], &size[probe]);
-            cc = parse_reply(receive_buf[probe], cc, probe);
+            gettimeofday(&tv_now, NULL);
+            cc = parse_reply(receive_buf[probe], cc, &probe, tv_now);
             if (cc == 0 || cc == 2)
                 print_line(probe, cc);
             if (cc == 2 && probe == 2) {

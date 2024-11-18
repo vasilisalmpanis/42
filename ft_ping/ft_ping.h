@@ -70,6 +70,7 @@ struct environ {
     struct timeval deadline;
 
     bool verbose; /* verbose mode */
+    bool broadcast;
     bool no_dns;
 
     bool is_ip;

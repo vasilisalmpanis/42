@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "ft_ping.h"
 
 struct argp_option opts[] = {
@@ -9,6 +11,7 @@ struct argp_option opts[] = {
     {"preload", 'l', "NUM", 0, "send <preload> number of packages while waiting for replies", 0},
     {"count", 'c', "NUM", 0, "stop after <count> replies", 0},
     {"interval", 'i', "NUM", 0, "seconds between sending each packet", 0},
+    {"broadcast", 'b', 0, 0, "allow pinging broadcast", 0},
     {0}};
 
 struct environ settings;
@@ -295,7 +298,8 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
     uint8_t receive_packet[200];
     socklen_t addrlen = sizeof(settings.whereto);
     int ping_ret, cc; /*ttl_opt = 1*/
-    int ret_val = OURS;
+    int ret_val   = OURS;
+    int broadcast = 1;
     struct timeval tv_out;
     tv_out.tv_sec  = 1;
     tv_out.tv_usec = 0;
@@ -303,6 +307,13 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
     if (settings.deadline.tv_sec)
         setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (void *)&settings.deadline,
                    sizeof(settings.deadline));
+    if (settings.broadcast) {
+        if ((ret_val = setsockopt(settings.sock.fd, SOL_SOCKET, SO_BROADCAST, &broadcast,
+                                  sizeof(broadcast)) < 0)) {
+            printf("ft_ping: failed to set SO_BROADCAST option to socket\n");
+            return 1;
+        }
+    }
     while (true) {
 #if 0
 		printf("npackets :%ld nreceived %ld nerrors %ld\n", settings.npackets, settings.nreceived, settings.nerrors);
@@ -313,9 +324,14 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
             ping_ret = ping(addr_con);
             if (ping_ret == 0)
                 advance_ntransmitted();
-
-            if (ping_ret > 0)
-                continue;
+            else {
+                if (errno == EACCES) {
+                    printf(
+                        "ft_ping: Do you want to ping broadcast? Then -b. If not, check your local "
+                        "firewall rules\n");
+                    return 1;
+                }
+            }
         }
         memset(receive_packet, 0, PACKET_SIZE * 2);
         memset(&settings.whereto, 0, sizeof(struct sockaddr_in));
@@ -366,6 +382,7 @@ void init_settings(int argc, char **argv, char *ip, char *reverse_ip)
     settings.tsum          = 0;
     settings.tsum2         = 0;
     settings.interval      = 1000000;
+    settings.broadcast     = false;
     memset(&settings.deadline, 0, sizeof(struct timeval));
 }
 

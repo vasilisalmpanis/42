@@ -9,7 +9,7 @@ SRC	=	main.c \
 OBJ	=	$(SRC:.c=.o)
 RM	=	rm -rf
 CC	=	clang
-CFLAGS	=	-Wall -Wextra -Werror -g
+CFLAGS	=	-Wall -Wextra -Werror
 
 all: $(NAME)
 
@@ -27,5 +27,8 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
+
+clang-format:
+	clang-format -i $(SRC) ./ft_ping.h
 
 .PHONY: all clean fclean re

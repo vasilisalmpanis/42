@@ -4,9 +4,9 @@
  * @brief prefroms the dns lookup to find the destination from the
  * address provided by the user
  *
- * @param addr_host 
- * @param addr_con 
- * @param ip 
+ * @param addr_host
+ * @param addr_con
+ * @param ip
  */
 void dns_lookup(char *addr_host, struct sockaddr_in *addr_con, char *ip)
 {
@@ -24,7 +24,7 @@ void dns_lookup(char *addr_host, struct sockaddr_in *addr_con, char *ip)
 /**
  * @brief Does the reverse dns lookup from the ip address
  *
- * @param ip the ip address populated by dns_lookup 
+ * @param ip the ip address populated by dns_lookup
  * @param reverse_ip buffer to put the result
  */
 void reverse_dns_lookup(char *ip, char *reverse_ip)

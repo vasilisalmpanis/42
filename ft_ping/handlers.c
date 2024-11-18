@@ -32,8 +32,7 @@ int parse_opt(int key, char *arg, struct argp_state *state)
     uint32_t num;
     // Could implement flood but not necessary already have interval which can work like flood
     // but with normal output not dots.
-    switch (key)
-    {
+    switch (key) {
         case 'v':
             settings.verbose = true;
             break;
@@ -90,6 +89,9 @@ int parse_opt(int key, char *arg, struct argp_state *state)
                 printf("ping: bad timing interval: %d\n", num);
                 exit(1);
             }
+            return 0;
+        case 'b':
+            settings.broadcast = true;
             return 0;
         case ARGP_KEY_ARG:
             if (settings.target)

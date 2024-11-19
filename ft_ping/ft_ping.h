@@ -64,6 +64,7 @@ struct environ {
     long ntransmitted; /* sequence # for outbound packets = #sent */
     long nchecksum;    /* replies with bad checksum */
     long nerrors;      /* icmp errors */
+    long nduplicates;
 
     int interval; /* interval between packets (msec) */
     int preload;  /* amount of packets to send before receiving */

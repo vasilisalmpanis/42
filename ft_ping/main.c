@@ -1,4 +1,9 @@
+#include <arpa/inet.h>
+#include <bits/posix1_lim.h>
+#include <netdb.h>
+#include <netinet/in.h>
 #include <stdio.h>
+#include <sys/socket.h>
 
 #include "ft_ping.h"
 
@@ -29,6 +34,8 @@ void print_statistics()
     printf(", %ld received", settings.nreceived);
     if (settings.nchecksum)
         printf(", +%ld corrupted", settings.nchecksum);
+    if (settings.nduplicates)
+        printf(", +%ld duplicates", settings.nduplicates);
 #ifdef IPUTILS
     if (settings.nerrors)
         printf(", +%ld errors", settings.nerrors);
@@ -154,7 +161,7 @@ int ping(struct sockaddr_in *addr_con)
  * @param csfailed if the checksum was incorrect
  * @return 0
  */
-void gather_statistics(double duration, int csfailed)
+void gather_statistics(double duration, int csfailed, bool is_dup)
 {
     long triptime = 0;
     (void)duration;
@@ -181,6 +188,9 @@ void gather_statistics(double duration, int csfailed)
         --settings.nreceived;
         ++settings.nchecksum;
         printf(" (BAD CHECKSUM!)");
+    } else if (is_dup) {
+        --settings.nreceived;
+        ++settings.nduplicates;
     }
 }
 
@@ -197,9 +207,12 @@ int parse_reply(int cc, uint8_t *packet)
 {
     struct iphdr *iph;
     struct icmphdr *icp;
+    char host[HOST_NAME_MAX];
+    char ip[INET_ADDRSTRLEN];
     int hlen;
     int csfailed = 0;
     int reply_ttl;
+    bool is_dup = false;
 
     iph       = (struct iphdr *)packet;
     reply_ttl = 0;
@@ -231,14 +244,18 @@ int parse_reply(int cc, uint8_t *packet)
         }
         settings.prev_time = (struct timeval *)((uint8_t *)icp + 8);
         double duration    = convert_to_milli();
-        gather_statistics(duration, csfailed);
-        uint16_t sequence = ntohs(icp->un.echo.sequence);
+        socklen_t size     = sizeof(settings.whereto);
+        uint16_t sequence  = ntohs(icp->un.echo.sequence);
+        inet_ntop(AF_INET, &(settings.whereto.sin_addr), ip, size);
+        is_dup = sequence < settings.ntransmitted - 1;
+        gather_statistics(duration, csfailed, is_dup);
+        getnameinfo((struct sockaddr *)(&settings.whereto), size, host, HOST_NAME_MAX, NULL, 0, 0);
         if (!settings.is_ip && !settings.no_dns)
-            printf(success_format_string, cc - sizeof(struct iphdr), settings.reverse_ip,
-                   settings.ip, sequence, reply_ttl, duration);
+            printf(success_format_string, cc - sizeof(struct iphdr), host, ip, sequence, reply_ttl,
+                   duration, is_dup ? "(DUP!)" : "");
         else
-            printf(success_format_string2, cc - sizeof(struct iphdr), settings.ip, sequence,
-                   reply_ttl, duration);
+            printf(success_format_string2, cc - sizeof(struct iphdr), ip, sequence, reply_ttl,
+                   duration, is_dup ? "(DUP!)" : "");
     } else {
         switch (icp->type) {
             case ICMP_ECHO:
@@ -278,7 +295,7 @@ int parse_reply(int cc, uint8_t *packet)
                 break;
         }
     }
-    return 0;
+    return OURS;
 }
 
 /**
@@ -383,6 +400,7 @@ void init_settings(int argc, char **argv, char *ip, char *reverse_ip)
     settings.tsum2         = 0;
     settings.interval      = 1000000;
     settings.broadcast     = false;
+    settings.nduplicates   = 0;
     memset(&settings.deadline, 0, sizeof(struct timeval));
 }
 

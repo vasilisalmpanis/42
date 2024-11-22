@@ -331,6 +331,14 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
             return 1;
         }
     }
+    /* TODO change architecture of main_loop
+     *
+     * send x amount of preload if given by user
+     * FD_ZERO our set and set sockfd to be tracked
+     * use select in a nested while loop to loop through all received packets
+     * ping again
+     * repeat
+     */
     while (true) {
 #if 0
 		printf("npackets :%ld nreceived %ld nerrors %ld\n", settings.npackets, settings.nreceived, settings.nerrors);

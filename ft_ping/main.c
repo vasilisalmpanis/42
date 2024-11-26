@@ -1,9 +1,7 @@
-#include <arpa/inet.h>
-#include <bits/posix1_lim.h>
-#include <netdb.h>
-#include <netinet/in.h>
+#include <netinet/ip_icmp.h>
 #include <stdio.h>
-#include <sys/socket.h>
+#include <sys/select.h>
+#include <unistd.h>
 
 #include "ft_ping.h"
 
@@ -131,7 +129,6 @@ void advance_ntransmitted() { settings.ntransmitted++; }
 int ping(struct sockaddr_in *addr_con)
 {
     struct packet packet;
-    struct timeval tv_now;
 
     int cc;
     int i;
@@ -144,13 +141,19 @@ int ping(struct sockaddr_in *addr_con)
     packet.icmp_header.un.echo.sequence = htons(settings.ntransmitted);
     packet.icmp_header.un.echo.id       = settings.ident;
 
-    gettimeofday(&tv_now, NULL);
-    memcpy(packet.data, &tv_now, sizeof(tv_now));
+    gettimeofday(&settings.tv_now, NULL);
+    memcpy(packet.data, &settings.tv_now, sizeof(settings.tv_now));
 
     packet.icmp_header.checksum = icmp_checksum(&packet, cc);
     i = sendto(settings.sock.fd, &packet, sizeof(packet), 0, (struct sockaddr *)addr_con,
                sizeof(*addr_con));
-    return i == cc ? 0 : i;
+    if (i == cc) {
+        advance_ntransmitted();
+        if (settings.preload)
+            --settings.preload;
+        return 0;
+    }
+    return i;
 }
 
 /**
@@ -247,7 +250,7 @@ int parse_reply(int cc, uint8_t *packet)
         socklen_t size     = sizeof(settings.whereto);
         uint16_t sequence  = ntohs(icp->un.echo.sequence);
         inet_ntop(AF_INET, &(settings.whereto.sin_addr), ip, size);
-        is_dup = sequence < settings.ntransmitted - 1;
+        /*is_dup = sequence < settings.ntransmitted - 1;*/
         gather_statistics(duration, csfailed, is_dup);
         getnameinfo((struct sockaddr *)(&settings.whereto), size, host, HOST_NAME_MAX, NULL, 0, 0);
         if (!settings.is_ip && !settings.no_dns)
@@ -264,6 +267,13 @@ int parse_reply(int cc, uint8_t *packet)
             case ICMP_SOURCE_QUENCH:
             case ICMP_REDIRECT:
             case ICMP_DEST_UNREACH:
+                // FIX: jupm to original packet and get sequence
+                inet_ntop(AF_INET, &(settings.whereto.sin_addr), ip, sizeof(settings.whereto));
+                getnameinfo((struct sockaddr *)(&settings.whereto), sizeof(settings.whereto), host,
+                            HOST_NAME_MAX, NULL, 0, 0);
+                printf("From %s: icmp_seq=%d Destination Host Unreachable\n", ip,
+                       icp->un.echo.sequence);
+                break;
             case ICMP_TIME_EXCEEDED:
             case ICMP_PARAMETERPROB:
                 settings.nerrors++;
@@ -291,6 +301,7 @@ int parse_reply(int cc, uint8_t *packet)
 #endif
                 break;
             default:
+                printf("message came in with type%d\n", icp->type);
                 /* MUST NOT */
                 break;
         }
@@ -314,9 +325,11 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
 {
     uint8_t receive_packet[200];
     socklen_t addrlen = sizeof(settings.whereto);
-    int ping_ret, cc; /*ttl_opt = 1*/
+    fd_set fd_master;
+    int cc; /*ttl_opt = 1*/
     int ret_val   = OURS;
     int broadcast = 1;
+    int n;
     struct timeval tv_out;
     tv_out.tv_sec  = 1;
     tv_out.tv_usec = 0;
@@ -330,7 +343,21 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
             printf("ft_ping: failed to set SO_BROADCAST option to socket\n");
             return 1;
         }
+        printf("setting broadcast succeeded\n");
     }
+    while (settings.preload) {
+        ret_val = ping(addr_con);
+        if ((ret_val) != 0) {
+            if (errno == EACCES) {
+                printf(
+                    "ft_ping: Do you want to ping broadcast? Then -b. If not, check your local "
+                    "firewall rules\n");
+                return 1;
+            }
+        }
+    }
+    ping(addr_con);
+
     /* TODO change architecture of main_loop
      *
      * send x amount of preload if given by user
@@ -343,45 +370,42 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
 #if 0
 		printf("npackets :%ld nreceived %ld nerrors %ld\n", settings.npackets, settings.nreceived, settings.nerrors);
 #endif
-        if (settings.npackets && settings.nerrors + settings.nreceived >= settings.npackets)
-            break;
-        if (ret_val == OURS) {
-            ping_ret = ping(addr_con);
-            if (ping_ret == 0)
-                advance_ntransmitted();
-            else {
-                if (errno == EACCES) {
-                    printf(
-                        "ft_ping: Do you want to ping broadcast? Then -b. If not, check your local "
-                        "firewall rules\n");
-                    return 1;
-                }
-            }
-        }
         memset(receive_packet, 0, PACKET_SIZE * 2);
         memset(&settings.whereto, 0, sizeof(struct sockaddr_in));
-        cc = recvfrom(settings.sock.fd, receive_packet, PACKET_SIZE * 2, 0,
-                      (struct sockaddr *)&settings.whereto, &addrlen);
-        gettimeofday(&settings.tv_now, NULL);
-        if (cc < 0) {
-            error("Error receiving packet\n");
-            return 1;
-        }
-        ret_val = parse_reply(cc, receive_packet);
-        switch (ret_val) {
-            case OURS:
-                if (settings.preload > 0)
-                    settings.preload--;
-                if (!settings.preload)
-                    usleep(settings.interval);
-                break;
-            case NOT_OURS:
-                break;
-            case FAULT:
+        FD_ZERO(&fd_master);
+        FD_SET(settings.sock.fd, &fd_master);
+        tv_out.tv_sec  = 1;
+        tv_out.tv_usec = 0;
+        n              = select(settings.sock.fd + 1, &fd_master, NULL, NULL, &tv_out);
+        if (n < 0) {
+            if (errno == EINTR)
+                continue;
+            error("ft_ping: select failed\n");
+        } else if (n == 1) {
+            cc = recvfrom(settings.sock.fd, receive_packet, PACKET_SIZE * 2, 0,
+                          (struct sockaddr *)&settings.whereto, &addrlen);
+            gettimeofday(&settings.tv_now, NULL);
+            if (cc < 0) {
+                error("Error receiving packet\n");
                 return 1;
-            default:
-                /* MUST NOT */
+            }
+            ret_val = parse_reply(cc, receive_packet);
+            if (settings.npackets && settings.nerrors + settings.nreceived >= settings.npackets)
                 break;
+            switch (ret_val) {
+                case OURS:
+                case NOT_OURS:
+                    break;
+                case FAULT:
+                    return 1;
+                default:
+                    /* MUST NOT */
+                    break;
+            }
+        } else {
+            if (settings.npackets && settings.ntransmitted >= settings.npackets)
+                break;
+            ret_val = ping(addr_con);
         }
     }
     return 0;
@@ -471,6 +495,18 @@ int main(int argc, char *argv[])
         }
     }
 #endif
+    //
+    /*struct sockaddr_in bind_addr;*/
+    /*memset(&bind_addr, 0, sizeof(bind_addr));*/
+    /*bind_addr.sin_family      = AF_INET;*/
+    /*bind_addr.sin_addr.s_addr = INADDR_ANY;  // Bind to all interfaces*/
+    /*bind_addr.sin_port        = 0;           // No specific port needed for ICMP*/
+    /**/
+    /*if (bind(settings.sock.fd, (struct sockaddr *)&bind_addr, sizeof(bind_addr)) < 0) {*/
+    /*    perror("Socket binding failed");*/
+    /*    return 1;*/
+    /*}*/
+    //
     set_signal(SIGINT, sigexit);
     set_signal(SIGALRM, sigexit);
     set_signal(SIGQUIT, sigstatus);

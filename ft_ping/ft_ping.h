@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/select.h>
 #include <sys/signal.h>
 #include <sys/socket.h>
 #include <sys/time.h>

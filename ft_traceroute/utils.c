@@ -1,8 +1,4 @@
-#include <arpa/inet.h>
-#include <netinet/in.h>
-
 #include "ft_traceroute.h"
-#include "libft/libft.h"
 
 /**
  * @brief Calculates the checksum of the icmp packet

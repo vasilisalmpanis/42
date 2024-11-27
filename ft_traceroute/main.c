@@ -204,6 +204,12 @@ int main_loop()
     size[1] = sizeof(opts.whereto[1]);
     size[2] = sizeof(opts.whereto[2]);
     struct timeval timeout;
+    // TODO:
+    // refactor -> send 3 probes in the beginning
+    // run select till it returns 0 with timeout
+    // check hops and exit if necessary
+    // send next probes
+    // repeat
     /**/
     timeout.tv_sec  = 1;
     timeout.tv_usec = 0;

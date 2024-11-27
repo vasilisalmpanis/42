@@ -1,6 +1,7 @@
 #include <netinet/ip_icmp.h>
 #include <stdio.h>
 #include <sys/select.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 #include "ft_ping.h"
@@ -330,9 +331,9 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
     int ret_val   = OURS;
     int broadcast = 1;
     int n;
-    struct timeval tv_out;
-    tv_out.tv_sec  = 1;
-    tv_out.tv_usec = 0;
+    struct timeval resp_time, last, now, intvl;
+    intvl.tv_sec  = 1;
+    intvl.tv_usec = 0;
     setsockopt(fd, IPPROTO_IP, IP_TTL, &settings.ttl, sizeof(settings.ttl));
     if (settings.deadline.tv_sec)
         setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (void *)&settings.deadline,
@@ -358,14 +359,7 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
     }
     ping(addr_con);
 
-    /* TODO change architecture of main_loop
-     *
-     * send x amount of preload if given by user
-     * FD_ZERO our set and set sockfd to be tracked
-     * use select in a nested while loop to loop through all received packets
-     * ping again
-     * repeat
-     */
+    gettimeofday(&last, NULL);
     while (true) {
 #if 0
 		printf("npackets :%ld nreceived %ld nerrors %ld\n", settings.npackets, settings.nreceived, settings.nerrors);
@@ -374,9 +368,16 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
         memset(&settings.whereto, 0, sizeof(struct sockaddr_in));
         FD_ZERO(&fd_master);
         FD_SET(settings.sock.fd, &fd_master);
-        tv_out.tv_sec  = 1;
-        tv_out.tv_usec = 0;
-        n              = select(settings.sock.fd + 1, &fd_master, NULL, NULL, &tv_out);
+        gettimeofday(&now, NULL);
+        resp_time.tv_sec  = last.tv_sec + intvl.tv_sec - now.tv_sec;
+        resp_time.tv_usec = last.tv_usec + intvl.tv_usec - now.tv_usec;
+        while (resp_time.tv_usec < 0) {
+            resp_time.tv_usec += 1000000;
+            resp_time.tv_sec--;
+        }
+        if (resp_time.tv_sec < 0)
+            resp_time.tv_sec = resp_time.tv_usec = 0;
+        n = select(settings.sock.fd + 1, &fd_master, NULL, NULL, &resp_time);
         if (n < 0) {
             if (errno == EINTR)
                 continue;
@@ -394,6 +395,7 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
                 break;
             switch (ret_val) {
                 case OURS:
+                    break;
                 case NOT_OURS:
                     break;
                 case FAULT:
@@ -406,6 +408,7 @@ int main_loop(struct sockaddr_in *addr_con, int fd)
             if (settings.npackets && settings.ntransmitted >= settings.npackets)
                 break;
             ret_val = ping(addr_con);
+            gettimeofday(&last, NULL);
         }
     }
     return 0;
@@ -495,18 +498,6 @@ int main(int argc, char *argv[])
         }
     }
 #endif
-    //
-    /*struct sockaddr_in bind_addr;*/
-    /*memset(&bind_addr, 0, sizeof(bind_addr));*/
-    /*bind_addr.sin_family      = AF_INET;*/
-    /*bind_addr.sin_addr.s_addr = INADDR_ANY;  // Bind to all interfaces*/
-    /*bind_addr.sin_port        = 0;           // No specific port needed for ICMP*/
-    /**/
-    /*if (bind(settings.sock.fd, (struct sockaddr *)&bind_addr, sizeof(bind_addr)) < 0) {*/
-    /*    perror("Socket binding failed");*/
-    /*    return 1;*/
-    /*}*/
-    //
     set_signal(SIGINT, sigexit);
     set_signal(SIGALRM, sigexit);
     set_signal(SIGQUIT, sigstatus);

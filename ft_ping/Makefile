@@ -14,7 +14,7 @@ CFLAGS	=	-Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -lidn
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 	setcap cap_net_raw=ep $(NAME)
 
 %.o: %.c 

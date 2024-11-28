@@ -4,6 +4,7 @@
 #include <argp.h>
 #include <arpa/inet.h>
 #include <bits/posix1_lim.h>
+#include <errno.h>
 #include <net/if.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -12,6 +13,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -44,7 +46,7 @@ struct opts {
     int current_hop;
 
     long ntransmitted;
-    long ident;
+    uint16_t ident;
 
     struct sockaddr_in source;
     struct sockaddr_in whereto[3];

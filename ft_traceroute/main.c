@@ -1,3 +1,7 @@
+#include <netinet/ip.h>
+#include <netinet/ip_icmp.h>
+#include <stdio.h>
+
 #include "ft_traceroute.h"
 
 int curr_index = 1;
@@ -85,7 +89,7 @@ void set_up_opts()
     opts.intf         = NULL;
     opts.packetlen    = 60;
     opts.packet       = NULL;
-    opts.ident        = getpid();
+    opts.ident        = (uint16_t)getpid();
     opts.ntransmitted = 1;
 }
 
@@ -107,7 +111,7 @@ int setup_packet()
     struct timeval tv_now;
     struct icmphdr *icmp;
 
-    size_t i = 0;
+    int i = 0;
 
     if (!opts.packet) {
         opts.packet = ft_calloc(opts.packetlen, sizeof(unsigned char));
@@ -132,7 +136,11 @@ int setup_packet()
     ft_memcpy(opts.packet + sizeof(struct icmphdr), &tv_now, sizeof(tv_now));
     icmp->checksum = icmp_checksum(opts.packet, opts.packetlen);
     i = sendto(opts.socket.fd, opts.packet, opts.packetlen, 0, (struct sockaddr *)&opts.source, sizeof(opts.source));
-    return i == opts.packetlen ? 0 : i;
+    if (i == -1) {
+        printf("connect: %s\n", strerror(errno));
+        exit(1);
+    }
+    return i == (int)opts.packetlen ? 0 : i;
 }
 
 int parse_reply(uint8_t *packet, int cc, int *probe, struct timeval tv_now)
@@ -161,86 +169,132 @@ int parse_reply(uint8_t *packet, int cc, int *probe, struct timeval tv_now)
     gettimeofday(&tv_now, NULL);
     switch (icmp->type) {
         case ICMP_ECHOREPLY:
-            time                  = (struct timeval *)(packet + sizeof(struct iphdr) + sizeof(struct icmphdr));
-            long seconds          = tv_now.tv_sec - time->tv_sec;
-            long microseconds     = tv_now.tv_usec - time->tv_usec;
-            opts.duration[*probe] = (double)(seconds * 1000.0 + microseconds / 1000.0);
+            if (icmp->un.echo.id != opts.ident)
+                return 3;
+            time              = (struct timeval *)(packet + sizeof(struct iphdr) + sizeof(struct icmphdr));
+            long seconds      = tv_now.tv_sec - time->tv_sec;
+            long microseconds = tv_now.tv_usec - time->tv_usec;
+            (*probe)++;
+            opts.duration[*probe - 1] = (double)(seconds * 1000.0 + microseconds / 1000.0);
             return 2;
         case ICMP_TIME_EXCEEDED:
+            icmp = (struct icmphdr *)(packet + 2 * sizeof(struct iphdr) + sizeof(struct icmphdr));
+            if (icmp->un.echo.id != opts.ident)
+                return 3;
             ft_bzero(opts.hop_ip[*probe], HOST_NAME_MAX);
             ft_bzero(opts.hop_reverse_ip[*probe], HOST_NAME_MAX);
             inet_ntop(AF_INET, &(opts.whereto[*probe].sin_addr.s_addr), opts.hop_ip[*probe], INET_ADDRSTRLEN);
             addr       = (struct sockaddr *)&opts.whereto[*probe];
             reverse_ip = opts.hop_reverse_ip[*probe];
             getnameinfo(addr, sizeof(*addr), reverse_ip, HOST_NAME_MAX, NULL, 0, 0);
+            (*probe)++;
             break;
         case ICMP_ECHO:
-            --(*probe);
-            return 1;
+            return 3;
     }
     return 0;
 }
 
 void print_line(int probe, int cc)
 {
-    if (probe == 0 && cc == 0)
+    if (probe == 1)
+        printf(" %d  ", opts.current_ttl);
+    if (probe != 3 && cc == 0)
         printf("%s (%s) ", opts.hop_reverse_ip[0][0] ? opts.hop_reverse_ip[0] : opts.hop_ip[0], opts.hop_ip[0]);
-    if (probe == 0 && cc == 2)
+    if (probe == 1 && cc == 2)
         printf("%s (%s) ", opts.reverse_ip, opts.ip);
-    if (probe != 2)
-        printf(" %.3f ms ", opts.duration[probe]);
+    if (probe != 3)
+        printf(" %.3f ms ", opts.duration[probe - 1]);
     else
-        printf(" %.3f ms", opts.duration[probe]);
+        printf(" %.3f ms\n", opts.duration[probe - 1]);
 }
 
 int main_loop()
 {
     uint8_t receive_buf[3][200];
     struct timeval tv_now;
-    int ret_val, cc;
+    struct timeval timeout;
+    fd_set read_fd;
+    int ret_val, cc, probe, select_ret;
     socklen_t size[3];
 
     size[0] = sizeof(opts.whereto[0]);
     size[1] = sizeof(opts.whereto[1]);
     size[2] = sizeof(opts.whereto[2]);
-    struct timeval timeout;
+    probe   = 0;
+    while (probe++ < PROBES) {
+        setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
+        ret_val = setup_packet();
+        if (ret_val) {
+            // handle;
+            return 1;
+        }
+    }
     // TODO:
-    // refactor -> send 3 probes in the beginning
-    // run select till it returns 0 with timeout
-    // check hops and exit if necessary
-    // send next probes
-    // repeat
-    /**/
-    timeout.tv_sec  = 1;
+    // fix timing
+    timeout.tv_sec  = 5;
     timeout.tv_usec = 0;
+    FD_ZERO(&read_fd);
+    probe = 0;
+
     while (true) {
-        cc        = 0;
-        int probe = 0;
+        cc = 0;
+        FD_SET(opts.socket.fd, &read_fd);
         if (opts.current_ttl == opts.max_ttl)
             break;
-        printf(" %d  ", opts.current_ttl);
-        while (probe < PROBES) {
-            setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
-            setsockopt(opts.socket.fd, SOL_SOCKET, SO_RCVTIMEO, (void *)&timeout, sizeof(timeout));
-            ret_val = setup_packet();
-            if (ret_val) {
-                // handle;
-                return 1;
+        setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
+        /*setsockopt(opts.socket.fd, SOL_SOCKET, SO_RCVTIMEO, (void *)&timeout, sizeof(timeout));*/
+        select_ret = select(opts.socket.fd + 1, &read_fd, NULL, NULL, &timeout);
+        if (select_ret < 0) {
+            if (errno == EINTR)
+                continue;
+            else {
+                printf("select: %s\n", strerror(errno));
+                exit(1);
             }
+        }
+        if (select_ret == 1) {
             cc = recvfrom(opts.socket.fd, (void *restrict)receive_buf[probe], 200, 0,
                           (struct sockaddr *)&opts.whereto[probe], &size[probe]);
-            gettimeofday(&tv_now, NULL);
             cc = parse_reply(receive_buf[probe], cc, &probe, tv_now);
+            if (cc == 3) {
+                continue;
+            }
             if (cc == 0 || cc == 2)
                 print_line(probe, cc);
-            if (cc == 2 && probe == 2) {
-                printf("\n");
+            if (cc == 2 && probe == 3) {
                 return 0;
             }
-            probe++;
+            if (probe == 3) {
+                opts.current_ttl++;
+                probe = 0;
+                setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
+                while (probe++ < 3) {
+                    ret_val = setup_packet();
+                }
+                probe = 0;
+            }
+        } else {
+            while (probe < 4) {
+                if (probe == 0)
+                    printf(" %d \n", opts.current_ttl);
+                if (probe != 3)
+                    printf(" * ");
+                else
+                    printf(" * \n");
+                probe++;
+            }
+            opts.current_ttl++;
+            probe = 0;
+            setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
+            while (probe++ < 3) {
+                ret_val = setup_packet();
+            }
+            probe           = 0;
+            timeout.tv_sec  = 5;
+            timeout.tv_usec = 0;
         }
-        opts.current_ttl++;
-        printf("\n");
+        gettimeofday(&tv_now, NULL);
     }
     return 0;
 }

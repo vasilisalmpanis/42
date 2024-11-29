@@ -218,12 +218,15 @@ int main_loop()
     int ret_val, cc, probe, select_ret;
     socklen_t size[3];
 
-    size[0] = sizeof(opts.whereto[0]);
-    size[1] = sizeof(opts.whereto[1]);
-    size[2] = sizeof(opts.whereto[2]);
-    probe   = 0;
+    size[0]         = sizeof(opts.whereto[0]);
+    size[1]         = sizeof(opts.whereto[1]);
+    size[2]         = sizeof(opts.whereto[2]);
+    timeout.tv_sec  = 5;
+    timeout.tv_usec = 0;
+    probe           = 0;
+    setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
+    FD_ZERO(&read_fd);
     while (probe++ < PROBES) {
-        setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
         ret_val = setup_packet();
         if (ret_val) {
             // handle;
@@ -232,17 +235,11 @@ int main_loop()
     }
     // TODO:
     // fix timing
-    timeout.tv_sec  = 5;
-    timeout.tv_usec = 0;
-    FD_ZERO(&read_fd);
     probe = 0;
-
     while (true) {
-        cc = 0;
         FD_SET(opts.socket.fd, &read_fd);
         if (opts.current_ttl == opts.max_ttl)
             break;
-        setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
         /*setsockopt(opts.socket.fd, SOL_SOCKET, SO_RCVTIMEO, (void *)&timeout, sizeof(timeout));*/
         select_ret = select(opts.socket.fd + 1, &read_fd, NULL, NULL, &timeout);
         if (select_ret < 0) {
@@ -254,6 +251,7 @@ int main_loop()
             }
         }
         if (select_ret == 1) {
+            gettimeofday(&tv_now, NULL);
             cc = recvfrom(opts.socket.fd, (void *restrict)receive_buf[probe], 200, 0,
                           (struct sockaddr *)&opts.whereto[probe], &size[probe]);
             cc = parse_reply(receive_buf[probe], cc, &probe, tv_now);
@@ -266,12 +264,10 @@ int main_loop()
                 return 0;
             }
             if (probe == 3) {
-                opts.current_ttl++;
+                ++opts.current_ttl;
                 probe = 0;
                 setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
-                while (probe++ < 3) {
-                    ret_val = setup_packet();
-                }
+                while (probe++ < 3) setup_packet();
                 probe = 0;
             }
         } else {
@@ -294,7 +290,6 @@ int main_loop()
             timeout.tv_sec  = 5;
             timeout.tv_usec = 0;
         }
-        gettimeofday(&tv_now, NULL);
     }
     return 0;
 }

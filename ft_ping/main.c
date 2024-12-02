@@ -1,9 +1,3 @@
-#include <netinet/ip_icmp.h>
-#include <stdio.h>
-#include <sys/select.h>
-#include <sys/time.h>
-#include <unistd.h>
-
 #include "ft_ping.h"
 
 struct argp_option opts[] = {

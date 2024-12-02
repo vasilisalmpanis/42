@@ -1,7 +1,3 @@
-#include <netinet/ip.h>
-#include <netinet/ip_icmp.h>
-#include <stdio.h>
-
 #include "ft_traceroute.h"
 
 int curr_index = 1;

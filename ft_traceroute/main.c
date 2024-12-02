@@ -8,7 +8,13 @@ static const struct argp_option options[] = {
     {"max-hops", 'm', "NUM", 0, "Set the max number of hops (max TTL to be reached). Default is 30", 0},
     {0}};
 
-int ft_patse_num_str(char *s)
+/**
+ * @brief Checks if give string is a positive number
+ *
+ * @param s string passed to function
+ * @return 1 on error 0 if it is a valid positive number
+ */
+int ft_parse_num_str(char *s)
 {
     for (size_t i = 0; i < ft_strlen(s); i++) {
         if (!ft_isdigit(s[i]))
@@ -17,6 +23,9 @@ int ft_patse_num_str(char *s)
     return 0;
 }
 
+/**
+ * @brief Prints the state of the opts object.
+ */
 void print_opts()
 {
     printf(
@@ -26,6 +35,14 @@ void print_opts()
         opts.max_ttl, opts.verbose, opts.intf);
 }
 
+/**
+ * @brief Parses the options given by the user
+ *
+ * @param key the ascii representation of the argumrnt given
+ * @param arg the whole argument string
+ * @param state parse argument state
+ * @return 0 on success, 1 on error
+ */
 int parse_opt(int key, char *arg, struct argp_state *state)
 {
     (void)arg;
@@ -51,7 +68,7 @@ int parse_opt(int key, char *arg, struct argp_state *state)
                     printf("Extra arg `%s' (position 3, argc %d)", arg, curr_index);
                     exit(1);
                 }
-                if (ft_patse_num_str(arg)) {
+                if (ft_parse_num_str(arg)) {
                     printf("Cannot handle \"packetlen\" cmdline arg `%s' on position 2 (argc %d)", arg, curr_index);
                     exit(1);
                 }
@@ -75,6 +92,9 @@ int parse_opt(int key, char *arg, struct argp_state *state)
     return 0;
 }
 
+/**
+ * @brief initializes opts to default values
+ */
 void set_up_opts()
 {
     opts.max_ttl      = 30;
@@ -89,6 +109,11 @@ void set_up_opts()
     opts.ntransmitted = 1;
 }
 
+/**
+ * @brief Bind to specific interface given by the user
+ *
+ * @return 0 on success, 1 on failure
+ */
 int bind_to_intf()
 {
     struct ifreq ifr;
@@ -102,6 +127,11 @@ int bind_to_intf()
     return 0;
 }
 
+/**
+ * @brief Sets up the next icmp packet and sends it
+ *
+ * @return 0 on success or the size of the sent packet
+ */
 int setup_packet()
 {
     struct timeval tv_now;

@@ -169,7 +169,6 @@ int setup_packet()
     }
     return i == (int)opts.packetlen ? 0 : i;
 }
-
 int parse_reply(uint8_t *packet, int cc, int *probe, struct timeval tv_now)
 {
     struct iphdr *ip;
@@ -204,7 +203,7 @@ int parse_reply(uint8_t *packet, int cc, int *probe, struct timeval tv_now)
             (*probe)++;
             opts.duration[*probe - 1] = (double)(seconds * 1000.0 + microseconds / 1000.0);
             return 2;
-        case ICMP_DEST_UNREACH:
+        case ICMP_DEST_UNREACH: /* TODO check if packet belongs to us */
             if (icmp->type == ICMP_DEST_UNREACH && *probe + 1 == 3)
                 opts.finishing = true;
         case ICMP_TIME_EXCEEDED:

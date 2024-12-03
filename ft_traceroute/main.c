@@ -107,6 +107,7 @@ void set_up_opts()
     opts.packet       = NULL;
     opts.ident        = (uint16_t)getpid();
     opts.ntransmitted = 1;
+    opts.finishing    = false;
 }
 
 /**
@@ -203,6 +204,9 @@ int parse_reply(uint8_t *packet, int cc, int *probe, struct timeval tv_now)
             (*probe)++;
             opts.duration[*probe - 1] = (double)(seconds * 1000.0 + microseconds / 1000.0);
             return 2;
+        case ICMP_DEST_UNREACH:
+            if (icmp->type == ICMP_DEST_UNREACH && *probe + 1 == 3)
+                opts.finishing = true;
         case ICMP_TIME_EXCEEDED:
             icmp = (struct icmphdr *)(packet + 2 * sizeof(struct iphdr) + sizeof(struct icmphdr));
             if (icmp->un.echo.id != opts.ident)
@@ -213,26 +217,42 @@ int parse_reply(uint8_t *packet, int cc, int *probe, struct timeval tv_now)
             addr       = (struct sockaddr *)&opts.whereto[*probe];
             reverse_ip = opts.hop_reverse_ip[*probe];
             getnameinfo(addr, sizeof(*addr), reverse_ip, HOST_NAME_MAX, NULL, 0, 0);
+            time         = (struct timeval *)(packet + 2 * sizeof(struct iphdr) + 2 * sizeof(struct icmphdr));
+            seconds      = tv_now.tv_sec - time->tv_sec;
+            microseconds = tv_now.tv_usec - time->tv_usec;
             (*probe)++;
+            opts.duration[*probe - 1] = (double)(seconds * 1000.0 + microseconds / 1000.0);
             break;
         case ICMP_ECHO:
             return 3;
+        default:
+            printf("type %d code %d\n", icmp->type, icmp->code);
+            exit(1);
     }
     return 0;
 }
 
-void print_line(int probe, int cc)
+void print_line(int probe, int cc, bool *printed_host)
 {
+    /* first response print ttl */
     if (probe == 1)
         printf(" %d  ", opts.current_ttl);
-    if (probe != 3 && cc == 0)
-        printf("%s (%s) ", opts.hop_reverse_ip[0][0] ? opts.hop_reverse_ip[0] : opts.hop_ip[0], opts.hop_ip[0]);
-    if (probe == 1 && cc == 2)
-        printf("%s (%s) ", opts.reverse_ip, opts.ip);
-    if (probe != 3)
-        printf(" %.3f ms ", opts.duration[probe - 1]);
-    else
-        printf(" %.3f ms\n", opts.duration[probe - 1]);
+
+    /* error print '*' */
+    if (cc < 0) {
+        printf("*%s", probe != 3 ? " " : "");
+    } else if (!(*printed_host)) {
+        /* print host */
+        if (cc == 0)
+            printf("%s (%s) ", opts.hop_reverse_ip[0][0] ? opts.hop_reverse_ip[0] : opts.hop_ip[0], opts.hop_ip[0]);
+        else if (cc == 2)
+            printf("%s (%s) ", opts.reverse_ip, opts.ip);
+        printf("%.3f ms%s", opts.duration[probe - 1], probe == 3 ? "" : " ");
+        *printed_host = true;
+    } else
+        printf("%.3f ms%s", opts.duration[probe - 1], probe == 3 ? "" : " "); /* print duration */
+    if (probe == 3)
+        printf("\n"); /* last response print newline */
 }
 
 int main_loop()
@@ -243,6 +263,7 @@ int main_loop()
     fd_set read_fd;
     int ret_val, cc, probe, select_ret;
     socklen_t size[3];
+    bool printed_host = false;
 
     size[0]         = sizeof(opts.whereto[0]);
     size[1]         = sizeof(opts.whereto[1]);
@@ -263,9 +284,8 @@ int main_loop()
     // fix timing
     probe = 0;
     while (true) {
+        // reset fd tracking
         FD_SET(opts.socket.fd, &read_fd);
-        if (opts.current_ttl == opts.max_ttl)
-            break;
         /*setsockopt(opts.socket.fd, SOL_SOCKET, SO_RCVTIMEO, (void *)&timeout, sizeof(timeout));*/
         select_ret = select(opts.socket.fd + 1, &read_fd, NULL, NULL, &timeout);
         if (select_ret < 0) {
@@ -281,40 +301,46 @@ int main_loop()
             cc = recvfrom(opts.socket.fd, (void *restrict)receive_buf[probe], 200, 0,
                           (struct sockaddr *)&opts.whereto[probe], &size[probe]);
             cc = parse_reply(receive_buf[probe], cc, &probe, tv_now);
+            /*printf("normal reply %d\n", probe);*/
             if (cc == 3) {
                 continue;
             }
-            if (cc == 0 || cc == 2)
-                print_line(probe, cc);
+            if (cc == 0 || cc == 2) {
+                print_line(probe, cc, &printed_host);
+                if (opts.finishing)
+                    return 0;
+            }
             if (cc == 2 && probe == 3) {
                 return 0;
             }
             if (probe == 3) {
                 ++opts.current_ttl;
+                if (opts.current_ttl == opts.max_ttl + 1)
+                    break;
                 probe = 0;
                 setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
                 while (probe++ < 3) setup_packet();
-                probe = 0;
+                probe        = 0;
+                printed_host = false;
             }
         } else {
-            while (probe < 4) {
-                if (probe == 0)
-                    printf(" %d \n", opts.current_ttl);
-                if (probe != 3)
-                    printf(" * ");
-                else
-                    printf(" * \n");
-                probe++;
-            }
+            /*printf("timeout\n");*/
+            probe++;
+            print_line(probe, -1, &printed_host); /* print asterisk */
+            timeout.tv_sec  = 1;
+            timeout.tv_usec = 0;
+            if (probe != 3)
+                continue;
             opts.current_ttl++;
+            if (opts.current_ttl == opts.max_ttl + 1)
+                break;
             probe = 0;
             setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
             while (probe++ < 3) {
                 ret_val = setup_packet();
             }
-            probe           = 0;
-            timeout.tv_sec  = 5;
-            timeout.tv_usec = 0;
+            probe        = 0;
+            printed_host = false;
         }
     }
     return 0;

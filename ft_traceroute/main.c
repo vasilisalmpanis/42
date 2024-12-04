@@ -203,11 +203,15 @@ int parse_reply(uint8_t *packet, int cc, int *probe, struct timeval tv_now)
             (*probe)++;
             opts.duration[*probe - 1] = (double)(seconds * 1000.0 + microseconds / 1000.0);
             return 2;
-        case ICMP_DEST_UNREACH: /* TODO check if packet belongs to us */
-            if (icmp->type == ICMP_DEST_UNREACH && *probe + 1 == 3)
-                opts.finishing = true;
+        case ICMP_DEST_UNREACH:
         case ICMP_TIME_EXCEEDED:
-            icmp = (struct icmphdr *)(packet + 2 * sizeof(struct iphdr) + sizeof(struct icmphdr));
+            if (icmp->type == ICMP_DEST_UNREACH && *probe + 1 == 3) {
+                icmp = (struct icmphdr *)(packet + 2 * sizeof(struct iphdr) + sizeof(struct icmphdr));
+                if (icmp->un.echo.id != opts.ident)
+                    return 3;
+                opts.finishing = true;
+            } else
+                icmp = (struct icmphdr *)(packet + 2 * sizeof(struct iphdr) + sizeof(struct icmphdr));
             if (icmp->un.echo.id != opts.ident)
                 return 3;
             ft_bzero(opts.hop_ip[*probe], HOST_NAME_MAX);
@@ -279,8 +283,6 @@ int main_loop()
             return 1;
         }
     }
-    // TODO:
-    // fix timing
     probe = 0;
     while (true) {
         // reset fd tracking

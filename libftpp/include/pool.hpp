@@ -9,8 +9,8 @@ template<typename TType>
 class Pool {
 	public:
 		// Forward declaration of Object class with TType
-		Pool<TType>(void);
-		~Pool<TType>(void);
+		Pool(void);
+		~Pool(void);
 		class Object {
 			public:
 				Object(Pool *address, TType *pointer, size_t index) : pool(address), ptr(pointer), index(index) {}
@@ -45,7 +45,6 @@ Pool<TType>::Pool(void)
 {
 }
 
-#include <iostream>
 template <typename TType>
 Pool<TType>::~Pool(void)
 {

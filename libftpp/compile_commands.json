@@ -1,0 +1,38 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++11",
+      "-I",
+      "./include",
+      "-c",
+      "-o",
+      "src/data_buffer.o",
+      "src/data_buffer.cpp"
+    ],
+    "directory": "/home/valmpani/42/libftpp",
+    "file": "/home/valmpani/42/libftpp/src/data_buffer.cpp",
+    "output": "/home/valmpani/42/libftpp/src/data_buffer.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++11",
+      "-I",
+      "./include",
+      "-c",
+      "-o",
+      "src/memento.o",
+      "src/memento.cpp"
+    ],
+    "directory": "/home/valmpani/42/libftpp",
+    "file": "/home/valmpani/42/libftpp/src/memento.cpp",
+    "output": "/home/valmpani/42/libftpp/src/memento.o"
+  }
+]

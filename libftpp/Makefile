@@ -19,7 +19,7 @@ ${BOBJS} : ${BSRC}
 	${CXX} ${CXXFLAGS} -c ${BSRC} -I ${INCS}
 
 %.o: %.cpp
-		${CXX} ${CXXFLAGS} -c $< -o $@
+		${CXX} ${CXXFLAGS} -I $(INCS) -c $< -o $@
 
 
 clean :

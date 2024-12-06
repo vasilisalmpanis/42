@@ -83,9 +83,14 @@ void StateMachine<TState>::addAction(const TState &state,
 template <class TState>
 void StateMachine<TState>::transitionTo(const TState &state) {
     /* executes the transition to a specific state */
-    if (_states.find(state) == _states.end() ||
-        !_states[_current_state][1].has_event(state))
+    if (_current_state == state)
+        return;
+    if (_states.find(state) == _states.end())
         throw std::invalid_argument("Invalid State to transition to");
+    if (!_states[_current_state][1].has_event(state)) {
+        _current_state = state;
+        throw std::invalid_argument("Invalid transition");
+    }
     _states[_current_state][1].notify(state);
     _current_state = state;
 }

@@ -30,4 +30,8 @@ fclean : clean
 	
 re: fclean all
 
+clang-format:
+	find ./include/ -type f \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) -exec clang-format -i {} +
+	find ./src/ -type f \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) -exec clang-format -i {} +
+
 .PHONY: all fclean clean re

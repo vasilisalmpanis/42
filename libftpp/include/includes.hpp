@@ -3,7 +3,10 @@
 #include <cstring>
 #include <functional>
 #include <iostream>
+#include <mutex>
+#include <sstream>
 #include <stack>
 #include <stdexcept>
+#include <strstream>
 #include <unordered_map>
 #include <vector>

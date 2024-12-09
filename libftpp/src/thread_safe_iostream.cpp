@@ -19,10 +19,10 @@ ThreadSafeIOStream::operator<<(std::ostream &(*manip)(std::ostream &)) {
         if (manip ==
             static_cast<std::ostream &(*)(std::ostream &)>(std::endl)) {
             _buffer << "\n";
-            std::cout << _buffer.str();
+            _ostream << _buffer.str();
         } else if (manip ==
                    static_cast<std::ostream &(*)(std::ostream &)>(std::flush)) {
-            std::cout << _buffer.str() << manip;
+            _ostream << _buffer.str() << manip;
         }
         _buffer.str("");
     }

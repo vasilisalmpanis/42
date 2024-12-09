@@ -20,12 +20,12 @@ DataBuffer -> Polymorphic container to store objects in form byte format. Serial
     - [ThreadSafeIOStream]()
 
 5. **Thread**
-    - [ThreadSafeIOStream]()
+    - [ThreadSafeQueue]()
     - [Thread]()
     - [WorkerPool]()
     - [PersistentWorker]()
 
-6. **Networ**
+6. **Network**
     - [Message]()
     - [Client]()
     - [Server]()
@@ -40,5 +40,13 @@ DataBuffer -> Polymorphic container to store objects in form byte format. Serial
 ` // TODO `
 
 # Pool
-Resource management class that takes care of preallocating objects andreturning  
+Resource management class that takes care of pre allocating objects and returning  
 returning pointers. Acts like smart_pointer class (unique ptr)
+
+# ThreadSafeIOStream
+Uses mutexes and thread_local variables to preform thread-safe I/O with prefixed lines.  
+Helps debug and monitor applications with multiple threads more easily.
+
+- `Operator overloads for «, »`
+- `void setPrefix(const std::string& prefix)`
+- `template<typename T> void prompt(const std::string& question, T& dest)`

@@ -3,16 +3,18 @@
 #pragma once
 #include <includes.hpp>
 
-// thread-safe I/O stream with prefixed lines
-//
+// Thread-safe I/O stream with prefixed lines
+
 extern std::mutex mutex;
 
 class ThreadSafeIOStream {
 public:
-    ThreadSafeIOStream() = default;
-    ThreadSafeIOStream(ThreadSafeIOStream &&) = default;
+    ThreadSafeIOStream(std::ostream &ostream = std::cout,
+                       std::istream &istream = std::cin)
+        : _ostream(ostream), _istream(istream) {}
+    ThreadSafeIOStream(ThreadSafeIOStream &&) = delete;
     ThreadSafeIOStream(const ThreadSafeIOStream &) = delete;
-    ThreadSafeIOStream &operator=(ThreadSafeIOStream &&) = default;
+    ThreadSafeIOStream &operator=(ThreadSafeIOStream &&) = delete;
     ThreadSafeIOStream &operator=(const ThreadSafeIOStream &) = delete;
     ~ThreadSafeIOStream() = default;
 
@@ -25,7 +27,7 @@ public:
     ThreadSafeIOStream &operator<<(std::ostream &(*manip)(std::ostream &));
 
 public:
-    // overload of >> <<
+    // Overload of >> <<
     void setPrefix(const std::string &prefix);
     template <typename T>
     void prompt(const std::string &question, T &dest) {
@@ -34,14 +36,16 @@ public:
         buffer << _prefix << question;
         {
             std::lock_guard<std::mutex> lock(mutex);
-            std::cout << buffer.str();
+            _ostream << buffer.str();
         }
-        std::cin >> dest;
+        _istream >> dest;
     }
 
 private:
     std::string _prefix;
     std::ostringstream _buffer;
+    std::ostream &_ostream;
+    std::istream &_istream;
 };
 
 template <class TType>
@@ -65,5 +69,5 @@ ThreadSafeIOStream &ThreadSafeIOStream::operator>>(TType &out) {
 
 extern thread_local ThreadSafeIOStream threadSafeCout;
 
-/*template <class TType>*/
+/* Template <class TType>*/
 #endif

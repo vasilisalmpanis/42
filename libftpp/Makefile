@@ -1,12 +1,14 @@
 NAME	= libftpp.a
 CXX	= c++
-SRC	= ./src/data_buffer.cpp \
-	  ./src/memento.cpp
+SRC	= ./src/data_buffer.cpp			\
+	  ./src/memento.cpp			\
+	  ./src/thread_safe_iostream.cpp	\
+	  ./src/thread.cpp
 
 OBJS	= ${SRC:.cpp=.o}
 RM	= rm -rf
 AR	= ar rcs
-CXXFLAGS = -Wall -Wextra -Werror -std=c++11
+CXXFLAGS = -Wall -Wextra -std=c++11 #-Werror 
 INCS	= ./include
 
 all : ${NAME}

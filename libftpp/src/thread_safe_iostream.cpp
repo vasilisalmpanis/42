@@ -4,6 +4,7 @@
 
 /*thread_local ThreadSafeIOStream threadSafeCout;*/
 std::mutex mutex;
+thread_local ThreadSafeIOStream threadSafeCout;
 
 void ThreadSafeIOStream::setPrefix(const std::string &prefix) {
     _prefix = prefix;

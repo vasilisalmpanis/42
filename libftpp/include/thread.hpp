@@ -5,9 +5,9 @@
 class Thread {
 public:
     Thread(const std::string &name, std::function<void()> functToExecute);
-    Thread(Thread &&) = default;
+    Thread(Thread &&) = delete;
     Thread(const Thread &) = delete;
-    Thread &operator=(Thread &&) = default;
+    Thread &operator=(Thread &&) = delete;
     Thread &operator=(const Thread &) = delete;
     ~Thread() = default;
 

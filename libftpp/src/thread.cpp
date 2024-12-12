@@ -1,13 +1,11 @@
-#include "thread_safe_iostream.hpp"
-#include <stdexcept>
 #include <thread.hpp>
-#include <thread>
 
 Thread::Thread(const std::string &name, std::function<void()> functToExecute) {
     _lamda = functToExecute;
     _name = name;
     _running = false;
 }
+
 void Thread::start() {
     if (_running)
         throw std::runtime_error("Thread already started");

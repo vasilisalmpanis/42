@@ -43,6 +43,7 @@ public:
 
 private:
     std::string _prefix;
+    // change the deprecated ostringstream to something like a stringstream
     std::ostringstream _buffer;
     std::ostream &_ostream;
     std::istream &_istream;

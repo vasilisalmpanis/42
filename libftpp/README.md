@@ -23,7 +23,7 @@ DataBuffer -> Polymorphic container to store objects in form byte format. Serial
     - [ThreadSafeQueue]()
     - [Thread]()
     - [WorkerPool]()
-    - [PersistentWorker]()
+    - [PersistentWorker](#PersistentWorker)
 
 6. **Network**
     - [Message]()
@@ -50,3 +50,10 @@ Helps debug and monitor applications with multiple threads more easily.
 - `Operator overloads for «, »`
 - `void setPrefix(const std::string& prefix)`
 - `template<typename T> void prompt(const std::string& question, T& dest)`
+
+# PersistentWorker
+A thread that continuously performs a set of tasks defined by  
+users. It should maintain a list of tasks to perform in a loop.
+
+- `void addTask(const std::string& name, const std::function<void()>& jobToExecute)`
+- `void removeTask(const std::string& name)`

@@ -4,7 +4,8 @@ SRC	= ./src/data_buffer.cpp			\
 	  ./src/memento.cpp			\
 	  ./src/thread_safe_iostream.cpp	\
 	  ./src/thread.cpp			\
-	  ./src/worker_pool.cpp
+	  ./src/worker_pool.cpp			\
+	  ./src/persistent_worker.cpp
 
 OBJS	= ${SRC:.cpp=.o}
 RM	= rm -rf

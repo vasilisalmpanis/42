@@ -45,7 +45,7 @@ WorkerPool::~WorkerPool() {
     /* The notifying thread does not need to hold the lock */
     _condition.notify_all();
     for (std::thread &worker : _workers) {
-	    if (worker.joinable())
-		    worker.join();
+        if (worker.joinable())
+            worker.join();
     }
 }

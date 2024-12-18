@@ -11,14 +11,14 @@ void Thread::start() {
         throw std::runtime_error("Thread already started");
     _running = true;
     _thread = std::thread([this]() {
-		    threadSafeCout.setPrefix(this->_name);
-		    this->_lamda();
-	});
+        threadSafeCout.setPrefix(this->_name);
+        this->_lamda();
+    });
 }
 void Thread::stop() {
-	if (!_running)
-		throw std::runtime_error("Thread is not running");
-	_running = false;
-	if (_thread.joinable())
-		_thread.join();
+    if (!_running)
+        throw std::runtime_error("Thread is not running");
+    _running = false;
+    if (_thread.joinable())
+        _thread.join();
 }

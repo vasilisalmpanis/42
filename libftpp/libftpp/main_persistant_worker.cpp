@@ -18,8 +18,10 @@ int main() {
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
+    std::cout << "removing" << std::endl;
     worker.removeTask("Task1");
 
+    std::cout << "removed" << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     return 0;

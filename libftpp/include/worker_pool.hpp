@@ -41,7 +41,7 @@ private:
 
 class Master : public WorkerPool::IJobs {
 public:
-    static void execute(){
+    static void execute() {
         threadSafeCout << "Master Executing job on thread: "
                        << std::this_thread::get_id() << std::endl;
     }

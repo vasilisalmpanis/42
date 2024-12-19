@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic>
 #include <includes.hpp>
 
 class PersistentWorker {
@@ -7,8 +8,9 @@ public:
     public:
         std::string getName() const { return _name; }
         std::function<void()> getTask() const { return _lambda; }
-	Task(std::string name, std::function<void()> lambda) : _lambda(lambda), _name(name) {}
-	~Task() {}
+        Task(std::string name, std::function<void()> lambda)
+            : _lambda(lambda), _name(name) {}
+        ~Task() {}
 
     private:
         std::function<void()> _lambda;
@@ -31,4 +33,5 @@ private:
     std::vector<Task> _persistentWorkers;
     std::thread _worker;
     std::mutex _mutex;
+    std::atomic<bool> _running; // could have also used std::condition_variable
 };

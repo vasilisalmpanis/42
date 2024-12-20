@@ -5,6 +5,7 @@ SRC	= ./src/data_buffer.cpp			\
 	  ./src/thread_safe_iostream.cpp	\
 	  ./src/thread.cpp			\
 	  ./src/worker_pool.cpp			\
+	  ./src/message.cpp			\
 	  ./src/persistent_worker.cpp
 
 OBJS	= ${SRC:.cpp=.o}

@@ -5,6 +5,8 @@ DataBuffer::DataBuffer() {}
 DataBuffer::~DataBuffer() {}
 
 DataBuffer::DataBuffer(const DataBuffer &other) { *this = other; }
+DataBuffer::DataBuffer(DataBuffer &&other) : buffer(std::move(other.buffer)) { 
+}
 
 DataBuffer &DataBuffer::operator=(const DataBuffer &other) {
     if (this != &other) {

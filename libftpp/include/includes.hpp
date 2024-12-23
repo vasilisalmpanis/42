@@ -10,7 +10,6 @@
 #include <sstream>
 #include <stack>
 #include <stdexcept>
-#include <strstream>
 #include <thread>
 #include <unordered_map>
 #include <utility>

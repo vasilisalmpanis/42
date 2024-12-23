@@ -4,7 +4,6 @@
 #include <includes.hpp>
 
 // Thread-safe I/O stream with prefixed lines
-
 extern std::mutex mutex;
 
 class ThreadSafeIOStream {
@@ -31,8 +30,7 @@ public:
     void setPrefix(const std::string &prefix);
     template <typename T>
     void prompt(const std::string &question, T &dest) {
-        std::ostrstream buffer;
-
+        std::stringstream buffer; // Changed from ostrstream to stringstream
         buffer << _prefix << question;
         {
             std::lock_guard<std::mutex> lock(mutex);
@@ -43,15 +41,13 @@ public:
 
 private:
     std::string _prefix;
-    // change the deprecated ostringstream to something like a stringstream
-    std::ostringstream _buffer;
+    std::stringstream _buffer;
     std::ostream &_ostream;
     std::istream &_istream;
 };
 
 template <class TType>
 ThreadSafeIOStream &ThreadSafeIOStream::operator<<(const TType &in) {
-
     std::lock_guard<std::mutex> lock(mutex);
     if (_buffer.str().empty())
         _buffer << _prefix << in;
@@ -63,12 +59,9 @@ ThreadSafeIOStream &ThreadSafeIOStream::operator<<(const TType &in) {
 template <class TType>
 ThreadSafeIOStream &ThreadSafeIOStream::operator>>(TType &out) {
     std::lock_guard<std::mutex> lock(mutex);
-
     _buffer >> out;
     return *this;
 }
 
 extern thread_local ThreadSafeIOStream threadSafeCout;
-
-/* Template <class TType>*/
 #endif

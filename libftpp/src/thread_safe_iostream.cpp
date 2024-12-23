@@ -1,5 +1,3 @@
-#include <mutex>
-#include <ostream>
 #include <thread_safe_iostream.hpp>
 
 /*thread_local ThreadSafeIOStream threadSafeCout;*/
@@ -26,6 +24,7 @@ ThreadSafeIOStream::operator<<(std::ostream &(*manip)(std::ostream &)) {
             _ostream << _buffer.str() << manip;
         }
         _buffer.str("");
+        _buffer.clear(); // Clear the state of the stream
     }
     return *this;
 }

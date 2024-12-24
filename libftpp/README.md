@@ -57,3 +57,12 @@ users. It should maintain a list of tasks to perform in a loop.
 
 - `void addTask(const std::string& name, const std::function<void()>& jobToExecute)`
 - `void removeTask(const std::string& name)`
+
+# Message
+Handles messages between client and server
+- `Message(int type):`
+- `Templated operator overloads for «, »`
+- `int type()`
+
+# Client
+# Server

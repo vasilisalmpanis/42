@@ -5,7 +5,8 @@
 
 class Message: public DataBuffer {
 public:
-	explicit Message(int type);
+	using Type = int;
+	explicit Message(Type type);
 	Message(Message &&) = default;
 	Message(const Message &) = delete;
 	Message &operator=(Message &&) = default;
@@ -15,6 +16,6 @@ public:
 public:
 	int type() const noexcept;
 private:
-	int _type;
+	Type _type;
 };
 

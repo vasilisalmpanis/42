@@ -1,6 +1,6 @@
 #include <message.hpp>
 
-Message::Message(int type): DataBuffer() , _type(type) {
+Message::Message(Type type): DataBuffer() , _type(type) {
 }
 
 Message::~Message()

@@ -2,6 +2,8 @@
 #include <includes.hpp>
 #include <message.hpp>
 
+struct sockaddr_storage;
+
 
 class Client {
 public:
@@ -20,6 +22,7 @@ public:
 	void update();
 private:
 	std::string	_address;
+	struct sockaddr_storage _serv;
 	int		_fd;
 	size_t		_port;
 	std::unordered_map<Message::Type , std::function<void(Message &)>> _actions;

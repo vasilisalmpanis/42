@@ -1,13 +1,13 @@
 #include <persistent_worker.hpp>
 
 PersistentWorker::PersistentWorker() {
-	_running = true;
+    _running = true;
     _worker = std::thread(&PersistentWorker::work, this);
 }
 
-PersistentWorker::~PersistentWorker() { 
-	_running = false;
-	_worker.join();
+PersistentWorker::~PersistentWorker() {
+    _running = false;
+    _worker.join();
 }
 
 void PersistentWorker::addTask(const std::string &name,

@@ -14,7 +14,7 @@ CFLAGS	=	-Wall -Wextra -Werror -g
 all: libft $(NAME) 
 
 $(NAME): $(OBJ) 
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -lidn -L./libft -lft
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -L./libft -lft
 	setcap cap_net_raw=ep $(NAME)
 
 %.o: %.c 

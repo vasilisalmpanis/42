@@ -1,6 +1,7 @@
 #pragma once
 #include <includes.hpp>
 #include <message.hpp>
+#include <endian.hpp>
 
 struct sockaddr_storage;
 
@@ -12,6 +13,24 @@ public:
     Client &operator=(Client &&) = default;
     Client &operator=(const Client &) = default;
     ~Client();
+
+    class NotConnectedException : public std::exception {
+	    const char *what() const throw() {
+		    return "Client is not connected";
+	    }
+    };
+
+    class ClientDisconnected : public std::exception {
+	    const char *what() const throw() {
+		    return "Disconnected";
+	    }
+    };
+
+    class ActionDefinedException : public std::exception {
+	    const char *what() const throw() {
+		    return "This action is already defined";
+	    }
+    };
 
 public:
     void connect(const std::string &address, const size_t &port);
@@ -27,5 +46,4 @@ private:
     int _fd;
     size_t _port;
     std::unordered_map<Message::Type, std::function<void(Message &)>> _actions;
-    std::unordered_map<Message::Type, std::function<void(Message &)>> actions_;
 };

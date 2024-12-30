@@ -53,9 +53,48 @@ void Client::disconnect() {
 void Client::defineAction(
     const Message::Type &messageType,
     const std::function<void(const Message &msg)> &action) {
+	if (_actions.find(messageType) != _actions.end())
+			throw ActionDefinedException();
     _actions[messageType] = action;
 }
 
 void Client::send(const Message &message) { (void)message; }
 
-void Client::update() {}
+void Client::update() {
+	if (_fd == -1)
+		throw NotConnectedException();
+	int ret;
+	size_t type = 0, size = 0;
+	ret = ::recv(_fd, &type, sizeof(size_t), MSG_DONTWAIT); // receive the type
+
+	if (ret == 0)
+		throw ClientDisconnected();
+	else if (ret < 0)
+		return;
+	ret = ::recv(_fd, &size, sizeof(size_t), MSG_DONTWAIT); // receive the size
+
+	if (ret == 0)
+		throw ClientDisconnected();
+	else if (ret < 0)
+		return;
+	std::vector<uint8_t> msg;
+	int received = 0;
+	while (true) { // receive the rest of the message
+		ret = ::recv(_fd, msg.data() + received, size - received, MSG_DONTWAIT);
+		if (ret == 0)
+			throw ClientDisconnected();
+		if (ret < 0)
+			continue;
+		received += ret;
+		if (static_cast<size_t>(received) >= size)
+			break;
+	}
+	// perform the action
+	auto action = _actions.find(type);
+	Message message(type);
+	for (size_t i = 0; i < msg.size(); i++)
+		message << msg[i];
+	if (action != _actions.end())
+		action->second(message);
+	
+}

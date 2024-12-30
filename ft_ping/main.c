@@ -1,3 +1,6 @@
+#include <arpa/inet.h>
+#include <netdb.h>
+
 #include "ft_ping.h"
 
 struct argp_option opts[] = {
@@ -266,8 +269,10 @@ int parse_reply(int cc, uint8_t *packet)
                 inet_ntop(AF_INET, &(settings.whereto.sin_addr), ip, sizeof(settings.whereto));
                 getnameinfo((struct sockaddr *)(&settings.whereto), sizeof(settings.whereto), host,
                             HOST_NAME_MAX, NULL, 0, 0);
-                printf("From %s: icmp_seq=%d Destination Host Unreachable\n", ip,
-                       icp->un.echo.sequence);
+                if (memcmp(&settings.whereto.sin_addr, &settings.source.sin_addr,
+                           sizeof(struct addrinfo)))
+                    printf("From %s: icmp_seq=%d Destination Host Unreachable\n", ip,
+                           icp->un.echo.sequence);
                 break;
             case ICMP_TIME_EXCEEDED:
             case ICMP_PARAMETERPROB:

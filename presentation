@@ -1,0 +1,74 @@
+Presentation Structure:
+1. Introduction (30-45 seconds)
+	Start with your introduction:
+	Name, your role as an intern, and your school (42 Wolfsburg).
+	Briefly introduce CloudLinux and the KernelCare team.
+	Context of the company:
+	Mention CloudLinux's focus: stability, security, and performance of servers for web hosting and enterprises.
+	Introduce KernelCare as a leading live-patching solution for Linux servers, ensuring seamless security updates without rebooting.
+	Show your enthusiasm and personal goal: “I was thrilled to gain hands-on experience in live-patching and kernel development.”
+
+2. Company Context (1 minute)
+	CloudLinux’s Market Role:
+	CloudLinux is a trusted name in the Linux ecosystem.
+	KernelCare: A flagship product for live-patching Linux kernels, focusing on enterprise-grade security.
+	Importance of live patching in reducing downtime and addressing vulnerabilities in real-time.
+	Highlight the stakes: Servers running critical workloads cannot afford downtime, so KernelCare solves a crucial problem.
+
+3. Internship Challenges and Scope (1-2 minutes)
+	Your Role in the KernelCare Team:
+	Explain what backporting is (for non-technical viewers): Adapting patches for older Linux kernels to fix vulnerabilities.
+	Mention how backporting fits into the broader live-patching process.
+	Key Responsibilities:
+	Adapting patches:
+	Analyzed upstream kernel patches.
+	Modified and tested them for compatibility with older kernel versions.
+	Testing your changes rigorously:
+	Created virtual machines.
+	Booted kernels you patched to test for stability.
+	Used tools like iperf to stress-test network subsystems.
+	Loaded and unloaded kernel modules to simulate real-world scenarios.
+	Ensuring patching/unpatching didn’t break the system:
+	Used KernelCare’s engine to validate the live-patching process.
+	Emphasize the technical and problem-solving aspects of your work.
+
+4. Results and Learnings (1 minute)
+	Results of Your Work:
+	Delivered patches that were successfully integrated into KernelCare’s updates.
+	Helped maintain secure environments for servers across multiple organizations.
+	Reduced turnaround time for addressing vulnerabilities in older kernel versions.
+	Skills You Developed:
+	Technical: In-depth knowledge of Linux kernel internals, backporting techniques, and live-patching processes.
+	Soft skills: Problem-solving, attention to detail, and the ability to rigorously test under pressure.
+
+5. Conclusion (30-45 seconds)
+	Reflect on your experience:
+	“This internship not only deepened my technical expertise but also taught me the importance of reliability and precision in software engineering.”
+	Thank the KernelCare team and CloudLinux for the mentorship and opportunity.
+	End on a professional note: “I’m excited to take these skills forward into my career as a software engineer and contribute to innovative solutions like KernelCare.”
+	Slide Design Tips:
+	Slide 1 (Intro):
+
+Title: “Internship Experience at CloudLinux – KernelCare Team”
+Subtext: Your name and “42 Wolfsburg – Software Engineering Student.”
+Include a logo of CloudLinux and a professional photo of yourself.
+Slide 2 (Company Context):
+
+Use visuals: A world map with CloudLinux’s global impact, a diagram of live-patching benefits, or customer testimonials.
+Slide 3-5 (Challenges & Scope):
+
+Break into parts (Backporting, Testing, Ensuring Stability).
+Use diagrams for processes like backporting or live-patching.
+Include snippets of code (if allowed) or screenshots of your testing environment (e.g., a VM console).
+Slide 6 (Results & Learnings):
+
+Highlight your key results in bullet points.
+Add a chart or timeline to show your contributions over the internship.
+Slide 7 (Conclusion):
+
+A photo of you with a message like “Thank you, KernelCare Team!”
+Professional closing statement.
+Delivery Tips:
+Practice: Time yourself to ensure the video is 4-5 minutes.
+Speak clearly and confidently: Avoid technical jargon unless explained.
+Dress professionally: Business casual attire is ideal.

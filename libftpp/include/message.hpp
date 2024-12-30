@@ -1,10 +1,11 @@
 #pragma once
+#include <cstddef>
 #include <data_buffer.hpp>
 #include <includes.hpp>
 
 class Message : public DataBuffer {
 public:
-    using Type = int;
+    using Type = size_t;
     explicit Message(Type type);
     Message(Message &&) = default;
     Message(const Message &) = delete;
@@ -13,7 +14,7 @@ public:
     ~Message();
 
 public:
-    int type() const noexcept;
+    size_t type() const noexcept;
 
 private:
     Type _type;

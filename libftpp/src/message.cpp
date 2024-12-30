@@ -1,7 +1,8 @@
+#include <cstddef>
 #include <message.hpp>
 
 Message::Message(Type type) : DataBuffer(), _type(type) {}
 
 Message::~Message() {}
 
-int Message::type() const noexcept { return _type; }
+size_t Message::type() const noexcept { return _type; }

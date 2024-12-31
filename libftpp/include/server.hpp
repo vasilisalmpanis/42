@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <atomic>
 #include <message.hpp>
 #include <sys/select.h>
 
@@ -58,7 +59,8 @@ private:
     std::vector<long long> _clients;
     std::unordered_map<Message::Type, std::function<void(const Message &)>>
         _actions;
-    fd_set _master, _read_fds, _write_fds;
+    fd_set _master, _read_fds;
     std::thread _thread;
-    std::mutex mutex;
+    std::mutex _mutex;
+    std::atomic_bool _running;
 };

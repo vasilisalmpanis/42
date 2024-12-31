@@ -33,3 +33,5 @@ DataBuffer &DataBuffer::operator>>(std::string &string) {
     buffer.erase(buffer.begin(), buffer.begin() + size);
     return *this;
 }
+
+size_t DataBuffer::size() const { return buffer.size(); }

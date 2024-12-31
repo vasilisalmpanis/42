@@ -1,7 +1,7 @@
 #pragma once
+#include <endian.hpp>
 #include <includes.hpp>
 #include <message.hpp>
-#include <endian.hpp>
 
 struct sockaddr_storage;
 
@@ -15,21 +15,17 @@ public:
     ~Client();
 
     class NotConnectedException : public std::exception {
-	    const char *what() const throw() {
-		    return "Client is not connected";
-	    }
+        const char *what() const throw() { return "Client is not connected"; }
     };
 
     class ClientDisconnected : public std::exception {
-	    const char *what() const throw() {
-		    return "Disconnected";
-	    }
+        const char *what() const throw() { return "Disconnected"; }
     };
 
     class ActionDefinedException : public std::exception {
-	    const char *what() const throw() {
-		    return "This action is already defined";
-	    }
+        const char *what() const throw() {
+            return "This action is already defined";
+        }
     };
 
 public:

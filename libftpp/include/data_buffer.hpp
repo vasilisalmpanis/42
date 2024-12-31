@@ -19,10 +19,15 @@ public:
     DataBuffer &operator<<(const T &data);
 
     template <typename TType>
-	    DataBuffer &operator<<(const std::vector<TType> &vector);
+    DataBuffer &operator<<(const std::vector<TType> &vector);
 
     template <typename TType>
-	    DataBuffer &operator>>(std::vector<TType> &vector);
+    DataBuffer &operator>>(std::vector<TType> &vector);
+
+    const void *data() const { return buffer.data(); }
+
+    size_t size() const;
+
 private:
     std::vector<uint8_t> buffer;
 };
@@ -60,7 +65,7 @@ DataBuffer &DataBuffer::operator<<(const std::vector<TType> &vector) {
     }
     *this << size;
     for (const auto &element : vector) {
-        *this << element;  // Serialize each element using operator<< for TType
+        *this << element; // Serialize each element using operator<< for TType
     }
 
     return *this;
@@ -69,12 +74,12 @@ DataBuffer &DataBuffer::operator<<(const std::vector<TType> &vector) {
 template <typename TType>
 DataBuffer &DataBuffer::operator>>(std::vector<TType> &vector) {
     size_t vector_size;
-    *this >> vector_size;  // Deserialize the size of the vector
+    *this >> vector_size; // Deserialize the size of the vector
 
-    vector.resize(vector_size);  // Resize to hold the elements
+    vector.resize(vector_size); // Resize to hold the elements
 
     for (auto &element : vector) {
-        *this >> element;  // Deserialize each element using operator>> for TType
+        *this >> element; // Deserialize each element using operator>> for TType
     }
 
     return *this;

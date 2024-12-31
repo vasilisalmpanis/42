@@ -1,5 +1,4 @@
 #pragma once
-#include <cstddef>
 #include <data_buffer.hpp>
 #include <includes.hpp>
 
@@ -8,9 +7,9 @@ public:
     using Type = size_t;
     explicit Message(Type type);
     Message(Message &&) = default;
-    Message(const Message &) = delete;
     Message &operator=(Message &&) = default;
-    Message &operator=(const Message &) = delete;
+    Message(const Message &);
+    Message &operator=(const Message &);
     ~Message();
 
 public:

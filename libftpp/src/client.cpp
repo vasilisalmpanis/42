@@ -78,39 +78,51 @@ void Client::send(const Message &message) {
     if (size <= 0)
         return;
     ret = ::send(_fd, &type, sizeof(size_t), 0);
-    if (ret == 0)
+    if (ret == 0) {
+        disconnect();
         throw ClientDisconnected();
+    }
     ret = ::send(_fd, &size, sizeof(size_t), 0);
-    if (ret == 0)
+    if (ret == 0) {
+        disconnect();
         throw ClientDisconnected();
+    }
     ret = ::send(_fd, temp.data(), size, 0);
-    if (ret == 0)
+    if (ret == 0) {
+        disconnect();
         throw ClientDisconnected();
+    }
 }
 
 void Client::update() {
     if (_fd == -1)
         throw NotConnectedException();
+
+    // this should go on for all the available messages
     int ret;
     size_t type = 0, size = 0;
     ret = ::recv(_fd, &type, sizeof(size_t), MSG_DONTWAIT); // receive the type
 
-    if (ret == 0)
+    if (ret == 0) {
+        disconnect();
         throw ClientDisconnected();
-    else if (ret < 0)
+    } else if (ret < 0)
         return;
     ret = ::recv(_fd, &size, sizeof(size_t), MSG_DONTWAIT); // receive the size
 
-    if (ret == 0)
+    if (ret == 0) {
+        disconnect();
         throw ClientDisconnected();
-    else if (ret < 0)
+    } else if (ret < 0)
         return;
     std::vector<uint8_t> msg;
     int received = 0;
     while (true) { // receive the rest of the message
         ret = ::recv(_fd, msg.data() + received, size - received, MSG_DONTWAIT);
-        if (ret == 0)
+        if (ret == 0) {
+            disconnect();
             throw ClientDisconnected();
+        }
         if (ret < 0)
             continue;
         received += ret;

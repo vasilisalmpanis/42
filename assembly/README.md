@@ -1,4 +1,6 @@
-# Bases
+# X86 Assembly
+
+## Bases
 - base 10
     Digits 0-9 and combine numbers but combining digits together.
 - hexadecimal
@@ -8,7 +10,7 @@
       0 0 0 0 0 0 0 0
       2^7 2^6 2^5-2^0
 
-# x86 arch
+## x86 arch
 - CPU
     ALU - logic and arithmetic
     Control Unit - decode instructions and direct operations to other units
@@ -24,18 +26,18 @@
 - Data BUS
     handles transfer of data between CPU, Memory, IO devices etc
 
-# Instructions:
+## Instructions:
 - fetch
 - decode
 - if operands are involved, fetch them from Memory
 - exevute the instruction and update the status flag
 - store the result if required
 
-# Modes
+## Modes
 - Protected Mode - the native processor state
 - Real address mode - early intel programming environment with the ability to switch modes
 
-# Registers
+## Registers
 - 32 bit size registers
 example : eax, ebx, ecx, edx
 high 16 bits: ax, bx, cx, dx
@@ -59,3 +61,25 @@ high 16 bits: ax, bx, cx, dx
     - ZF zero
     - AC auxiliary
     - PF parity
+
+## GAS Syntax
+```
+	.section .data
+	// Variable Declarations
+	// declaring a string
+hello: .asciz "hello world"
+
+	// list
+list: .long 1,2,3,4
+
+	// char
+char: .byte 'a'
+	//declaring a num of 4 bytes
+num: .long 5
+	.globl _start
+	.section .text
+```
+
+> If i want to use the character I can use movb
+> in order to print it I would need the address for that we use   
+leal -> load effective address

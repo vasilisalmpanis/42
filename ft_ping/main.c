@@ -271,8 +271,10 @@ int parse_reply(int cc, uint8_t *packet)
                             HOST_NAME_MAX, NULL, 0, 0);
                 if (memcmp(&settings.whereto.sin_addr, &settings.source.sin_addr,
                            sizeof(struct addrinfo)))
-                    printf("From %s: icmp_seq=%d Destination Host Unreachable\n", ip,
-                           icp->un.echo.sequence);
+                    printf("From %s(%s): icmp_seq=%d Destination Host Unreachable\n",
+				host,
+				ip,
+                        	icp->un.echo.sequence);
                 break;
             case ICMP_TIME_EXCEEDED:
             case ICMP_PARAMETERPROB:

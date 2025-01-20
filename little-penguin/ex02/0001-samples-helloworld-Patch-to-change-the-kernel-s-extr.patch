@@ -1,0 +1,28 @@
+From 6d41f3d69a0b9f8ca5039fc3aa3079b1bc37d4b2 Mon Sep 17 00:00:00 2001
+From: Vasileios Almpanis <valmpani@student.42wolfsburg.de>
+Date: Wed, 12 Jun 2024 10:12:49 +0200
+Subject: [PATCH] samples/helloworld: Patch to change the kernel's extra
+ version
+
+My first patch for the schools projects
+
+Signed-off-by: Vasileios Almpanis <valmpani@student.42wolfsburg.de>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 925a75b8b..7b28358f9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -2,7 +2,7 @@
+ VERSION = 6
+ PATCHLEVEL = 10
+ SUBLEVEL = 0
+-EXTRAVERSION = -rc3
++EXTRAVERSION = -thor
+ NAME = Baby Opossum Posse
+ 
+ # *DOCUMENTATION*
+-- 
+2.44.0

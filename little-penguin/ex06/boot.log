@@ -1,0 +1,50 @@
+--------
+Jun 17 15:54:47 +02:00 (none)  Mounting virtual file systems: /run /proc /sys /dev/shm /sys/fs/cgroup OK
+Jun 17 15:54:47 +02:00 (none)  Create symlinks in /dev targeting /proc: /dev/stdin /dev/stdout /dev/stderr /dev/fd /dev/core OK
+Jun 17 15:54:47 +02:00 (none)  Bringing up the loopback interface... OK
+Jun 17 15:54:47 +02:00 (none)  Setting hostname to valmpani... OK
+Jun 17 15:54:47 +02:00 valmpani  Populating /dev with device nodes...  OK
+Jun 17 15:54:38 +02:00 valmpani  Activating all swap files/partitions... OK
+Jun 17 15:54:38 +02:00 valmpani  Mounting root file system in read-only mode...  OK
+Jun 17 15:54:38 +02:00 valmpani  Checking file systems... OK
+Jun 17 15:54:38 +02:00 valmpani  Remounting root file system in read-write mode... OK
+Jun 17 15:54:38 +02:00 valmpani  Mounting remaining file systems... OK
+Jun 17 15:54:38 +02:00 valmpani  Cleaning file systems: /tmp OK
+Jun 17 15:54:38 +02:00 valmpani  Creating files and directories...  OK
+Jun 17 15:54:38 +02:00 valmpani  Retrying failed uevents, if any... OK
+Jun 17 15:54:38 +02:00 valmpani  Setting up Linux console... OK
+Jun 17 15:54:38 +02:00 valmpani  Starting system log daemon... OK
+Jun 17 15:54:38 +02:00 valmpani  Starting kernel log daemon... OK
+Jun 17 15:54:38 +02:00 valmpani  Bringing up the eth0 interface... OK
+Jun 17 15:54:38 +02:00 valmpani  Starting dhcpcd on the eth0 interface... OK
+Jun 17 15:54:38 +02:00 valmpani  Initializing kernel random number generator... OK
+Jun 17 15:54:38 +02:00 valmpani  Starting the D-Bus Messagebus Daemon... OK
+Jun 17 15:54:38 +02:00 valmpani  Starting SSH Server... OK
+Jun 17 15:54:39 +02:00 valmpani  Starting network connection manager NetworkManager OK
+Jun 17 15:54:39 +02:00 valmpani  Starting fcron... OK
+Jun 17 15:54:39 +02:00 valmpani  Starting GPM console mouse service... OK
+--------
+Jun 17 16:28:49 +02:00 (none)  Mounting virtual file systems: /run /proc /sys /dev/shm /sys/fs/cgroup OK
+Jun 17 16:28:49 +02:00 (none)  Create symlinks in /dev targeting /proc: /dev/stdin /dev/stdout /dev/stderr /dev/fd /dev/core OK
+Jun 17 16:28:49 +02:00 (none)  Bringing up the loopback interface... OK
+Jun 17 16:28:51 +02:00 (none)  Setting hostname to valmpani... OK
+Jun 17 16:28:51 +02:00 valmpani  Populating /dev with device nodes...  OK
+Jun 17 16:28:51 +02:00 valmpani  Activating all swap files/partitions... OK
+Jun 17 16:28:51 +02:00 valmpani  Mounting root file system in read-only mode...  OK
+Jun 17 16:28:51 +02:00 valmpani  Checking file systems... OK
+Jun 17 16:28:51 +02:00 valmpani  Remounting root file system in read-write mode... OK
+Jun 17 16:28:51 +02:00 valmpani  Mounting remaining file systems... OK
+Jun 17 16:28:51 +02:00 valmpani  Cleaning file systems: /tmp OK
+Jun 17 16:28:51 +02:00 valmpani  Creating files and directories...  OK
+Jun 17 16:28:51 +02:00 valmpani  Retrying failed uevents, if any... OK
+Jun 17 16:28:51 +02:00 valmpani  Setting up Linux console... OK
+Jun 17 16:28:51 +02:00 valmpani  Starting system log daemon... OK
+Jun 17 16:28:51 +02:00 valmpani  Starting kernel log daemon... OK
+Jun 17 16:28:52 +02:00 valmpani  Bringing up the eth0 interface... OK
+Jun 17 16:28:48 +02:00 valmpani  Starting dhcpcd on the eth0 interface... OK
+Jun 17 16:28:54 +02:00 valmpani  Initializing kernel random number generator... OK
+Jun 17 16:28:54 +02:00 valmpani  Starting the D-Bus Messagebus Daemon... OK
+Jun 17 16:28:54 +02:00 valmpani  Starting SSH Server... OK
+Jun 17 16:28:55 +02:00 valmpani  Starting network connection manager NetworkManager OK
+Jun 17 16:28:55 +02:00 valmpani  Starting fcron... OK
+Jun 17 16:28:56 +02:00 valmpani  Starting GPM console mouse service... OK

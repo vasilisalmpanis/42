@@ -1,0 +1,2 @@
+SUBSYSTEM=="usb", ACTION=="add", ATTR{bInterfaceProtocol}=="01", RUN="/usr/sbin/insmod /usr/src/linux-6.10/samples/helloworld/hello-world.ko"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c31c", ACTION=="remove", RUN+="/usr/sbin/rmmod hello_world"

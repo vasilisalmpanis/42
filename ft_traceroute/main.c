@@ -1,5 +1,9 @@
 #include "ft_traceroute.h"
 
+void print_timeval(struct timeval *tv) {
+    printf("Timeval: %ld.%06ld\n", tv->tv_sec, tv->tv_usec);
+}
+
 int curr_index = 1;
 struct opts opts;
 static const struct argp_option options[] = {
@@ -133,7 +137,7 @@ int bind_to_intf()
  *
  * @return 0 on success or the size of the sent packet
  */
-int setup_packet()
+int setup_packet(int probe)
 {
     struct timeval tv_now;
     struct icmphdr *icmp;
@@ -161,6 +165,8 @@ int setup_packet()
     /*ft_print_packet_hex(opts.packet, opts.packetlen);*/
     gettimeofday(&tv_now, NULL);
     ft_memcpy(opts.packet + sizeof(struct icmphdr), &tv_now, sizeof(tv_now));
+    opts.time_sent[probe] = tv_now;
+    // printf("probe: %d\n", probe);
     icmp->checksum = icmp_checksum(opts.packet, opts.packetlen);
     i = sendto(opts.socket.fd, opts.packet, opts.packetlen, 0, (struct sockaddr *)&opts.source, sizeof(opts.source));
     if (i == -1) {
@@ -175,7 +181,7 @@ int parse_reply(uint8_t *packet, int cc, int *probe, struct timeval tv_now)
     struct sockaddr *addr;
     char *reverse_ip;
     struct icmphdr *icmp;
-    struct timeval *time;
+    //struct timeval *time;
     if (cc < 0) {
         printf("* \n");
         return 1;
@@ -197,11 +203,10 @@ int parse_reply(uint8_t *packet, int cc, int *probe, struct timeval tv_now)
         case ICMP_ECHOREPLY:
             if (icmp->un.echo.id != opts.ident)
                 return 3;
-            time              = (struct timeval *)(packet + sizeof(struct iphdr) + sizeof(struct icmphdr));
-            long seconds      = tv_now.tv_sec - time->tv_sec;
-            long microseconds = tv_now.tv_usec - time->tv_usec;
+            long seconds      = tv_now.tv_sec - opts.time_sent[*probe].tv_sec;
+            long microseconds = tv_now.tv_usec - opts.time_sent[*probe].tv_usec;
+            opts.duration[*probe] = (double)(seconds * 1000.0 + microseconds / 1000.0);
             (*probe)++;
-            opts.duration[*probe - 1] = (double)(seconds * 1000.0 + microseconds / 1000.0);
             return 2;
         case ICMP_DEST_UNREACH:
         case ICMP_TIME_EXCEEDED:
@@ -220,11 +225,10 @@ int parse_reply(uint8_t *packet, int cc, int *probe, struct timeval tv_now)
             addr       = (struct sockaddr *)&opts.whereto[*probe];
             reverse_ip = opts.hop_reverse_ip[*probe];
             getnameinfo(addr, sizeof(*addr), reverse_ip, HOST_NAME_MAX, NULL, 0, 0);
-            time         = (struct timeval *)(packet + 2 * sizeof(struct iphdr) + 2 * sizeof(struct icmphdr));
-            seconds      = tv_now.tv_sec - time->tv_sec;
-            microseconds = tv_now.tv_usec - time->tv_usec;
+            seconds      = tv_now.tv_sec - opts.time_sent[*probe].tv_sec;
+            microseconds = tv_now.tv_usec - opts.time_sent[*probe].tv_usec;
+            opts.duration[*probe] = (double)(seconds * 1000.0 + microseconds / 1000.0);
             (*probe)++;
-            opts.duration[*probe - 1] = (double)(seconds * 1000.0 + microseconds / 1000.0);
             break;
         case ICMP_ECHO:
             return 3;
@@ -260,6 +264,7 @@ void print_line(int probe, int cc, bool *printed_host)
 
 int main_loop()
 {
+    bool is_found = false;
     uint8_t receive_buf[3][200];
     struct timeval tv_now;
     struct timeval timeout;
@@ -277,7 +282,7 @@ int main_loop()
     setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
     FD_ZERO(&read_fd);
     while (probe++ < PROBES) {
-        ret_val = setup_packet();
+        ret_val = setup_packet(probe - 1);
         if (ret_val) {
             // handle;
             return 1;
@@ -302,11 +307,11 @@ int main_loop()
             cc = recvfrom(opts.socket.fd, (void *restrict)receive_buf[probe], 200, 0,
                           (struct sockaddr *)&opts.whereto[probe], &size[probe]);
             cc = parse_reply(receive_buf[probe], cc, &probe, tv_now);
-            /*printf("normal reply %d\n", probe);*/
-            if (cc == 3) {
-                continue;
-            }
-            if (cc == 0 || cc == 2) {
+	    if (cc == 3)
+		    continue;
+	    if (cc == 0 || cc == 2) {
+		if (cc == 2)
+		    is_found = true;
                 print_line(probe, cc, &printed_host);
                 if (opts.finishing)
                     return 0;
@@ -318,9 +323,9 @@ int main_loop()
                 ++opts.current_ttl;
                 if (opts.current_ttl == opts.max_ttl + 1)
                     break;
-                probe = 0;
+                probe = -1;
                 setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
-                while (probe++ < 3) setup_packet();
+                while (++probe < 3) setup_packet(probe);
                 probe        = 0;
                 printed_host = false;
             }
@@ -335,10 +340,12 @@ int main_loop()
             opts.current_ttl++;
             if (opts.current_ttl == opts.max_ttl + 1)
                 break;
-            probe = 0;
+	    if (is_found && probe == 3)
+		    return 0;
+            probe = -1;
             setsockopt(opts.socket.fd, IPPROTO_IP, IP_TTL, &opts.current_ttl, sizeof(opts.current_ttl));
-            while (probe++ < 3) {
-                ret_val = setup_packet();
+            while (++probe < 3) {
+                ret_val = setup_packet(probe);
             }
             probe        = 0;
             printed_host = false;
@@ -364,7 +371,7 @@ int main(int argc, char *argv[])
     hints.ai_flags    = AI_CANONNAME;
     hints.ai_protocol = IPPROTO_ICMP;
     if ((rv = getaddrinfo(opts.host, 0, &hints, &res)) != 0) {
-        printf("ft_traceroute: %s\n", gai_strerror(rv));
+        printf("%s: %s\n", opts.host, gai_strerror(rv));
         exit(1);
     }
     /*printf("host %s packetlen %ld\n", opts.host, opts.packetlen);*/

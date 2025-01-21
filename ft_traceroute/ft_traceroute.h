@@ -58,6 +58,8 @@ struct opts {
     char ip[INET_ADDRSTRLEN];
     char reverse_ip[HOST_NAME_MAX];
     bool finishing;
+
+    struct timeval time_sent[3];
 };
 
 unsigned short icmp_checksum(void *packet, size_t length);

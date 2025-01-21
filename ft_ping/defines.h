@@ -13,7 +13,7 @@
 #define VERBOSE_STR \
     "ping: sock4.fd: %d (socktype: %s), sock6.fd: -1 (socktype: 0), hints.ai_family: AF_INET\n\n"
 
-#define PING_STR "PING %s (%s) 56 data bytes"
+#define PING_STR "PING %s (%s): 56 data bytes"
 
 #define success_format_string "%lu bytes from %s (%s): icmp_seq=%d ttl=%d time=%.3f ms %s\n"
 #define success_format_string2 "%lu bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms %s\n"

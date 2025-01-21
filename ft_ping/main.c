@@ -25,9 +25,9 @@ struct environ settings;
 void print_statistics()
 {
     printf("--- %s ping statistics ---\n", settings.target);
-    int packet_loss = (1 - (settings.nreceived / settings.ntransmitted)) * 100;
+    int packet_loss = (1 - ((double)settings.nreceived / (double)settings.ntransmitted)) * 100;
     printf("%ld packets transmitted", settings.ntransmitted);
-    printf(", %ld received", settings.nreceived);
+    printf(", %ld packets received", settings.nreceived);
     if (settings.nchecksum)
         printf(", +%ld corrupted", settings.nchecksum);
     if (settings.nduplicates)
@@ -265,16 +265,17 @@ int parse_reply(int cc, uint8_t *packet)
             case ICMP_SOURCE_QUENCH:
             case ICMP_REDIRECT:
             case ICMP_DEST_UNREACH:
+		//92 bytes from c2r14s9.42wolfsburg.de (10.12.14.9): Destination Host Unreachable
                 // FIX: jupm to original packet and get sequence
                 inet_ntop(AF_INET, &(settings.whereto.sin_addr), ip, sizeof(settings.whereto));
                 getnameinfo((struct sockaddr *)(&settings.whereto), sizeof(settings.whereto), host,
                             HOST_NAME_MAX, NULL, 0, 0);
                 if (memcmp(&settings.whereto.sin_addr, &settings.source.sin_addr,
                            sizeof(struct addrinfo)))
-                    printf("From %s(%s): icmp_seq=%d Destination Host Unreachable\n",
+                    printf("%ld bytes from %s (%s): Destination Host Unreachable\n",
+				cc - sizeof(struct iphdr),
 				host,
-				ip,
-                        	icp->un.echo.sequence);
+				ip);
                 break;
             case ICMP_TIME_EXCEEDED:
             case ICMP_PARAMETERPROB:
@@ -474,10 +475,10 @@ int main(int argc, char *argv[])
     };
     dns_lookup(settings.target, &settings.source, ip);
     if (!ip[0]) {
-        printf("ping: %s: Name or service not known\n", settings.target);
+        printf("ft_ping: unknown host\n");
         return 1;
     }
-    if (!settings.no_dns)
+    if (!settings.no_dns || !isValidIpAddress(settings.target))
         reverse_dns_lookup(ip, reverse_ip);
     ret_val = getaddrinfo(settings.target, NULL, &hints, &result);
     if (ret_val)
@@ -502,7 +503,7 @@ int main(int argc, char *argv[])
     set_signal(SIGINT, sigexit);
     set_signal(SIGALRM, sigexit);
     set_signal(SIGQUIT, sigstatus);
-    printf(PING_STR, settings.target, ip);
+    printf(PING_STR, reverse_ip[0] ? reverse_ip : settings.target, ip);
     if (settings.verbose)
         printf(", id 0x%04x = %u", settings.ident, settings.ident);
     printf("\n");

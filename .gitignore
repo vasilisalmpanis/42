@@ -13,6 +13,7 @@ ft_ping/ft_ping
 ft_traceroute/ft_traceroute
 ft_traceroute/libft
 *.a
+inetutils-2.0
 
 .cache
 

@@ -74,3 +74,42 @@ void print_packet_hex(uint8_t *packet, int length)
         printf("\n");
     }
 }
+
+void print_ip_header(struct iphdr *iph) {
+    char src_ip[INET_ADDRSTRLEN];
+    char dst_ip[INET_ADDRSTRLEN];
+
+    inet_ntop(AF_INET, &(iph->saddr), src_ip, INET_ADDRSTRLEN);
+    inet_ntop(AF_INET, &(iph->daddr), dst_ip, INET_ADDRSTRLEN);
+
+    unsigned char *ptr = (unsigned char *)iph;
+    printf("IP Hdr Dump:\n ");
+    for (int i = 0; i < 20; i++) {
+        printf("%02x", ptr[i]);
+        if ((i + 1) % 2 == 0) printf(" ");
+    }
+    printf("\n");
+
+    printf("Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src\tDst\tData\n");
+    printf(" %1x  %1x  %02x %04x %04x   %1x %04x  %02x  %02x %04x %s  %s\n",
+        iph->version,
+        iph->ihl,
+        iph->tos,
+        ntohs(iph->tot_len),
+        ntohs(iph->id),
+        (ntohs(iph->frag_off) >> 13),
+        ntohs(iph->frag_off) & 0x1FFF,
+        iph->ttl,
+        iph->protocol,
+        ntohs(iph->check),
+        src_ip,
+        dst_ip);
+}
+
+void print_icmp_header(struct icmphdr *icmph) {
+    printf("ICMP: type %d, code %d, size 64, id 0x%04x, seq 0x%04x\n",
+        icmph->type,
+        icmph->code,
+        ntohs(icmph->un.echo.id),
+        ntohs(icmph->un.echo.sequence));
+}

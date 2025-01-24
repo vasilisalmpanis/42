@@ -127,6 +127,9 @@ long llsqrt(long long a);
 bool isValidIpAddress(char *ipAddress);
 void print_packet_hex(uint8_t *packet, int length);
 
+void print_ip_header(struct iphdr *iph);
+void print_icmp_header(struct icmphdr *icmph);
+
 static inline void set_signal(int signo, void (*handler)(int))
 {
     struct sigaction sa;

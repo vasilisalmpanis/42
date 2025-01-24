@@ -267,6 +267,8 @@ int parse_reply(int cc, uint8_t *packet)
             case ICMP_DEST_UNREACH:
 		//92 bytes from c2r14s9.42wolfsburg.de (10.12.14.9): Destination Host Unreachable
                 // FIX: jupm to original packet and get sequence
+                iph      = (struct iphdr *)(&icp[1]);
+                icp      = (struct icmphdr *)((unsigned char *)iph + (iph->ihl * 4));
                 inet_ntop(AF_INET, &(settings.whereto.sin_addr), ip, sizeof(settings.whereto));
                 getnameinfo((struct sockaddr *)(&settings.whereto), sizeof(settings.whereto), host,
                             HOST_NAME_MAX, NULL, 0, 0);
@@ -276,6 +278,8 @@ int parse_reply(int cc, uint8_t *packet)
 				cc - sizeof(struct iphdr),
 				host,
 				ip);
+		print_ip_header(iph);
+		print_icmp_header(icp);
                 break;
             case ICMP_TIME_EXCEEDED:
             case ICMP_PARAMETERPROB:
@@ -291,7 +295,7 @@ int parse_reply(int cc, uint8_t *packet)
                               INET_ADDRSTRLEN);
                     reverse_dns_lookup(settings.error_ip, settings.error_reverse_ip);
                 }
-#ifdef IPUTILS
+// #ifdef IPUTILS
                 /* resembling inetutils ping is actually a downgrade */
 
                 uint16_t error_sequence = ntohs(icp->un.echo.sequence);
@@ -301,7 +305,9 @@ int parse_reply(int cc, uint8_t *packet)
                 else
                     printf(failure_format_string2, settings.error_ip, error_sequence,
                            "Time to live exceeded");
-#endif
+// #endif
+		print_ip_header(iph);
+		print_icmp_header(icp);
                 break;
             default:
                 printf("message came in with type%d\n", icp->type);

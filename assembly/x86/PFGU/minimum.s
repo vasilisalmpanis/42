@@ -1,10 +1,11 @@
 #
 #	edi: holds the index
-#	ebx: Largest data item found
+#	ebx: Lowest data item found
 #	eax: current item
 	.section .data
 data_items:
-	.long 3,5,55,45,32,65,30,0
+	.long 3,5,55,45,32,65,100
+data_items_end:
 	.section .text
 	.globl _start
 _start:
@@ -13,7 +14,7 @@ _start:
 	movl %eax, %ebx				# move the first element to ebx
 
 start_loop:
-	cmpl $0, %eax				# compare eax with 0
+	cmpl data_items_end, %eax				# compare eax with 0
 	je loop_exit
 	incl %edi 				# increment the index
 	movl data_items(, %edi, 4), %eax	# jump one int and place the next into eax

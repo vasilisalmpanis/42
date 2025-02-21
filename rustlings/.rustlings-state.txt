@@ -1,8 +1,7 @@
 DON'T EDIT THIS FILE!
 
-enums3
+hashmaps1
 
-intro1
 intro2
 variables1
 variables2
@@ -37,3 +36,11 @@ structs2
 structs3
 enums1
 enums2
+enums3
+strings1
+strings2
+strings3
+strings4
+modules1
+modules2
+modules3

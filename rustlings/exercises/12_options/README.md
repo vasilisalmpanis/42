@@ -1,4 +1,6 @@
-# Options
+
+            }
+Options
 
 Type Option represents an optional value: every Option is either Some and contains a value, or None, and does not.
 Option types are very common in Rust code, as they have a number of uses:

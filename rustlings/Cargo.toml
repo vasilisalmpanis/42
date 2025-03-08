@@ -220,3 +220,6 @@ infinite_loop = "deny"
 mem_forget = "deny"
 # Currently, there are no disallowed methods. This line avoids problems when developing Rustlings.
 disallowed_methods = "allow"
+
+[dependencies]
+rustlings = "6.4.0"

@@ -2,13 +2,14 @@
 #	edi: holds the index
 #	ebx: Largest data item found
 #	eax: current item
-	.section .data
-data_items:
-	.long 3,5,55,45,32,65,30,0
 	.section .text
 	.globl _start
 _start:
 	xorl %edi, %edi				# zero out the edi register to use it as index.
+.pushsection .data
+data_items:
+	.long 3,5,55,45,32,65,30,0
+.popsection
 	movl data_items(, %edi, 4), %eax	# Load to eax the value at data_items, index edi with size of 4 bytes
 	movl %eax, %ebx				# move the first element to ebx
 

@@ -1,0 +1,20 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++98",
+      "-c",
+      "-I",
+      "./include/",
+      "-o",
+      "src/DivideAndRule.o",
+      "src/DivideAndRule.cpp"
+    ],
+    "directory": "/home/valmpani/42/piscine_object/ex00",
+    "file": "/home/valmpani/42/piscine_object/ex00/src/DivideAndRule.cpp",
+    "output": "/home/valmpani/42/piscine_object/ex00/src/DivideAndRule.o"
+  }
+]

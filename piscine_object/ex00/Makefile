@@ -1,26 +1,25 @@
-NAME		= bank
+NAME		= bank.bin
 CXXFLAGS	= -Wall -Wextra -Werror -std=c++98
 SRCS		= ./src/DivideAndRule.cpp \
 		  ./src/main.cpp
-
-OBJ     	=  $(SRCS:.cpp=.o)
+OBJ     	= $(SRCS:.cpp=.o)
 RM		= rm -rf
-CXX		= $(shell which g++)
+CXX		:= $(shell which g++)
 INCS		= ./include/
 
-all : ${NAME}
+all: ${NAME}
 
-${NAME}:	${OBJ}
-		${CXX}  ${CXXFLAGS} ${OBJ} -o ${NAME} -I ${INCS}
+${NAME}: ${OBJ}
+	${CXX} ${CXXFLAGS} ${OBJ} -o ${NAME} -I ${INCS}
 
 %.o: %.cpp
-		${CXX} ${CXXFLAGS} -c $< -o $@ -I ${INCS}
+	${CXX} ${CXXFLAGS} -c $< -o $@ -I ${INCS}
 
 clean:
-		${RM} ${OBJ}
+	${RM} ${OBJ}
 
 fclean: clean
-		${RM} ${NAME}
+	${RM} ${NAME}
 
 re: fclean all
 

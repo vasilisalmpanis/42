@@ -3,31 +3,6 @@
 #include <iostream>
 #include <vector>
 
-struct Account
-{
-	Account(int value, int id);
-	void addValue(int value);
-	unsigned int getId() const;
-	unsigned int getValue() const;
-	friend std::ostream& operator << (std::ostream& p_os, const Account& p_account);
-
-	private:
-		int id;
-		int value;
-};
-
-/* C++98 Doenst have lambdas but we can do the equivalent with a Functor
- * Functors are empty functions that define the operator(). They act like a function
- * the can also hold state.
- */
-struct FindAccountById {
-    unsigned int target_id;
-    FindAccountById(unsigned int id) : target_id(id) {}
-    bool operator()(const Account& acc) const {
-        return acc.getId() == target_id;
-    }
-};
-
 /*
 * The bank must receive 5% of each money inflow on these client accounts
 * The accounts must never have two identical IDs
@@ -40,19 +15,64 @@ struct FindAccountById {
 */
 struct Bank
 {
+
+	struct Account
+	{
+		Account(int value, int id);
+		unsigned int getId() const;
+		unsigned int getValue() const;
+		friend std::ostream& operator << (std::ostream& p_os, const Account& p_account);
+
+		private:
+		friend class Bank;	
+		void addValue(int value);
+		int id;
+		int value;
+	};
+
+	Bank::Account const &operator[](int val);
+
 	Bank();
 	void set_liquidity(int liq);
 	void deposit(unsigned int id, int value);
 	int addAccount();
 	void addLiquidity(int value);
 	void removeLiquidity(int value);
-	Account *getAccount(unsigned int id);
 	void AcountBalance(unsigned int id);
+	int requestLoan(unsigned int id, unsigned int value);
 	void BankBalance();
 	void accountRemove(unsigned int id);
+	Account *getAccount(unsigned int id);
+
+	class IndexNotFoundException : public std::exception {
+		public:
+			virtual const char *what() const throw();
+	};
+	class IncorrectValueException : public std::exception {
+		public:
+			virtual const char *what() const throw();
+	};
+	class NotEnoughFundsException : public std::exception {
+		public:
+			virtual const char *what() const throw();
+	};
+
 	friend std::ostream& operator << (std::ostream& p_os, const Bank& p_bank);
 private:
+
 	int liquidity;
 	std::vector<Account > clientAccounts;
 	static unsigned int available_id;
+};
+
+/* C++98 Doenst have lambdas but we can do the equivalent with a Functor
+ * Functors are empty functions that define the operator(). They act like a function
+ * the can also hold state.
+ */
+struct FindAccountById {
+    unsigned int target_id;
+    FindAccountById(unsigned int id) : target_id(id) {}
+    bool operator()(const Bank::Account& acc) const {
+        return acc.getId() == target_id;
+    }
 };

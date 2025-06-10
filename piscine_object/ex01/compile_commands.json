@@ -1,0 +1,20 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c++98",
+      "-c",
+      "-I",
+      "./include/",
+      "-o",
+      "src/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/home/valmpani/Desktop/42/piscine_object/ex01",
+    "file": "/home/valmpani/Desktop/42/piscine_object/ex01/src/main.cpp",
+    "output": "/home/valmpani/Desktop/42/piscine_object/ex01/src/main.o"
+  }
+]

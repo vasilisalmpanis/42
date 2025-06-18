@@ -31,3 +31,4 @@ list *(do_panic+0x08)
 ```
 
 [resources](https://linux-kernel-labs.github.io/refs/heads/master/so2/lec9-debugging.html)
+[perf](https://www.brendangregg.com/perf.html)

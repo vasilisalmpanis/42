@@ -1,0 +1,59 @@
+From d557c366c4e024cebebf54e6a772c0576e92b47a Mon Sep 17 00:00:00 2001
+From: Vasileios Almpanis <vasilisalmpanis@gmail.com>
+Date: Fri, 20 Jun 2025 11:04:16 +0200
+Subject: [PATCH] kernel-teaching: Make it work for latest arch
+
+Before URL for yocto was outdated and gnu-nc is superseeded by 
+nmap. Use ncat instead.
+
+Signed-off-by: Vasileios Almpanis <vasilisalmpanis@gmail.com>
+---
+ tools/labs/qemu/Makefile           | 4 ++--
+ tools/labs/qemu/qemu.sh            | 2 +-
+ tools/labs/scripts/vmchecker-setup | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/labs/qemu/Makefile b/tools/labs/qemu/Makefile
+index e9ee4ec1b500..a1f89ed99675 100644
+--- a/tools/labs/qemu/Makefile
++++ b/tools/labs/qemu/Makefile
+@@ -8,8 +8,8 @@ ZIMAGE = $(KDIR)/arch/$(ARCH)/boot/$(b)zImage
+ KCONFIG = $(KDIR)/.config
+ NTTCP = $(KDIR)/tools/labs/templates/assignments/6-e100/nttcp
+ 
+-YOCTO_URL = http://downloads.yoctoproject.org/releases/yocto/yocto-2.3/machines/qemu/qemu$(ARCH)/
+-YOCTO_IMAGE = core-image-minimal-qemu$(ARCH).ext4
++YOCTO_URL = https://downloads.yoctoproject.org/releases/yocto/yocto-5.2.1/machines/qemu/qemux86/
++YOCTO_IMAGE = core-image-minimal-qemux86.rootfs.ext4
+ #YOCTO_IMAGE = core-image-minimal-dev-qemu$(ARCH).ext4
+ #YOCTO_IMAGE = core-image-sato-dev-qemu$(ARCH).ext4
+ #YOCTO_IMAGE = core-image-sato-qemu$(ARCH).ext4
+diff --git a/tools/labs/qemu/qemu.sh b/tools/labs/qemu/qemu.sh
+index 6073942b8fff..c47e9968a7f9 100755
+--- a/tools/labs/qemu/qemu.sh
++++ b/tools/labs/qemu/qemu.sh
+@@ -17,7 +17,7 @@ case $ARCH in
+ 	;;
+ esac
+ 
+-echo info chardev | nc -U -l qemu.mon | egrep --line-buffered -o "/dev/pts/[0-9]*" | xargs -I PTS ln -fs PTS serial.pts &
++echo info chardev | ncat -U -l qemu.mon | egrep --line-buffered -o "/dev/pts/[0-9]*" | xargs -I PTS ln -fs PTS serial.pts &
+ $qemu "$@" -monitor unix:qemu.mon
+ rm qemu.mon 
+ rm serial.pts
+diff --git a/tools/labs/scripts/vmchecker-setup b/tools/labs/scripts/vmchecker-setup
+index 787b4a8f489d..cd4457e63987 100755
+--- a/tools/labs/scripts/vmchecker-setup
++++ b/tools/labs/scripts/vmchecker-setup
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ 
+ if test ! -f ../initial.clean-slate.core-image-minimal-qemux86.ext4; then
+-    wget http://downloads.yoctoproject.org/releases/yocto/yocto-2.3/machines/qemu/qemux86/core-image-minimal-qemux86.ext4 -O ../initial.clean-slate.core-image-minimal-qemux86.ext4
++    wget https://downloads.yoctoproject.org/releases/yocto/yocto-5.2.1/machines/qemu/qemux86/core-image-minimal-qemux86.rootfs.ext4 -O ../initial.clean-slate.core-image-minimal-qemux86.ext4
+ fi
+ if test ! -f ../clean-slate.core-image-minimal-qemux86.ext4; then
+     cp ../initial.clean-slate.core-image-minimal-qemux86.ext4 ../clean-slate.core-image-minimal-qemux86.ext4
+-- 
+2.50.0
+

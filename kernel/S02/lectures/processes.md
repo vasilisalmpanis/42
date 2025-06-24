@@ -64,3 +64,8 @@ the same instance is shared by multiple tasks and is duplicated upon unsharing.
 - Which of the following are potential valid sizes for struct thread_info: 4095, 4096, 4097?
 
     answer the size is 4096.
+
+# Kthreads
+
+sometimes drivers need to run in process context. This is why we have kthreads. they don't access userspace and they
+don't access files.

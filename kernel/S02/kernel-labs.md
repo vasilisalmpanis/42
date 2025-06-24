@@ -3,8 +3,8 @@
 #### Lectures
 - [x] SO2 Lecture 01 - Course overview and Linux kernel introduction
 - [x] SO2 Lecture 02 - [System calls](./lectures/systemcalls.md)
-- [ ] SO2 Lecture 03 - [Processes](./lectures/processes.md) 
-- [ ] SO2 Lecture 04 - Interrupts
+- [x] SO2 Lecture 03 - [Processes](./lectures/processes.md) 
+- [ ] SO2 Lecture 04 - [Interrupts](./lectures/interrupts.md)
 - [ ] SO2 Lecture 05 - Symmetric Multi-Processing
 - [ ] SO2 Lecture 06 - Address Space
 - [ ] SO2 Lecture 07 - Memory Management
@@ -36,3 +36,6 @@
 - [ ] Assignment 3 - Software RAID
 - [ ] Assignment 4 - SO2 Transport Protocol
 - [ ] Assignment 7 - SO2 Virtual Machine Manager with KVM
+
+## Resources
+[The_Linux_Kernel](https://en.wikibooks.org/wiki/The_Linux_Kernel)
